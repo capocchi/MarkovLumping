@@ -128,19 +128,22 @@ def Tetha(tetha, init_state, partitions, M, new_states, P, Pi, S, N=500):
     return T
 
 ### KL pour un état i donnée est une partition (intégré dans Q_mu)
-def KL(i, Q_mu, P, Pi, S):
+def KL(S, P, Pi, Q_mu):
     ### To ensure R(P k Q) is finite, we require P to be absolutely
     ### continuous w.r.t. Q, i.e. Qij = 0 ⇒ Pij = 0.
-    L = (a for a in S if Q_mu[i,a] != 0.0 and P[i,a] != 0.0)
-    return np.sum([Pi[j]*P[i,j]*np.log(P[i,j]/Q_mu[i,j]) for j in L])
+    r = 0.0
+    for i in S:
+        r += Pi[i]*np.sum([P[i,j]*np.log(P[i,j]/Q_mu[i,j]) for j in S if Q_mu[i,j] != 0.0 and P[i,j] != 0.0])
+    
+    return r
 
-def process(partition, M, Pi, P, new_states, S, state, par):
+def process(partition, M, P, new_states, S, par):
     Q = Lump(partition, Pi, P)
     p = par[str(partition)]
     Q_mu = Lifting(Q, Pi, S, p)
     tetha = np.ones(len(S))
     neta = Neta(p, tetha, M, new_states, S)
-    kl = KL(state, Q_mu, P, Pi, S)
+    kl = KL(P, Q_mu)
     return np.gradient(neta)*kl
 
 # def Lifting2(Q, Pi, S, partition):
@@ -192,7 +195,7 @@ if __name__ == '__main__':
     S = ['S', 'R', 'C']
     n = len(S)
     k = 2  ### classes
-    P = pykov.readmat('3x3.txt')
+    P = pykov.readmat(os.path.join('Matrix','3x3.dat'))
     #P = pykov.Chain({(S[0],S[0]):0.97,
     #                 (S[0],S[1]):0.01,
     #                 (S[0],S[2]):0.02,
@@ -250,7 +253,7 @@ if __name__ == '__main__':
         Q_mu = Lifting(Q, Pi, S, p)
         tetha = np.ones(n)
         neta = Neta(p, tetha, M, new_states, S)
-        kl = KL(init_state, Q_mu, P, Pi, S)
+        kl = KL(S, P,Pi,Q_mu)
 
         if kl<result[0]:
             result = [kl,list(p), Q_mu]

@@ -1,0 +1,1 @@
+python main_matrix.py 10 Matrix\bench\shuffle\10x10_1.dat uniform 1

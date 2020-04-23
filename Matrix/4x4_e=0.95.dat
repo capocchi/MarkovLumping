@@ -1,0 +1,16 @@
+S S 0
+S R 0.95
+S C 0
+S D 0.05
+R S 0.95
+R R 0
+R C 0.05
+R D 0
+C S 0
+C R 0.05
+C C 0
+C D 0.95
+D S 0.05
+D R 0
+D C 0.95
+D D 0

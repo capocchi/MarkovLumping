@@ -4,6 +4,7 @@
 from itertools import islice
 import numpy as np
 import random
+from itertools import combinations, chain
 
 from PartitionsSchemes import *
 from nbPartitions import *
@@ -37,21 +38,36 @@ def getPartitionsList(M,S,C,nbPartition,verbose=False):
 
         if verbose: print("\r{:2.12%}".format((len(np.where(M!='')[0])/nbPartition)), end="", flush=True)
 
-def getPartitions(S,C):
+def getPartitions(S,C,coordinate_choice=None):
     """ S is the states set
         C is the partitions schemes list
+        coordinate_choice: impose a specific coordinate (1122) for n=4 and k=2
     """
-    ### shuffle the list on place
-    np.random.shuffle(S)
+    ### shuffle the list on place only if coordinate_choice is None
+    if coordinate_choice is None:
+        np.random.shuffle(S)
 
     for c in C:
         Input = iter(S)
+        
         #Output = tuple(sorted(tuple(sorted(islice(Input, elem))) for elem in c))
         Output = tuple(tuple(islice(Input, elem)) for elem in c)
         yield str(Output)
 
+def getPartitionSchemesWithSplitting(n, k, splitting_choice=None):
+    """ Return the list of partition schemes depending on splitting choice
+        n: the lenght of P.
+        k: the classe.
+        splitting_choice (optional): special splitting choice (exemple (2,2))
+    """
+    for c in findCombinations(n): 
+        if len(c) == k and np.array_equal(c,splitting_choice):
+            yield c
+
 def getPartitionSchemes(n, k):
     """ Return the list of partition schemes
+        n: the lenght of P.
+        k: the classe.
     """
     for c in findCombinations(n): 
         if len(c) == k:
@@ -84,28 +100,46 @@ class Partition():
         assert(isinstance(s,str))
         return self.label_to_state[s]
 
-    def GetClasses(self,k):
-        return getPartitionSchemes(self._n,k)
+    def GetClasses(self,k, splitting_choice=None):
+        if splitting_choice is not None:
+            return getPartitionSchemesWithSplitting(self._n,k,splitting_choice)
+        else:
+            return getPartitionSchemes(self._n,k)
 
-    def GetLabeled(self,k, new_state=None):
+    def GetLabeled(self,k, new_state=None, splitting_choice=None, coordinate_choice=None):
         """ Return the random partition for k classes
             The partition is translated with the state labels
+            new_state: associate the labeled partition with the new partition (usually prefixed by the string NS)
+            splitting_choice: specify a splitting choice for the class k (for example if n=4, k=2, splitting_choice can be np.array([1,3]) or np.array([2,2]))
         """
 
         ### AddStateLabels must be called first
         if self.state_to_label:
-            partitions_as_string = [eval(a) for a in getPartitions(self._s,self.GetClasses(k))]
-            np.random.shuffle(partitions_as_string)
+            partitions_as_string = (eval(a) for a in getPartitions(self._s,self.GetClasses(k,splitting_choice),coordinate_choice))
 
+            if coordinate_choice: 
+                iterator = iter(coordinate_choice) 
+            
             for partition_as_tuple in partitions_as_string:
                 r = []
+                ### comment for main_parallel !
+                if coordinate_choice: 
+                    iterator = iter(coordinate_choice)
+ 
                 for i,c in enumerate(partition_as_tuple):
                     if new_state:
                         for a in c:
-                            r.append((*tuple([self.state_to_label[a]]),new_state+str(i)))
+                            NS = new_state+str(next(iterator)) if coordinate_choice else new_state+str(i)
+                            r.append((*tuple([self.state_to_label[a]]),NS))
                     else:
                         r.append(tuple(self.state_to_label[a] for a in c))
-
+                
+                if coordinate_choice:
+                    # using sort() + lambda + index() 
+                    # to sort according to other list  
+                    sort_order = [self.state_to_label[i] for i in range(4)]
+                    r.sort(key = lambda i: sort_order.index(i[0])) # works in python 3
+                    
                 yield r
         
     def Get(self,k):
