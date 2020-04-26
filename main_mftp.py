@@ -2,13 +2,13 @@
 # -*- coding: utf-8 -*-
 
 #######################################################################
-### Name: main_parallel_3.py
+### Name: main_mftp.py
 ### Author: L. Capocchi
 ### Version: 2.0
-### Description: script to compute the best partition of a (pykov) ergotic Markov chain using the KL rate. See the __main__ for the usage. 
+### Description: script to compute the correlation between Mean First Passage Time and partioning of a Markov chain. See the __main__ for the usage. 
 ### Dependencies: pykov, networkx, numpy, tdqm
 ### Python version: 3.7
-### Date: 04/22/2020
+### Date: 04/23/2020
 #######################################################################
 
 import pykov, sys, time, random
@@ -23,7 +23,18 @@ from sys import platform
 from pprint import pprint
 from Partition3 import Partition
 from Lifting import *
-from main_mftp import *
+
+def get_mfpt(P):
+    t = { (s1,s2):v for s1 in P.states() for s2,v in P.mfpt_to(s1).items()}
+    r = {}
+    for k,v in t.items():
+        a = tuple(sorted(k))
+        if a not in r.keys():
+            r[a]=v
+        else:
+            r[a]-=v
+
+    return [(k[0],k[1],abs(v)) for k,v in r.items()]
 
 def get_best_partition(k,partitionObject,S,P,Pi,coordinate_choice):
 
@@ -48,11 +59,6 @@ def get_best_partition(k,partitionObject,S,P,Pi,coordinate_choice):
         
         ### compute the kl rate
         Q = Lump(partition, Pi, P)
-        
-        ### Q must be ergotic i.e. the transition matrix must be irreducible and acyclic.            
-        #G = nx.DiGraph(list(Q.keys()), directed=True)
-        #assert nx.is_strongly_connected(G) and nx.is_aperiodic(G), f"Matrix is not ergotic!"
-
         p = par[str(partition)]
         Q_mu = Lifting(Q, Pi, S, p)
         kl = KL(S, P, Pi, Q_mu)
@@ -103,37 +109,12 @@ if __name__ == '__main__':
 
                 # starting time
                 start = time.time()
-
-                #P = pykov.Chain()
-                #with open(fn,'r') as f:
-                #    for s in f.readlines():
-                #        s1,s2,p = s.split(' ')
-                #        print(p.strip())
-                #        P[(s1,s2)]=float(p.strip())
-
+                
                 ### Markov matrix
                 P = pykov.readmat(fn)
 
-                #def steady_state_prop(
-                #    p=np.matrix([
-                #            [0,.2,.4,.4],
-                #            [.2,0,.4,.4],
-                #            [.2,.3,0,.5],
-                #            [.3,.4,.3,0]
-                #            ])):
-                #        dim = p.shape[0]
-                #        q = (p-np.eye(dim))
-                #        ones = np.ones(dim)
-                #        q = np.c_[q,ones]
-                #        QTQ = np.dot(q, q.T)
-                #        bQT = np.ones(dim)
-                #        return np.linalg.solve(QTQ,bQT)
-
-                #print(steady_state_prop())
-
+                ### Steady
                 Pi = P.steady()
-
-                assert(Pi.sum()!=0)
 
                 ### list of labeled states (dont use S = list(P.states() due to the unordered resulting list)
                 S = []
@@ -147,53 +128,7 @@ if __name__ == '__main__':
 
                 ### number of state
                 n = len(S)
-                    
-                if z is not None:
-                    zz = list(map(int, str(z)))
-                    assert len(zz)==n, f'The number of coordinates len({z})={len(zz)} must be equal to n ({n})'
 
-                ### parallel processing
-                K = range(k,k+1) if k else range(1,n)
-
-                ### Partition object
-                partitionObject = Partition(n)
-                partitionObject.AddStateLabels(S)
-
-                ### for Windows support
-                if platform == "win32":
-                    pool = Pool(initializer=tqdm.set_lock, initargs=(Lock(),))
-                else: 
-                    pool = Pool()
-
-                mapped_values = tqdm(pool.imap_unordered(partial(get_best_partition, partitionObject=partitionObject, S=S, P=P, Pi=Pi, coordinate_choice=z), K), desc='Optimal partitioning process', total=len(K))
-
-                #pool = Pool()
-                #mapped_values = pool.imap_unordered(partial(get_best_partition,  partitionObject=partitionObject, S=S, P=P, Pi=Pi, splitting_choice=c,coordinate_choice=z), K)
-
-                ### find best partition by minimizing
-                kl = sys.maxsize
-                result = None
-                for d in mapped_values:
-                    for k,v in d.items():
-                        if v[0]<kl:
-                            kl=v[0]
-                            result=v
-            
-                ### Print section #########################################################
-                print("\nStates:",S)
-                print(f"Best KL rate: {result[0]: .4f}")                   
-                print(f"Best partition: {result[1]} ({partitionObject.GetNumberedPartition(result[1])})")
-                #print("Best lumped matrix: ")
-                #pprint(result[-1])
-
-                # ### test
-                #print("\nSteady of the original: ",P.steady())
-                #print("Steady of the lumped: ",result[-1].steady())
-
-                ### absorbing_time(transient_set)
-                #vec = pykov.Vector({'R':.1, 'C':.1})
-                #tau = P.absorbing_time(vec.keys())
-                #print(tau, vec.keys())
 
                 ### Best K based on Generalized Degree
                 MFTP = get_mfpt(P)
@@ -214,40 +149,26 @@ if __name__ == '__main__':
                 edges_with_weights = [ (s1,s2,v) for s1 in P.states() for s2,v in P.mfpt_to(s1).items()]
                 pprint(sorted(edges_with_weights, key=lambda tup: tup[-1]))
                 
+                max_mftp = sorted(edges_with_weights, key=lambda tup: tup[-1])[-1][-1]
+                interval = max_mftp/k
+                
                 d = {}
                 for c in edges_with_weights:
+                    num_cls = int(round(c[-1]/interval))
+                    if num_cls == 0:
+                        num_cls = 1
                     if c[0] not in d:
-                        d[c[0]] = {'V':[c[-1]], 'S':[c[1]]}
+                        d[c[0]] = set([num_cls-1])
                     else:
-                        d[c[0]]['V'].append(c[-1])
-                        d[c[0]]['S'].append(c[1]) 
-                
+                        d[c[0]].add(num_cls-1)
+
+                print(S)
                 print(d)
-                dd = {}
-                for k,v in d.items():
-                    diff = [abs(x[1]-x[0]) for x in zip(v['V'][1:],v['V'][:-1])]
-                    dd[k] = diff
-                    #dd[k]={'diff':diff}
-                    #dd[k]['sum'] = sum(dd[k]['diff'])
-
-                print([k for k, v in sorted(dd.items(), key=lambda item: item[1])])
                 
-                #max_mftp = sorted(edges_with_weights, key=lambda tup: tup[-1])[-1][-1]
-                #interval = max_mftp/k
-                
-                #d = {}
-                #for c in edges_with_weights:
-                #    num_cls = int(round(c[-1]/interval))
-                #    if num_cls == 0:
-                #        num_cls = 1
-                #    if c[0] not in d:
-                #        d[c[0]] = set([num_cls-1])
-                #    else:
-                #        d[c[0]].add(num_cls-1)
+                print("Possible partitions:")
+                pprint([a for a in itertools.product(*[list(d[s]) for s in S]) if k-1 in a])
 
-                #print("Possible partitions:")
-                #print(d)
-                #pprint([a for a in itertools.product(*[list(d[s]) for s in S]) if k-1 in a])
+                ############################################################################
 
                 # end time
                 end = time.time()

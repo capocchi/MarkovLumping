@@ -54,7 +54,7 @@ def Lump(partition, Pi, P):
     new_pi = pykov.Vector()
     for new_state, sub_partition in partition.items():
         new_pi[new_state] = np.sum([Pi[s] for s in sub_partition])
-
+    
     ### new lumped markov chain
     new_chain = pykov.Chain()
     for pair in itertools.product(partition.keys(), repeat=2):
@@ -66,7 +66,8 @@ def Lump(partition, Pi, P):
         for state in L2:
             sum2 = np.sum([P[(state,s)] for s in L1])
             new_p_ij += Pi[state]*sum2
-
+        
+        #print(new_pi[p0])
         new_chain[pair] = new_p_ij/new_pi[p0]
 
     return new_chain
@@ -145,45 +146,6 @@ def process(partition, M, P, new_states, S, par):
     neta = Neta(p, tetha, M, new_states, S)
     kl = KL(P, Q_mu)
     return np.gradient(neta)*kl
-
-# def Lifting2(Q, Pi, S, partition):
-#     D = {}
-#     d = dict(partition)
-#     for i in S:
-#         a = d[i]
-#         for j in S:
-#             b = d[j]
-#             num = Pi[j]*Q[a, b]
-#             deno = np.sum([Pi[c[0]] for c in partition if b in c])
-#             D[(i,j)] = num/deno
-
-#     return D
-
-# def Lump2(partition, Pi, P):
-#     """ exact lumpability
-#     """
-#     ### new pi vector
-#     new_pi = {}
-#     for new_state, sub_partition in partition.items():
-#         T = tuple(eval(sub_partition))
-#         v = sum([Pi[s] for s in T])
-#         new_pi[new_state] = v
-
-#     ### new lumped markov chain
-#     new_chain = {}
-#     for pair in itertools.product(partition.keys(), repeat=2):
-#         # print pair
-#         new_p_ij = 0
-#         p0,p1 = pair
-#         L1 = tuple(eval(partition[p1]))
-#         L2 = tuple(eval(partition[p0]))
-#         for state in L2:
-#             sum2 = sum(list(map(lambda s: P.GetProbabiltyValue(state,s), L1))) #P[(state,s)], L1))
-#             new_p_ij += Pi[state]*sum2
-
-#         new_chain[pair] = new_p_ij/new_pi[p0]
-
-#     return new_chain
 
 
 if __name__ == '__main__':
