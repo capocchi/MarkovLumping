@@ -32,10 +32,14 @@ def get_best_partition(k,partitionObject,S,P,Pi,coordinate_choice):
     #print(next(partitionObject.GetLabeled(k, 'NS', coordinate_choice)))
     #print(next(partitionObject.GetLabeled(k, 'NS', coordinate_choice)))
 
+#    partitions = []
+    
     ### compute all partitions for a given k (optional coordinate_choice)
     pbar = tqdm(partitionObject.GetLabeled(k, 'NS', coordinate_choice=coordinate_choice), unit='part', position=k, total=None if coordinate_choice else partitionObject.Count(k))
     for p in pbar:
-    
+
+ #       partitions.append(p)
+ 
         ### one partition for k classes and formated to be computed by Lump and more functions...
         partition = {}
         for a, b in p:
@@ -45,7 +49,7 @@ def get_best_partition(k,partitionObject,S,P,Pi,coordinate_choice):
         #partition = {'NS0':"('S')", 'NS1':"('R','C')"}
 
         par = {str(partition):[(v, k1) for k1,v1 in partition.items() for v in v1]}
-        
+
         ### compute the kl rate
         Q = Lump(partition, Pi, P)
         
@@ -56,18 +60,20 @@ def get_best_partition(k,partitionObject,S,P,Pi,coordinate_choice):
         p = par[str(partition)]
         Q_mu = Lifting(Q, Pi, S, p)
         kl = KL(S, P, Pi, Q_mu)
-
-        #M = 0.0005
-        #new_states = ['NS%i'%i for i in range(n-1)]
-        #for M in np.linspace(0, 0.1, num=1000):
-        #    tetha = np.ones(n)
-        #    neta = Neta(p, tetha, M, new_states, S)
-        #    print(np.gradient(neta)*kl)
-    
+  
         ### store the best kl, the best partition and the lumped matrix Q
         if kl<result[k][0]:
             result[k] = (kl, p, Q)
             pbar.set_description(f"Processing for k={k}, kl={kl :.4f}, par={partitionObject.GetNumberedPartition(p)}")
+
+#    init_state = S[0]
+#    M = 0.1
+#    N = 100
+#    new_states = ['NS%i'%i for i in range(len(S)-1)]
+#    tetha = np.ones(len(S))
+#    T = Tetha(tetha, init_state, partitions, M, new_states, P, Pi, S, N)
+#    print(T[-1])
+#    Analyse(dict(zip(S,T[-1])))
 
     return result
 

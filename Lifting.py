@@ -102,11 +102,12 @@ def Tetha(tetha, init_state, partitions, M, new_states, P, Pi, S, N=500):
         r = np.zeros(l)
         D = {}
         for p in partitions:
+        
             Q = Lump2(p, Pi, P)
             Q_mu = Lifting(Q, Pi, S, p)
             neta = Neta(p, tetha, M, new_states, S)
-            assert(neta>=0)
-            kl = KL(state, Q_mu, P, Pi, S)
+            assert(len(neta)>=0)
+            kl = KL2(state, Q_mu, P, Pi, S)
             D[kl] = neta
 
         Sum = np.zeros(len(S))
@@ -138,6 +139,13 @@ def KL(S, P, Pi, Q_mu):
     
     return r
 
+### KL pour un état i donnée est une partition (intégré dans Q_mu)
+def KL2(i, Q_mu, P, Pi, S):
+    ### To ensure R(P k Q) is finite, we require P to be absolutely
+    ### continuous w.r.t. Q, i.e. Qij = 0 ⇒ Pij = 0.
+    L = filter(lambda a: Q_mu[i,a] != 0.0 and P[i,a] != 0.0, S)
+    return np.sum(list(map(lambda j: Pi[j]*P[i,j]*np.log(P[i,j]/Q_mu[i,j]), L)))
+
 def process(partition, M, P, new_states, S, par):
     Q = Lump(partition, Pi, P)
     p = par[str(partition)]
@@ -147,6 +155,14 @@ def process(partition, M, P, new_states, S, par):
     kl = KL(P, Q_mu)
     return np.gradient(neta)*kl
 
+def Analyse(T):
+    d = {}
+    for c,i in [('S'+str(i),10**i) for i in range(10)]:
+        for k,t in T.items():
+            a,b = str(i*t).split(".")
+            if b[0] != '0' and k not in d.keys():
+                d.update({k:c})
+    print(d)
 
 if __name__ == '__main__':
 
