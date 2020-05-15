@@ -21,7 +21,7 @@ from tqdm import tqdm
 from sys import platform
 
 from pprint import pprint
-from Partition3 import Partition
+from Partition3 import Partition, partition_k
 from Lifting import *
 from main_mftp import *
 
@@ -225,7 +225,8 @@ if __name__ == '__main__':
 
                 ### try to find the k from generalized degree
                 edges_with_weights = [ (s1,s2,v) for s1 in P.states() for s2,v in P.mfpt_to(s1).items()]
-                pprint(sorted(edges_with_weights, key=lambda tup: tup[-1]))
+                edges = sorted(edges_with_weights, key=lambda tup: tup[-1])
+                pprint(edges)
                 
                 d = {}
                 for c in edges_with_weights:
@@ -247,7 +248,26 @@ if __name__ == '__main__':
                 
                 #max_mftp = sorted(edges_with_weights, key=lambda tup: tup[-1])[-1][-1]
                 #interval = max_mftp/k
+                def partiton_gen():
+                    for p1 in range(len(S)):
+                        for p2 in range(p1+1,len(S)):
+                            yield (S[p1],S[p2])
+
+                ### compute all couple with distance regarding all other states
+                dd = {}
+                for i in partiton_gen():
+                    dd[i]=[]
+                    for s in i:
+                        for s1,s2,dist in edges:
+                            if s == s1:
+                                dd[i].append(dist)
                 
+                ### compute the difference
+                for k,v in dd.items():
+                    print(zip(v,v[2:]))
+                    dd[k] = [max(zip(v,v[2:]), key = lambda sub: abs(sub[0]-sub[1]))]
+
+                print(dd)
                 #d = {}
                 #for c in edges_with_weights:
                 #    num_cls = int(round(c[-1]/interval))
