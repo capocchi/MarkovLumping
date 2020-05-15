@@ -118,7 +118,14 @@ if __name__ == '__main__':
                 #        P[(s1,s2)]=float(p.strip())
 
                 ### Markov matrix
-                P = pykov.readmat(fn)
+                try:
+                    P = pykov.readmat(fn)
+                except AttributeError as info:
+                    with open(fn,'r') as f:
+                        for s in f.readlines():
+                            s1,s2,p = s.split(' ')
+                            P[(s1,s2)]=float(p.strip())
+                    
 
                 #def steady_state_prop(
                 #    p=np.matrix([
