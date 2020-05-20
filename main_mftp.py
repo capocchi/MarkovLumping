@@ -39,7 +39,7 @@ def reduce(l:[float])->[float]:
         l = [abs(a-b) for a,b in zip(l[::2], l[1::2])]
     return l
 
-def partiton_gen(S:[str],n:int=2)->tuple:
+def partition_gen(S:[str],n:int=2)->tuple:
     """ Get partitions of lenght n as list of tuple.
     """
     for p1 in range(len(S)):
@@ -62,25 +62,32 @@ def get_ordered_partitions(S:[str],P:pykov.Chain, n:int=2)->[tuple]:
     
     ### compute all couple with distance regarding all other states
     dd = {}
-    for i in partiton_gen(S,n):
-        dd[i]=[]
-        for s in i:
+    for p in partition_gen(S,n):
+        dd[p]=[]
+        for s in p:
             for s1,s2,dist in edges:
-                if s == s1:
-                    dd[i].append(dist)
+                if s == s1 and s2 not in p:
+                    dd[p].append(dist)
 
-    #ddd = {}
+    ddd = {}
     r = 10000000
     for k,v in dd.items():
         l = [abs(a-b) for a,b in zip(v[::2], v[1::2])]
-        var = statistics.variance(l)
-        if var < r:
-            r = var
-            K = k
-        #ddd[k]=statistics.variance(l)
+        ddd[k] = min(l)
 
-    return K
-    
+    mean = statistics.mean(ddd.values())
+    for k,v in ddd.items():
+        if v < mean:
+            print(k,v)
+     
+    ### adaption with Partition
+    from Partition3 import Partition
+    ### Partition object
+    partitionObject = Partition(len(S))
+    partitionObject.AddStateLabels(S)
+    for p in partitionObject.GetLabeled(k=2):
+        print(p)
+
     #a1_sorted_keys = sorted(ddd, key=ddd.get, reverse=False)
 
     #return a1_sorted_keys

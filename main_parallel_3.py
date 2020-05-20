@@ -1,15 +1,41 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#######################################################################
-### Name: main_parallel_3.py
-### Author: L. Capocchi
-### Version: 2.0
-### Description: script to compute the best partition of a (pykov) ergotic Markov chain using the KL rate. See the __main__ for the usage. 
-### Dependencies: pykov, networkx, numpy, tdqm
-### Python version: 3.7
-### Date: 04/22/2020
-#######################################################################
+# -*- coding: utf-8 -*-
+
+# This script is used to compute the best partition of a (pykov) ergotic Markov chain using the KL rate. See the __main__ for the usage.
+# Copyright (C) 2020  Laurent Capocchi
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Email: capocchi@univ-corse.fr
+
+"""Script documentation.
+.. module:: Computes the best partition of a (pykov) ergotic Markov chain using the KL rate.
+   :platform: Unix, Windows, Mac
+.. moduleauthor::
+   Laurent Capocchi <capocchi@univ-corse.fr>
+"""
+__date__ = 'Mai 2020'
+
+__version__ = 1.0
+
+__license__ = 'GNU General Public License Version 3'
+
+__authors__ = 'Laurent Capocchi'
+
+__many_thanks_to__ = 'Jean-François Santucci'
 
 import pykov, sys, time, random
 import networkx as nx
@@ -25,7 +51,9 @@ from Partition3 import Partition, partition_k
 from Lifting import *
 from main_mftp import *
 
-def get_best_partition(k,partitionObject,S,P,Pi,coordinate_choice):
+def _get_best_partition(k,partitionObject,S,P,Pi,coordinate_choice):
+    """
+    """
 
     result = {k:[sys.maxsize, None, None]}
 
@@ -78,6 +106,15 @@ def get_best_partition(k,partitionObject,S,P,Pi,coordinate_choice):
     return result
 
 if __name__ == '__main__':
+    """
+        >>> python main_parallel_3.py 4x4.dat 2 1212
+        Processing for k=2, kl=0.4429, par=1212: : 1part [00:00, 705.99part/s]                                               | 0/1 [00:00<?, ?it/s]
+        Optimal partitioning process: 100%|██████████████████████████████████████████████████████████████████████████| 1/1 [00:01<00:00,  1.13s/it]
+        Processing for k=2, kl=0.4429, par=1212: : 0part [00:00, ?part/s]
+        States: ['S', 'R', 'C', 'D']
+        Best KL rate:  0.4429
+        Best partition: [('S', 'NS1'), ('C', 'NS1'), ('R', 'NS2'), ('D', 'NS2')] (1212)
+    """
 
     # for Windows support of tqdm
     if platform == "win32":
@@ -153,10 +190,10 @@ if __name__ == '__main__':
                 else: 
                     pool = Pool()
 
-                mapped_values = tqdm(pool.imap_unordered(partial(get_best_partition, partitionObject=partitionObject, S=S, P=P, Pi=Pi, coordinate_choice=z), K), desc='Optimal partitioning process', total=len(K))
+                mapped_values = tqdm(pool.imap_unordered(partial(_get_best_partition, partitionObject=partitionObject, S=S, P=P, Pi=Pi, coordinate_choice=z), K), desc='Optimal partitioning process', total=len(K))
 
                 #pool = Pool()
-                #mapped_values = pool.imap_unordered(partial(get_best_partition,  partitionObject=partitionObject, S=S, P=P, Pi=Pi, splitting_choice=c,coordinate_choice=z), K)
+                #mapped_values = pool.imap_unordered(partial(_get_best_partition,  partitionObject=partitionObject, S=S, P=P, Pi=Pi, splitting_choice=c,coordinate_choice=z), K)
 
                 ### find best partition by minimizing
                 kl = sys.maxsize
