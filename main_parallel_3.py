@@ -242,7 +242,7 @@ if __name__ == '__main__':
                 #pprint(edges)
                 
                 ###  Mean First Passage Times Analysis ###################################
-                print(f"\nOrdered list of pairs (best to worst): {get_ordered_partitions(S,P,2)}")
+                print(f"\nOrdered list of pairs (best to worst): {list(get_ordered_partitions(S,P))}")
 
                 # end time
                 end = time.time()

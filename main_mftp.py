@@ -20,6 +20,8 @@ from sys import platform
 from multiprocessing import freeze_support
 from pprint import pprint
 
+from Partition3 import Partition
+
 def get_mfpt(P:pykov.Chain)->[tuple]:
     """ Get mfpt of Markov chain P as list of tuple.
     """
@@ -46,65 +48,45 @@ def partition_gen(S:[str],n:int=2)->tuple:
         for p2 in range(p1+(n-1),len(S)):
             yield (S[p1],S[p2])
 
-def get_ordered_partitions(S:[str],P:pykov.Chain, n:int=2)->[tuple]:
+def get_edges_with_weights(P):
+    """
+    """  
+    for s1 in P.states():
+        for s2,v in P.mfpt_to(s1).items():
+            yield (s1,s2,v)
+
+def get_ordered_partitions(S:[str],P:pykov.Chain)->[tuple]:
     """ Get orderded list of partitions.
     """
-    edges_with_weights = [(s1,s2,v) for s1 in P.states() for s2,v in P.mfpt_to(s1).items()]
-    edges = sorted(edges_with_weights, key=lambda tup: tup[-1])
+    #edges = sorted(edges_with_weights, key=lambda tup: tup[-1])
     
-    d = {}
-    for c in edges_with_weights:
-        if c[0] not in d:
-            d[c[0]] = {'V':[c[-1]], 'S':[c[1]]}
-        else:
-            d[c[0]]['V'].append(c[-1])
-            d[c[0]]['S'].append(c[1]) 
+    n = len(S)
+    partitionObject = Partition(n)
+    partitionObject.AddStateLabels(S)
     
-    ### compute all couple with distance regarding all other states
     dd = {}
-    for p in partition_gen(S,n):
-        dd[p]=[]
-        for s in p:
-            for s1,s2,dist in edges:
-                if s == s1 and s2 not in p:
-                    dd[p].append(dist)
+    ### k/2 is the best choice ?
+    for c in partitionObject.GetLabeled(k=n/2):
+        for p in c:
+            ### si == 2 uniquement que les partitions à deux états
+            if (len(p)>=2) and (p not in dd):
+                ### TODO ajouter c (pas p)
+                dd[p]=[]
+                for s in p:
+                    for s1,s2,dist in get_edges_with_weights(P):
+                        if s == s1 and s2 not in p:
+                            dd[p].append(dist)
 
     ddd = {}
-    r = 10000000
     for k,v in dd.items():
-        l = [abs(a-b) for a,b in zip(v[::2], v[1::2])]
-        ddd[k] = min(l)
+        ddd[k] = min([abs(a-b) for a,b in zip(v[::2], v[1::2])]) 
 
     mean = statistics.mean(ddd.values())
     for k,v in ddd.items():
         if v < mean:
-            print(k,v)
-     
-    ### adaption with Partition
-    from Partition3 import Partition
-    ### Partition object
-    partitionObject = Partition(len(S))
-    partitionObject.AddStateLabels(S)
-    for p in partitionObject.GetLabeled(k=2):
-        print(p)
-
-    #a1_sorted_keys = sorted(ddd, key=ddd.get, reverse=False)
-
-    #return a1_sorted_keys
-
-    #d = {}
-    #for c in edges_with_weights:
-    #    num_cls = int(round(c[-1]/interval))
-    #    if num_cls == 0:
-    #        num_cls = 1
-    #    if c[0] not in d:
-    #        d[c[0]] = set([num_cls-1])
-    #    else:
-    #        d[c[0]].add(num_cls-1)
-
-    #print("Possible partitions:")
-    #print(d)
-    #pprint([a for a in itertools.product(*[list(d[s]) for s in S]) if k-1 in a])
+            #### les couples sont les meilleurs partitions !
+            if len(k) == 2:
+                yield k
 
 if __name__ == '__main__':
 
@@ -146,19 +128,19 @@ if __name__ == '__main__':
         assert nx.is_strongly_connected(G) and nx.is_aperiodic(G), f"Matrix is not ergotic!"
 
         ### Best K based on Generalized Degree
-        MFTP = get_mfpt(P)
+        #MFTP = get_mfpt(P)
         #pprint(sorted(MFTP, key=lambda tup: tup[-1]))
 
-        G = nx.Graph()
-        G.add_weighted_edges_from(MFTP)
+        #G = nx.Graph()
+        #G.add_weighted_edges_from(MFTP)
         
-        l = list(set([v2 for v1 in nx.generalized_degree(G).values() for v2 in v1.values()]))
-        assert(len(l)==1)
-        k = l[0]
-        print("\nBest k based on Generalized Degree:",k)
+        #l = list(set([v2 for v1 in nx.generalized_degree(G).values() for v2 in v1.values()]))
+        #assert(len(l)==1)
+        #k = l[0]
+        #print("\nBest k based on Generalized Degree:",k)
 
         ###  Mean First Passage Times Analysis ###################################
-        print(f"\nOrdered list of pairs (best to worst): {get_ordered_partitions(S,P,2)}")
+        print(f"\nOrdered list of pairs (best to worst): {list(get_ordered_partitions(S,P))}")
         
         # end time
         end = time.time()
