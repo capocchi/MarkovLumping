@@ -25,7 +25,7 @@ from Partition3 import Partition
 def get_mfpt(P:pykov.Chain)->[tuple]:
     """ Get mfpt of Markov chain P as list of tuple.
     """
-    t = { (s1,s2):v for s1 in P.states() for s2,v in P.mfpt_to(s1).items()}
+    t = {(s1,s2):v for s1 in P.states() for s2,v in P.mfpt_to(s1).items()}
     r = {}
     for k,v in t.items():
         a = tuple(sorted(k))
@@ -36,18 +36,6 @@ def get_mfpt(P:pykov.Chain)->[tuple]:
         
     return [(k[0],k[1],abs(v)) for k,v in r.items()]
 
-def reduce(l:[float])->[float]:
-    while(len(l)>=2):
-        l = [abs(a-b) for a,b in zip(l[::2], l[1::2])]
-    return l
-
-def partition_gen(S:[str],n:int=2)->tuple:
-    """ Get partitions of lenght n as list of tuple.
-    """
-    for p1 in range(len(S)):
-        for p2 in range(p1+(n-1),len(S)):
-            yield (S[p1],S[p2])
-
 def get_edges_with_weights(P):
     """
     """  
@@ -55,7 +43,7 @@ def get_edges_with_weights(P):
         for s2,v in P.mfpt_to(s1).items():
             yield (s1,s2,v)
 
-def get_ordered_partitions(S:[str],P:pykov.Chain)->[tuple]:
+def get_ordered_partitions(S:[str],P:pykov.Chain)->tuple:
     """ Get orderded list of partitions.
     """
     #edges = sorted(edges_with_weights, key=lambda tup: tup[-1])
@@ -63,7 +51,8 @@ def get_ordered_partitions(S:[str],P:pykov.Chain)->[tuple]:
     n = len(S)
     partitionObject = Partition(n)
     partitionObject.AddStateLabels(S)
-    
+    edges = set(get_edges_with_weights(P))
+
     dd = {}
     ### k/2 is the best choice ?
     for c in partitionObject.GetLabeled(k=n/2):
@@ -73,7 +62,7 @@ def get_ordered_partitions(S:[str],P:pykov.Chain)->[tuple]:
                 ### TODO ajouter c (pas p)
                 dd[p]=[]
                 for s in p:
-                    for s1,s2,dist in get_edges_with_weights(P):
+                    for s1,s2,dist in edges:
                         if s == s1 and s2 not in p:
                             dd[p].append(dist)
 
@@ -140,7 +129,9 @@ if __name__ == '__main__':
         #print("\nBest k based on Generalized Degree:",k)
 
         ###  Mean First Passage Times Analysis ###################################
-        print(f"\nOrdered list of pairs (best to worst): {list(get_ordered_partitions(S,P))}")
+        print(f"\nOrdered list of pairs (best to worst):")
+        for p in get_ordered_partitions(S,P):
+            print(p)
         
         # end time
         end = time.time()
