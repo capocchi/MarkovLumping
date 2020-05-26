@@ -3,6 +3,8 @@
 
 import sys, math
 
+from decimal import Decimal
+
 def calculS(n,k):
     """ from https://www.prepamag.fr/concours/pdf/corriges.pdf.extraits/2017/PC_MATHS_CENTRALE_1_2017.extrait.pdf
     """
@@ -14,7 +16,7 @@ def calculS(n,k):
         return calculS(n-1,k-1) + k*calculS(n-1,k)
     
 def calculSbyGordon(n,k):
-    return int(sum([pow(-1,i)*pow(k-i,n)/(math.factorial(k-i)*math.factorial(i)) for i in range(k)])) if 1<= k < n else 1
+    return int(sum([pow(-1,i)*pow(k-i,n)//(math.factorial(k-i)*math.factorial(i)) for i in range(k)])) if 1<= k < n else 1
 
 if __name__ == '__main__':
 
@@ -29,7 +31,7 @@ if __name__ == '__main__':
         #print(nbPartition)
         
         ### from P. Gordon
-        print('{:.2e}'.format(calculSbyGordon(n,k)))
+        print('{:.2e}'.format(Decimal(calculSbyGordon(n,k))))
 
     ### $ python nbPartitions 8 
     ### return the list of numbers of k=1,2,3,...7 classes in n=8 elements   
@@ -42,10 +44,12 @@ if __name__ == '__main__':
         with mp.Pool(mp.cpu_count()) as pool:
             r = pool.starmap(calculSbyGordon, [(n,k) for k in range(n)])
 
+        print("Total number of partition:",'{:.2e}'.format(Decimal(sum(r))))
+
         #print(['{:.2e}'.format(x) for x in r])
 
         import matplotlib.pyplot as plt
-        r = list(map(float,r))
+        r = list(map(Decimal,r))
         plt.plot(r)
         plt.ylabel('Number of partitions')
         plt.xlabel('Number of classes k')

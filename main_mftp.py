@@ -11,7 +11,7 @@
 ### Date: 04/23/2020
 #######################################################################
 
-import pykov, sys, time, random
+import pykov, sys, time
 import networkx as nx
 import numpy as np
 import statistics
@@ -70,7 +70,9 @@ def get_ordered_partitions(S:[str],P:pykov.Chain)->tuple:
     for k,v in dd.items():
         ddd[k] = min([abs(a-b) for a,b in zip(v[::2], v[1::2])]) 
 
+    #print(len(ddd))
     mean = statistics.mean(ddd.values())
+    print(mean)
     for k,v in ddd.items():
         if v < mean:
             #### les couples sont les meilleurs partitions !
@@ -130,8 +132,13 @@ if __name__ == '__main__':
 
         ###  Mean First Passage Times Analysis ###################################
         print(f"\nOrdered list of pairs (best to worst):")
+        
+        count = 0
         for p in get_ordered_partitions(S,P):
-            print(p)
+            #print(p)
+            count+=1
+            
+        print(f"Number of possible best partitions:{count}") 
         
         # end time
         end = time.time()
