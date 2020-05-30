@@ -36,7 +36,7 @@ def get_mfpt(P:pykov.Chain)->[tuple]:
         
     return [(k[0],k[1],abs(v)) for k,v in r.items()]
 
-def get_edges_with_weights(P):
+def get_edges_with_weights(P:pykov.Chain)->tuple:
     """
     """  
     for s1 in P.states():
@@ -51,7 +51,7 @@ def get_ordered_partitions(S:[str],P:pykov.Chain)->tuple:
     n = len(S)
     partitionObject = Partition(n)
     partitionObject.AddStateLabels(S)
-    edges = set(get_edges_with_weights(P))
+    #edges = get_edges_with_weights(P)
 
     dd = {}
     ### k/2 is the best choice ?
@@ -62,18 +62,16 @@ def get_ordered_partitions(S:[str],P:pykov.Chain)->tuple:
                 ### TODO ajouter c (pas p)
                 dd[p]=[]
                 for s in p:
-                    for s1,s2,dist in edges:
+                    for s1,s2,dist in get_edges_with_weights(P):
                         if s == s1 and s2 not in p:
                             dd[p].append(dist)
 
-    ddd = {}
-    for k,v in dd.items():
-        ddd[k] = min([abs(a-b) for a,b in zip(v[::2], v[1::2])]) 
+                dd[p] = min([abs(a-b) for a,b in zip(dd[p][::2], dd[p][1::2])])
 
-    #print(len(ddd))
-    mean = statistics.mean(ddd.values())
-    print(mean)
-    for k,v in ddd.items():
+    #print(len(dd))
+    mean = statistics.mean(dd.values())
+    #print(mean)
+    for k,v in dd.items():
         if v < mean:
             #### les couples sont les meilleurs partitions !
             if len(k) == 2:
@@ -135,7 +133,7 @@ if __name__ == '__main__':
         
         count = 0
         for p in get_ordered_partitions(S,P):
-            #print(p)
+            print(p)
             count+=1
             
         print(f"Number of possible best partitions:{count}") 
