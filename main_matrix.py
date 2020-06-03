@@ -11,7 +11,7 @@ ERGOTIC_TEST=True
 ### write the matrix in filename given as parmeter
 WRITE_FILE = True
 ### if True, max values is on the diag, else we shuffle the matrix
-MAX_DIAG = False
+MAX_DIAG = True
 
 def randomStringDigits(stringLength=4):
     """Generate a random string of letters and digits """

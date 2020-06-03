@@ -48,11 +48,11 @@ if __name__ == '__main__':
 
         #print(['{:.2e}'.format(x) for x in r])
 
-        import matplotlib.pyplot as plt
-        r = list(map(Decimal,r))
-        plt.plot(r)
-        plt.ylabel('Number of partitions')
-        plt.xlabel('Number of classes k')
-        plt.axis([0, n, 0, max(r)])
-        plt.grid(True)
-        plt.show()
+ #       import matplotlib.pyplot as plt
+ #       r = list(map(Decimal,r))
+ #       plt.plot(r)
+ #       plt.ylabel('Number of partitions')
+ #       plt.xlabel('Number of classes k')
+ #       plt.axis([0, n, 0, max(r)])
+ #       plt.grid(True)
+ #       plt.show()

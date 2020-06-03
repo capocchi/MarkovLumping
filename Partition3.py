@@ -100,7 +100,7 @@ class Partition():
 
                 for partition in partitions:
                     r = []
-                            
+
                     for i,c in enumerate(partition):
                         if new_state:
                             for a in c:

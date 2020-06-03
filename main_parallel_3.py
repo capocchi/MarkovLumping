@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# -*- coding: utf-8 -*-
-
 # This script is used to compute the best partition of a (pykov) ergotic Markov chain using the KL rate. See the __main__ for the usage.
 # Copyright (C) 2020  Laurent Capocchi
 #
@@ -211,38 +209,63 @@ if __name__ == '__main__':
                 #print("Best lumped matrix: ")
                 #pprint(result[-1])
 
+                # end time
+                end = time.time()
+
+                # total time taken
+                print(f"`\nRuntime of the program is {end - start}")
+
                 # ### test
                 #print("\nSteady of the original: ",P.steady())
                 #print("Steady of the lumped: ",result[-1].steady())
 
-                ### absorbing_time(transient_set)
-                #vec = pykov.Vector({'R':.1, 'C':.1})
-                #tau = P.absorbing_time(vec.keys())
-                #print(tau, vec.keys())
+#                ### Best K based on Generalized Degree
+#                MFTP = get_mfpt(P)
+#                #pprint(sorted(MFTP, key=lambda tup: tup[-1]))
 
-                ### Best K based on Generalized Degree
-                MFTP = get_mfpt(P)
-                #pprint(sorted(MFTP, key=lambda tup: tup[-1]))
-
-                G = nx.Graph()
-                G.add_weighted_edges_from(MFTP)
+#                G = nx.Graph()
+#                G.add_weighted_edges_from(MFTP)
                 
-                l = list(set([v2 for v1 in nx.generalized_degree(G).values() for v2 in v1.values()]))
-                assert(len(l)==1)
-                k = l[0]
-                print("\nBest k based on Generalized Degree:",k)
+#                l = list(set([v2 for v1 in nx.generalized_degree(G).values() for v2 in v1.values()]))
+#                assert(len(l)==1)
+#                k = l[0]
+#                print("\nBest k based on Generalized Degree:",k)
 
                 ###  Mean First Passage Times Analysis ###################################
                 #print("\nMean First Passage Times of P:")
 
                 ### try to find the k from generalized degree
-                edges_with_weights = [ (s1,s2,v) for s1 in P.states() for s2,v in P.mfpt_to(s1).items()]
-                edges = sorted(edges_with_weights, key=lambda tup: tup[-1])
+                #edges_with_weights = [ (s1,s2,v) for s1 in P.states() for s2,v in P.mfpt_to(s1).items()]
+                #edges = sorted(edges_with_weights, key=lambda tup: tup[-1])
                 
                 #pprint(edges)
                 
+                # starting time
+                start = time.time()
+
+                ### extract the best partiton with the good format ('S1','S2')
+                import statistics
+                from statistics import mode 
+                d = dict(result[1])
+                NS = mode(d.values())
+
+                best_partition = tuple(k for k,v in d.items() if v == NS)
+
                 ###  Mean First Passage Times Analysis ###################################
-                print(f"\nOrdered list of pairs (best to worst): {list(get_ordered_partitions(S,P))}")
+                ### find to know if the best partition is in the list of best pair finded using mftp!
+                
+                count = 0
+                L = get_ordered_partitions(S,P)
+                flag = 'not finded...'
+                for c in L:
+                    s1,s2 = best_partition
+                    if s1 in c and s2 in c:
+                        flag = 'finded'
+                        break
+
+                print(f"\nNew state: {best_partition} ({NS}) {flag} amoung {len(list(get_ordered_partitions(S,P)))} pairs")
+
+                #print(f"\nOrdered list of pairs (best to worst): {list(get_ordered_partitions(S,P))}")
 
                 # end time
                 end = time.time()

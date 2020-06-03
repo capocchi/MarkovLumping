@@ -43,6 +43,42 @@ def get_edges_with_weights(P:pykov.Chain)->tuple:
         for s2,v in P.mfpt_to(s1).items():
             yield (s1,s2,v)
 
+__getMFTP_cache = {}
+def getMFTP(P:pykov.Chain,s):
+    if s not in __getMFTP_cache:
+        __getMFTP_cache[s] = P.mfpt_to(s).items()
+    return __getMFTP_cache[s]
+
+def getMFTPs(P:pykov.Chain,p)->float:
+    L = [v for s in p for s2,v in getMFTP(P,s) if s2 not in p]
+    return min([abs(a-b) for a,b in zip(L[::2], L[1::2])])
+
+def getMFTPs2(P:pykov.Chain,p)->float:
+    #L = []
+    for s in p:
+        a = None
+        b = None
+        r = 0.0
+        min = 100000000
+        #for s1,s2,dist in get_edges_with_weights(P):
+        for s2,v in getMFTP(P,s):
+            #if s == s1 and s2 not in p:
+            if s2 not in p:
+                if a:
+                    b=v
+                else:
+                    a=v
+                if a and b:
+                    r = abs(a-b)
+                    if r < min:
+                        min = r
+                    a = None
+                    b = None
+                #dd[p].append(dist)
+                #L.append(v)
+    return min
+    #return min([abs(a-b) for a,b in zip(L[::2], L[1::2])])
+    
 def get_ordered_partitions(S:[str],P:pykov.Chain)->tuple:
     """ Get orderded list of partitions.
     """
@@ -53,20 +89,34 @@ def get_ordered_partitions(S:[str],P:pykov.Chain)->tuple:
     partitionObject.AddStateLabels(S)
     #edges = get_edges_with_weights(P)
 
-    dd = {}
-    ### k/2 is the best choice ?
-    for c in partitionObject.GetLabeled(k=n/2):
-        for p in c:
-            ### si == 2 uniquement que les partitions à deux états
-            if (len(p)>=2) and (p not in dd):
-                ### TODO ajouter c (pas p)
-                dd[p]=[]
-                for s in p:
-                    for s1,s2,dist in get_edges_with_weights(P):
-                        if s == s1 and s2 not in p:
-                            dd[p].append(dist)
+    # dd = {}
+    # ### k=2 is the best choice ?
+    # for c in partitionObject.GetLabeled(k=2):
+        
+    #     ### consider only the partition with 2 states
+    #     for p in c:
+    #         ### si == 2 uniquement que les partitions à deux états
+    #         ### si >=2 toutes les partitions à plusieurs états
+    #         if (len(p)>=2) and (p not in dd):
+    #             ### TODO ajouter c (pas p)
+    #             dd[p]=getMFTPs(P,p)
+        
+    #             # dd[p]=[]
+    #             # for s in p:
+    #             #     #for s1,s2,dist in get_edges_with_weights(P):
+    #             #     for s2,v in getMFTP(P,s):
+    #             #         #if s == s1 and s2 not in p:
+    #             #         if s2 not in p:
+    #             #             dd[p].append(dist)
 
-                dd[p] = min([abs(a-b) for a,b in zip(dd[p][::2], dd[p][1::2])])
+    dd = {}
+    ### k=2 is the best choice ?
+    for c in partitionObject.GetLabeled(k=n-1):
+        length_list = list(map(len,c))
+        ### consider only the partition with 2 states
+        if 2 in length_list:
+            p = c[length_list.index(2)]
+            dd[p]=getMFTPs(P,p)
 
     #print(len(dd))
     mean = statistics.mean(dd.values())
@@ -135,7 +185,7 @@ if __name__ == '__main__':
         for p in get_ordered_partitions(S,P):
             print(p)
             count+=1
-            
+
         print(f"Number of possible best partitions:{count}") 
         
         # end time
