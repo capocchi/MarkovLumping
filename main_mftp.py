@@ -21,6 +21,7 @@ from multiprocessing import freeze_support
 from pprint import pprint
 
 from Partition3 import Partition
+from Lifting import Lump, KL, Lifting
 
 # def get_mfpt(P:pykov.Chain)->[tuple]:
 #     """ Get mfpt of Markov chain P as list of tuple.
@@ -79,7 +80,7 @@ def getMFTPs2(P:pykov.Chain,p)->float:
     return min
     #return min([abs(a-b) for a,b in zip(L[::2], L[1::2])])
     
-def get_ordered_partitions(S:[str],P:pykov.Chain)->tuple:
+def get_ordered_partitions_from_mftp(S:[str],P:pykov.Chain)->tuple:
     """ Get orderded list of partitions.
     """
     #edges = sorted(edges_with_weights, key=lambda tup: tup[-1])
@@ -110,6 +111,7 @@ def get_ordered_partitions(S:[str],P:pykov.Chain)->tuple:
     #             #             dd[p].append(dist)
 
     dd = {}
+    ddd = {}
     ### k=2 is the best choice ?
     for c in partitionObject.GetLabeled(k=n-1):
         length_list = list(map(len,c))
@@ -117,7 +119,7 @@ def get_ordered_partitions(S:[str],P:pykov.Chain)->tuple:
         if 2 in length_list:
             p = c[length_list.index(2)]
             dd[p]=getMFTPs(P,p)
-
+            ddd[p] = c
     #print(len(dd))
 
     mean = statistics.mean(dd.values())
@@ -126,7 +128,7 @@ def get_ordered_partitions(S:[str],P:pykov.Chain)->tuple:
         if v < mean:
             #### les couples sont les meilleurs partitions !
             if len(k) == 2:
-                yield k
+                yield ddd[k]
 
 if __name__ == '__main__':
 
@@ -157,12 +159,14 @@ if __name__ == '__main__':
                     s1,s2,p = s.split(' ')
                     P[(s1,s2)]=float(p.strip())
         
+        Pi = P.steady()
         ### list of labeled states (dont use S = list(P.states() due to the unordered resulting list)
-        S = []
-        for a in [i.strip('\n').split() for i in open(fn)]:
-            if a[0] not in S:
-                S.append(a[0])
-        
+        # S = []
+        # for a in [i.strip('\n').split() for i in open(fn)]:
+        #     if a[0] not in S:
+        #         S.append(a[0])
+        S = tuple(set([a[0] for a in [i.strip('\n').split() for i in open(fn)]]))
+
         ### P must be ergotic i.e. the transition matrix must be irreducible and acyclic.            
         G = nx.DiGraph(list(P.keys()), directed=True)
         assert nx.is_strongly_connected(G) and nx.is_aperiodic(G), f"Matrix is not ergotic!"
@@ -180,15 +184,30 @@ if __name__ == '__main__':
         #print("\nBest k based on Generalized Degree:",k)
 
         ###  Mean First Passage Times Analysis ###################################
-        print(f"\nOrdered list of pairs (best to worst):")
         
         count = 0
-        for p in get_ordered_partitions(S,P):
-            print(p)
+        result = {'kl':1,'partition':None}
+        ### loop on partitions to find the best from the mftp analysis
+        for p in get_ordered_partitions_from_mftp(S,P):
+            partition = {''.join(['NS',str(i)]):a for i,a in enumerate(p)}
+
+            ### compute the kl divergence rate
+            Q = Lump(partition, Pi, P)
+            p = [(v, k1) for k1,v1 in partition.items() for v in v1]
+            Q_mu = Lifting(Q, Pi, S, p)
+            kl = KL(S, P, Pi, Q_mu)
+        
+            ### store the best kl and partition
+            if kl < result['kl']:
+                result['kl']=kl
+                result['partition']=p
+        
             count+=1
 
         print(f"Number of possible best partitions:{count}") 
-        
+        print(f"Best KL :{result['kl']}")
+        print(f"Best partition :{result['partition']}")
+
         # end time
         end = time.time()
 

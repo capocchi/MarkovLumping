@@ -35,7 +35,8 @@ __authors__ = 'Laurent Capocchi'
 
 __many_thanks_to__ = 'Jean-François Santucci'
 
-import pykov, sys, time, random
+import sys, time, random
+import pykov
 import networkx as nx
 import numpy as np
 
@@ -237,35 +238,35 @@ if __name__ == '__main__':
                 
                 #pprint(edges)
                 
-                # starting time
-                start = time.time()
+                # # starting time
+                # start = time.time()
 
-                ### extract the best partiton with the good format ('S1','S2')
-                import statistics
-                from statistics import mode 
-                d = dict(result[1])
-                NS = mode(d.values())
+                # ### extract the best partiton with the good format ('S1','S2')
+                # import statistics
+                # from statistics import mode 
+                # d = dict(result[1])
+                # NS = mode(d.values())
 
-                best_partition = tuple(k for k,v in d.items() if v == NS)
+                # best_partition = tuple(k for k,v in d.items() if v == NS)
 
-                ###  Mean First Passage Times Analysis ###################################
-                ### find to know if the best partition is in the list of best pair finded using mftp!
+                # ###  Mean First Passage Times Analysis ###################################
+                # ### find to know if the best partition is in the list of best pair finded using mftp!
                 
-                count = 0
-                L = get_ordered_partitions(S,P)
-                flag = 'not finded...'
-                for c in L:
-                    s1,s2 = best_partition
-                    if s1 in c and s2 in c:
-                        flag = 'finded'
-                        break
+                # count = 0
+                # L = get_ordered_partitions_from_mftp(S,P)
+                # flag = 'not finded...'
+                # for c in L:
+                #     s1,s2 = best_partition
+                #     if s1 in c and s2 in c:
+                #         flag = 'finded'
+                #         break
 
-                print(f"\nNew state: {best_partition} ({NS}) {flag} amoung {len(list(get_ordered_partitions(S,P)))} pairs")
+                # print(f"\nNew state: {best_partition} ({NS}) {flag} amoung {len(list(get_ordered_partitions_from_mftp(S,P)))} pairs")
 
-                #print(f"\nOrdered list of pairs (best to worst): {list(get_ordered_partitions(S,P))}")
+                # #print(f"\nOrdered list of pairs (best to worst): {list(get_ordered_partitions(S,P))}")
 
-                # end time
-                end = time.time()
+                # # end time
+                # end = time.time()
 
                 # total time taken
-                print(f"`\nRuntime of the program is {end - start}")
+                # print(f"`\nRuntime of the program is {end - start}")
