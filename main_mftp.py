@@ -112,7 +112,6 @@ def get_ordered_partitions(S:[str],P:pykov.Chain)->tuple:
     dd = {}
     ### k=2 is the best choice ?
     for c in partitionObject.GetLabeled(k=n-1):
-        print(c)
         length_list = list(map(len,c))
         ### consider only the partition with 2 states
         if 2 in length_list:

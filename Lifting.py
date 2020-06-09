@@ -7,17 +7,17 @@ import pykov
 import itertools
 
 def Lifting(Q, Pi, S, partition):
-    D = {}
     d = dict(partition)
-    for i in S:
-        a = d[i]
-        for j in S:
-            b = d[j]
-            num = Pi[j]*Q[a, b]
-            deno = np.sum([Pi[c[0]] for c in partition if b in c])
-            D[(i,j)] = num/deno
+    D = {(i,j): Pi[j]*Q[d[i], d[j]]/np.sum([Pi[c[0]] for c in partition if d[j] in c]) for i in S for j in S}
+    # D = {}
+    # for i in S:
+    #     a = d[i]
+    #     for j in S:
+    #         b = d[j]
+    #         deno = np.sum([Pi[c[0]] for c in partition if b in c])
+    #         D[(i,j)] = Pi[j]*Q[a, b]/deno
 
-    return pykov.Chain(D)
+    return D#pykov.Chain(D)
 
 def Lump2(partition, Pi, P):
     """ exact lumpability
@@ -51,24 +51,20 @@ def Lump(partition, Pi, P):
     """ exact lumpability
     """
     ### new pi vector
-    new_pi = pykov.Vector()
-    for new_state, sub_partition in partition.items():
-        new_pi[new_state] = np.sum([Pi[s] for s in sub_partition])
+    new_pi = {new_state:np.sum([Pi[s] for s in sub_partition]) for new_state, sub_partition in partition.items()}
     
     ### new lumped markov chain
-    new_chain = pykov.Chain()
-    for pair in itertools.product(partition.keys(), repeat=2):
-        # print pair
-        new_p_ij = 0
-        p0,p1 = pair
-        L1 = partition[p1]
-        L2 = partition[p0]
-        for state in L2:
-            sum2 = np.sum([P[(state,s)] for s in L1])
-            new_p_ij += Pi[state]*sum2
+    new_chain = { pair:np.sum([Pi[state]*np.sum([P[(state,s)] for s in partition[pair[1]]]) for state in partition[pair[0]]])/new_pi[pair[0]] for pair in itertools.product(partition.keys(), repeat=2)}
+    # new_chain = {}
+    # for pair in itertools.product(partition.keys(), repeat=2):
+    #     # print pair
+    #     p0,p1 = pair
+    #     L1 = partition[p1]
+    #     L2 = partition[p0]
+    #     new_p_ij = np.sum([Pi[state]*np.sum([P[(state,s)] for s in partition[p1]]) for state in partition[p0]])
         
-        #print(new_pi[p0])
-        new_chain[pair] = new_p_ij/new_pi[p0]
+    #     #print(new_pi[p0])
+    #     new_chain[pair] = new_p_ij/new_pi[p0]
 
     return new_chain
 
