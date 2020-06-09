@@ -159,7 +159,6 @@ if __name__ == '__main__':
                     s1,s2,p = s.split(' ')
                     P[(s1,s2)]=float(p.strip())
         
-        Pi = P.steady()
         ### list of labeled states (dont use S = list(P.states() due to the unordered resulting list)
         # S = []
         # for a in [i.strip('\n').split() for i in open(fn)]:
@@ -185,8 +184,11 @@ if __name__ == '__main__':
 
         ###  Mean First Passage Times Analysis ###################################
         
+        #while(len(P)>=4):
+        Pi = P.steady()
         count = 0
-        result = {'kl':1,'partition':None}
+        ### result varaible - kl = 1.0 is the max value; we find the min.
+        result = {'kl':1.0,'partition':None}
         ### loop on partitions to find the best from the mftp analysis
         for p in get_ordered_partitions_from_mftp(S,P):
             partition = {''.join(['NS',str(i)]):a for i,a in enumerate(p)}
@@ -203,6 +205,7 @@ if __name__ == '__main__':
                 result['partition']=p
         
             count+=1
+        #    P = pykov.Chain(Q)
 
         print(f"Number of possible best partitions:{count}") 
         print(f"Best KL :{result['kl']}")
