@@ -22,19 +22,19 @@ from pprint import pprint
 
 from Partition3 import Partition
 
-def get_mfpt(P:pykov.Chain)->[tuple]:
-    """ Get mfpt of Markov chain P as list of tuple.
-    """
-    t = {(s1,s2):v for s1 in P.states() for s2,v in P.mfpt_to(s1).items()}
-    r = {}
-    for k,v in t.items():
-        a = tuple(sorted(k))
-        if a not in r.keys():
-            r[a]=v
-        else:
-            r[a]-=v
+# def get_mfpt(P:pykov.Chain)->[tuple]:
+#     """ Get mfpt of Markov chain P as list of tuple.
+#     """
+#     t = {(s1,s2):v for s1 in P.states() for s2,v in P.mfpt_to(s1).items()}
+#     r = {}
+#     for k,v in t.items():
+#         a = tuple(sorted(k))
+#         if a not in r.keys():
+#             r[a]=v
+#         else:
+#             r[a]-=v
         
-    return [(k[0],k[1],abs(v)) for k,v in r.items()]
+#     return [(k[0],k[1],abs(v)) for k,v in r.items()]
 
 def get_edges_with_weights(P:pykov.Chain)->tuple:
     """
@@ -112,6 +112,7 @@ def get_ordered_partitions(S:[str],P:pykov.Chain)->tuple:
     dd = {}
     ### k=2 is the best choice ?
     for c in partitionObject.GetLabeled(k=n-1):
+        print(c)
         length_list = list(map(len,c))
         ### consider only the partition with 2 states
         if 2 in length_list:
@@ -119,6 +120,7 @@ def get_ordered_partitions(S:[str],P:pykov.Chain)->tuple:
             dd[p]=getMFTPs(P,p)
 
     #print(len(dd))
+
     mean = statistics.mean(dd.values())
     #print(mean)
     for k,v in dd.items():

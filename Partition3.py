@@ -32,14 +32,14 @@ def partition_k(collection, min, k):
         yield [ [ first ] ] + smaller
 ###############################################################
 
-def randomStringDigits(stringLength=4):
+def randomStringDigits(stringLength:int=4)->str:
     """Generate a random string of letters and digits """
     lettersAndDigits = string.ascii_letters + string.digits
     return ''.join(random.choice(lettersAndDigits) for i in range(stringLength))
 
 class Partition():
 
-    def __init__(self, n):
+    def __init__(self, n:int)->None:
 
         self._n = n
 
@@ -48,22 +48,22 @@ class Partition():
 
         self._state_to_label = None
 
-    def Count(self,k):
+    def Count(self,k:int)->int:
         return calculS(self._n,k) #calculSbyGordon(self._n,k)
 
-    def AddStateLabels(self,S):
+    def AddStateLabels(self,S:list)->None:
         assert(len(S)==self._n)
         self._state_to_label = S
         #self.state_to_label=dict(zip(self._s,S))
 
-    def GetStateLabel(self,i):
+    def GetStateLabel(self,i:int)->str:
         #assert(isinstance(i,int))
         return self._state_to_label[i]
 
-    def GetStateLabels(self):
+    def GetStateLabels(self)->list:
         return self._state_to_label
 
-    def GetNumberedPartition(self,p):
+    def GetNumberedPartition(self,p:list)->str:
         ### p is [('A', 'NS0'), ('B', NS1'),...]
         if set(map(len,p))==set([2]):
             ### d = {'A':'NS0', 'B':'NS1';...}
@@ -72,7 +72,7 @@ class Partition():
             new_state = ''.join([n for n in list(d.values())[1] if not n.isdigit()])
             return ''.join([d[s][len(new_state):] for s in self.GetStateLabels()])
         
-    def GetLabeled(self,k, new_state=None, coordinate_choice=None):
+    def GetLabeled(self,k:int, new_state:str=None, coordinate_choice:int=None)->list:
         """ Return the partitions for a classe k
             The partition is translated with the state labels
             new_state: associate the labeled partition with the new partition (usually prefixed by the string NS)
@@ -85,10 +85,7 @@ class Partition():
                 
                 if new_state:
                     iterator = iter(coordinate_choice)
-                    r = []
-                    for a in self.GetStateLabels():
-                        NS = new_state+str(next(iterator))
-                        r.append((*tuple([a]),NS))
+                    r = [(*tuple([a]), new_state+str(next(iterator))) for a in self.GetStateLabels()]
                 else:
                     r = [None]*k
                     l = list(map(int,coordinate_choice))
@@ -100,17 +97,14 @@ class Partition():
 
                 for partition in partitions:
                     r = []
-
                     for i,c in enumerate(partition):
                         if new_state:
-                            for a in c:
-                                NS = new_state+str(i)
-                                r.append((*tuple([self.GetStateLabel(a)]),NS))
+                            r.extend([(*tuple([self.GetStateLabel(a)]), ''.join([new_state,str(i)])) for a in c])
                         else:
                             r.append(tuple(self.GetStateLabel(a) for a in c))
                     yield r
         
-    def Get(self,k):
+    def Get(self,k:int):
         """ Return the random partition for k classes.
         """ 
         ### get partitions depending on the partition schemes C that depends on k!

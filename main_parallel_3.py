@@ -70,11 +70,8 @@ def _get_best_partition(k,partitionObject,S,P,Pi,coordinate_choice):
         partition = {}
         for a, b in p:
             partition.setdefault(b, []).append(a)
-
         ### to test
         #partition = {'NS0':"('S')", 'NS1':"('R','C')"}
-
-        par = {str(partition):[(v, k1) for k1,v1 in partition.items() for v in v1]}
 
         ### compute the kl rate
         Q = Lump(partition, Pi, P)
@@ -83,7 +80,7 @@ def _get_best_partition(k,partitionObject,S,P,Pi,coordinate_choice):
         #G = nx.DiGraph(list(Q.keys()), directed=True)
         #assert nx.is_strongly_connected(G) and nx.is_aperiodic(G), f"Matrix is not ergotic!"
 
-        p = par[str(partition)]
+        p = [(v, k1) for k1,v1 in partition.items() for v in v1]
         Q_mu = Lifting(Q, Pi, S, p)
         kl = KL(S, P, Pi, Q_mu)
   

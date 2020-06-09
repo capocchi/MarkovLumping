@@ -12,24 +12,31 @@ import pykov
 
 fn = sys.argv[1]
 
-### Markov matrix
-try:
-    P = pykov.readmat(fn)
-except AttributeError as info:
-    with open(fn,'r') as f:
-        for s in f.readlines():
-            s1,s2,p = s.split(' ')
-            P[(s1,s2)]=float(p.strip())
+best_partition = ('Iteo','VdI6')
 
-### list of labeled states (dont use S = list(P.states() due to the unordered resulting list)
-S = []
-for a in [i.strip('\n').split() for i in open(fn)]:
-    if a[0] not in S:
-        S.append(a[0])
+flag = 'not finded...'
+while(flag == 'not finded...'):
 
-count = 0
-for c in get_ordered_partitions(S,P):
-    count+=1
+    ### Markov matrix
+    try:
+        P = pykov.readmat(fn)
+    except AttributeError as info:
+        with open(fn,'r') as f:
+            for s in f.readlines():
+                s1,s2,p = s.split(' ')
+                P[(s1,s2)]=float(p.strip())
 
-print(count)
-#print(len(list(get_ordered_partitions(S,P))))
+    ### list of labeled states (dont use S = list(P.states() due to the unordered resulting list)
+    S = []
+    for a in [i.strip('\n').split() for i in open(fn)]:
+        if a[0] not in S:
+            S.append(a[0])
+
+    L = get_ordered_partitions(S,P)
+    for c in L:
+        s1,s2 = best_partition
+        if s1 in c and s2 in c:
+            flag = 'finded'
+            break
+
+    print(f"\nNew state: {best_partition} {flag} amoung {len(list(L))} pairs")
