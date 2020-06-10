@@ -16,6 +16,7 @@ import networkx as nx
 import numpy as np
 import statistics
 
+from more_itertools import locate
 from sys import platform
 from multiprocessing import freeze_support
 from pprint import pprint
@@ -111,24 +112,30 @@ def get_ordered_partitions_from_mftp(S:[str],P:pykov.Chain)->tuple:
     #             #             dd[p].append(dist)
 
     dd = {}
-    ddd = {}
-    ### k=2 is the best choice ?
+    ### k=n-1 is the best choice... (only for these kind of matrix ?)
     for c in partitionObject.GetLabeled(k=n-1):
-        length_list = list(map(len,c))
+        listOfLengths = map(len,c)
+        #p = c[listOfLengths.index(2)]
+        ### for all couple of states p / for k=n-1 the lenght of the list is 1
         ### consider only the partition with 2 states
-        if 2 in length_list:
-            p = c[length_list.index(2)]
-            dd[p]=getMFTPs(P,p)
-            ddd[p] = c
-    #print(len(dd))
+        ### the aggregation of 2 state is the best choice... (only for these kind of matrix ?)
+        for i in locate(listOfLengths, lambda a: a == 2):
+            p = c[i]
+            if p in dd:
+               mfpt = getMFTPs(P,p)
+               if mfpt < dd[d][-1]:
+                   dd[p]=(c,mfpt)
+            else:
+                dd[p]=(c,getMFTPs(P,p))
+                
+    ### heristic is based on the mean of mftp values
+    mean = statistics.mean([v[1] for v in dd.values()])
 
-    mean = statistics.mean(dd.values())
-    #print(mean)
     for k,v in dd.items():
-        if v < mean:
+        if v[1] < mean:
             #### les couples sont les meilleurs partitions !
-            if len(k) == 2:
-                yield ddd[k]
+            #if len(k) == 2:
+            yield v[0]
 
 if __name__ == '__main__':
 
