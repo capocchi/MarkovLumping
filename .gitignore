@@ -1,9 +1,5 @@
 ~$Experiments.xlsx
-__pycache__/Lifting.cpython-37.pyc
-__pycache__/main_mftp.cpython-37.pyc
-__pycache__/main_mftp.cpython-38.pyc
-__pycache__/Partition3.cpython-37.pyc
-__pycache__/Lifting.cpython-37.pyc
+__pycache__/
 
 cmty.py
 Dessin1.vsdx
@@ -20,3 +16,5 @@ Partition.py
 Partition2.py
 script.py
 Utilities.py
+
+fig/
