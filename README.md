@@ -12,9 +12,9 @@ The main_matrix.py Python script can be used to randomly generate into a file a 
 
 For example, if you want to generate uniform matrix with n=4 and high=0.1:
 
-'''
+```
 python main_matrix.py 4 uniform 4x4_0.1.dat uniform 0.1
-'''
+```
 
 <!--- 
 main_matrix.py is the main file that conducts the experiments from the beginning.
