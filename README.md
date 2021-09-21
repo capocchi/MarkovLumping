@@ -2,9 +2,20 @@
 
 This README provides the methods to reproduce the results of the paper.
 
-The Scripts_for_paper is the directory that contains all the scripts nedeed to obtain 
-the result. The Matrix directory store all of the Matrix used to make the results resumed in table 1 and 2. 
+# Dependancies
+Some packages must be installed to execute the scripts. You can use pip in order to install them as follow:
 
+```
+pip install -U numpy tqdm more_itertools networkx 
+pip install git+git://github.com/riccardoscalco/Pykov@master
+```
+
+# Scripts
+
+The Scripts_for_paper is the directory that contains all the scripts nedeed to obtain 
+the results. The Matrix directory store all of the Matrix used to make the results resumed in table 1 and 2. 
+
+## Matrix Generation
 The main_matrix.py Python script can be used to randomly generate into a file a normalized ergotic Markov chain with a size n (number of states) and an distribution drift term (uniform, rayleigh, binomial, weibfull and beta). It generate a stochastic matrix filled with random numbers, given some conditions:
 
     * The rows have to sum up to 1.
@@ -15,6 +26,10 @@ For example, if you want to generate uniform matrix with n=4 and high=0.1:
 ```
 python main_matrix.py 4 uniform 4x4_0.1.dat uniform 0.1
 ```
+
+See the main_matrix.py header to have more details concerning the possible options. 
+
+## Best partition k=n-1 (Table 1)
 
 <!--- 
 main_matrix.py is the main file that conducts the experiments from the beginning.
