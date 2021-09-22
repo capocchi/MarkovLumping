@@ -35,7 +35,9 @@ The Matrix/ directory contains all of the matrix used in the experiments.
 
 ## Best partition k=n-1 (Table 1)
 
-Table 1 is obtained by executing the script Script_for_paper/table1.py as follow:
+![Alt Text](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)
+
+Table 1 is obtained by executing the folowing command from the Script_for_paper/ directory:
 
 ```
 python table1.py
@@ -43,7 +45,7 @@ python table1.py
 
 ## Validation of deterministic and heuristic improvements (Table 2)
 
-Table 2 is obtained by executing the script Script_for_paper/table2.py as follow:
+Table 1 is obtained by executing the folowing command from the Script_for_paper/ directory:
 
 ```
 python table2.py
