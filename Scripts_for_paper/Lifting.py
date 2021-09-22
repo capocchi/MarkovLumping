@@ -1,6 +1,24 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# This script is used to compute the best partition of a (pykov) ergotic Markov chain using the KL rate. See the __main__ for the usage.
+# Copyright (C) 2021  Laurent Capocchi
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# Email: capocchi@univ-corse.fr
+
 import numpy as np
 import os,sys
 import pykov
@@ -8,16 +26,7 @@ import itertools
 
 def Lifting(Q, Pi, S, partition):
     d = dict(partition)
-    D = {(i,j): Pi[j]*Q[d[i], d[j]]/np.sum([Pi[c[0]] for c in partition if d[j] in c]) for i in S for j in S}
-    # D = {}
-    # for i in S:
-    #     a = d[i]
-    #     for j in S:
-    #         b = d[j]
-    #         deno = np.sum([Pi[c[0]] for c in partition if b in c])
-    #         D[(i,j)] = Pi[j]*Q[a, b]/deno
-
-    return D#pykov.Chain(D)
+    return {(i,j): Pi[j]*Q[d[i], d[j]]/np.sum([Pi[c[0]] for c in partition if d[j] in c]) for i in S for j in S}
 
 def Lump2(partition, Pi, P):
     """ exact lumpability
@@ -52,21 +61,7 @@ def Lump(partition, Pi, P):
     """
     ### new pi vector
     new_pi = {new_state:np.sum([Pi[s] for s in sub_partition]) for new_state, sub_partition in partition.items()}
-    
-    ### new lumped markov chain
-    new_chain = { pair:np.sum([Pi[state]*np.sum([P[(state,s)] for s in partition[pair[1]]]) for state in partition[pair[0]]])/new_pi[pair[0]] for pair in itertools.product(partition.keys(), repeat=2)}
-    # new_chain = {}
-    # for pair in itertools.product(partition.keys(), repeat=2):
-    #     # print pair
-    #     p0,p1 = pair
-    #     L1 = partition[p1]
-    #     L2 = partition[p0]
-    #     new_p_ij = np.sum([Pi[state]*np.sum([P[(state,s)] for s in partition[p1]]) for state in partition[p0]])
-        
-    #     #print(new_pi[p0])
-    #     new_chain[pair] = new_p_ij/new_pi[p0]
-
-    return new_chain
+    return { pair:np.sum([Pi[state]*np.sum([P[(state,s)] for s in partition[pair[1]]]) for state in partition[pair[0]]])/new_pi[pair[0]] for pair in itertools.product(partition.keys(), repeat=2)}
 
 ### neta
 def Neta(partition, tetha, M, new_states, S):
@@ -110,22 +105,18 @@ def Tetha(tetha, init_state, partitions, M, new_states, P, Pi, S, N=500):
         for i in D.values():
             Sum = np.sum([Sum,i], axis=0)
             
-        #NN = []
         for kl,v in D.items():
             neta = np.divide(v, Sum)
             tmp = np.gradient(neta)*kl
-            #NN.append(neta)
             r = np.sum([r,tmp], axis=0)
-            
-#        print map(lambda i:sum(map(lambda a:a[i], NN)), range(len(S)))
+
         for k in range(l):
             tetha[k] -= 1*r[k]/(t+1)
 
         T.append(tetha)
- #   print neta
+
     return T
 
-### KL pour un état i donnée est une partition (intégré dans Q_mu)
 def KL(S, P, Pi, Q_mu):
     ### To ensure R(P k Q) is finite, we require P to be absolutely
     ### continuous w.r.t. Q, i.e. Qij = 0 ⇒ Pij = 0.
@@ -135,7 +126,6 @@ def KL(S, P, Pi, Q_mu):
     
     return r
 
-### KL pour un état i donnée est une partition (intégré dans Q_mu)
 def KL2(i, Q_mu, P, Pi, S):
     ### To ensure R(P k Q) is finite, we require P to be absolutely
     ### continuous w.r.t. Q, i.e. Qij = 0 ⇒ Pij = 0.

@@ -4,7 +4,6 @@
 import os
 import multiprocessing
 import subprocess
-import statistics
 
 def run_command(cmd):
     try:
