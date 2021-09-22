@@ -45,6 +45,8 @@ python table1.py
 
 ## Validation of deterministic and heuristic improvements (Table 2)
 
+![table2](https://user-images.githubusercontent.com/233341/134331867-90601576-3c01-4a24-9f4b-6f52a1ea4c80.gif)
+
 Table 1 is obtained by executing the folowing command from the Script_for_paper/ directory:
 
 ```
