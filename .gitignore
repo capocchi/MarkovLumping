@@ -20,6 +20,7 @@ __init__.py
 /main_parallel_3.py
 /main.py
 /Markov.py
+/Partition.py
 /Partition2.py
 /script.py
 /Utilities.py
