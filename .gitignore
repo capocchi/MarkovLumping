@@ -27,6 +27,7 @@ __init__.py
 /test.py 
 
 fig/
+gif/
 
 Scripts_for_paper/script_for_optimalPartitionsList.py
 Scripts_for_paper/OptimalPartitionsList.py

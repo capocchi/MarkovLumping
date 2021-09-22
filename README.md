@@ -35,7 +35,7 @@ The Matrix/ directory contains all of the matrix used in the experiments.
 
 ## Best partition k=n-1 (Table 1)
 
-![Alt Text](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)
+![table1.py python execution trace](gif/table1.gif)
 
 Table 1 is obtained by executing the folowing command from the Script_for_paper/ directory:
 
