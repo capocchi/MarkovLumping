@@ -1,3 +1,11 @@
+# Remove all istems from index
+# git rm -r -f --cached .
+
+# Rebuild index
+# git add .
+
+# Make commit...
+
 ~$Experiments.xlsx
 __pycache__/
 __init__.py
@@ -7,13 +15,10 @@ Dessin1.vsdx
 Experiments.xlsx
 Lifting.c
 Lifting.cp37-win_amd64.pyd
-main_mftp.py
 main_parallel_2.py
 main_parallel_3.py
-main_parallel.py
 main.py
 Markov.py
-Partition.py
 Partition2.py
 script.py
 Utilities.py
