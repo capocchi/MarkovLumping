@@ -10,19 +10,20 @@
 __pycache__/
 __init__.py
 
-cmty.py
-Dessin1.vsdx
-Experiments.xlsx
-Lifting.c
-Lifting.cp37-win_amd64.pyd
-main_parallel_2.py
-main_parallel_3.py
-main.py
-Markov.py
-Partition2.py
-script.py
-Utilities.py
-test.py 
+/cmty.py
+/Dessin1.vsdx
+/Experiments.xlsx
+/Lifting.c
+/Lifting.cp37-win_amd64.pyd
+/main_parallel.py
+/main_parallel_2.py
+/main_parallel_3.py
+/main.py
+/Markov.py
+/Partition2.py
+/script.py
+/Utilities.py
+/test.py 
 
 fig/
 
