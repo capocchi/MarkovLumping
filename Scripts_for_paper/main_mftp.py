@@ -170,14 +170,16 @@ if __name__ == '__main__':
         with mp.Pool(mp.cpu_count()) as pool:
             r = pool.starmap(calculSbyGordon, [(n,k) for k in range(n)])
 
-        print(f"Nb of partition:{sum(r)}")
-        print(f"Nb of partition for k=n-1=[{n-1}:{calculSbyGordon(n,n-1)}")
-        print(f"Best KL :{result['kl']}")
-        print(f"Optimal Partition Max Lenght:{count}") 
-        print(f"Best partition :{result['partition']}")
+        print(f"Nb of partition: {sum(r)}")
+        print(f"Nb of partition for k=n-1: {calculSbyGordon(n,n-1)}")
+        print(f"Labeled Best partition: {result['partition']}")
+        print(f"Best KL: {result['kl']}")
+        print(f"Optimal Partition Max Lenght: {count}") 
 
         # end time
         end = time.time()
 
         # total time taken
-        print(f"`\nRuntime of the program is {end - start}")
+        print(f"\nRuntime of the program is {end - start}s")
+        print(f"Reduction Rate compared to k=n-1: {(1-count/calculSbyGordon(n,n-1))*100}%")
+        print(f"Reduction Rate compared to all partitions: {(1-count/sum(r))*100}%")

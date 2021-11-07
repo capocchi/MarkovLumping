@@ -1,3 +1,4 @@
+# https://linuxize.com/post/gitignore-ignoring-files-in-git/
 # Remove all istems from index
 # git rm -r -f --cached .
 
@@ -30,3 +31,5 @@ fig/
 
 Scripts_for_paper/script_for_optimalPartitionsList.py
 Scripts_for_paper/OptimalPartitionsList.py
+
+table3.py

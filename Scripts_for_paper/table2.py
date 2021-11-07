@@ -15,3 +15,9 @@ if __name__ == "__main__":
         print(f"\n---------------------------- Matrix {i}x{i}_0.1")
         pool = "python main_mftp.py "+os.path.join("..","Matrix","bench","diag_max","uniform",f"{i}x{i}_0.1.dat")
         run_command(pool)
+
+        # print(f"\nTIME FOR ALL K")
+        # os.system("python main_parallel.py "+os.path.join("..","Matrix","bench","diag_max","uniform",f"{i}x{i}_0.1.dat"))
+
+        # print(f"\nTIME FOR ALL K=N-1")
+        # os.system("python main_parallel.py "+os.path.join("..","Matrix","bench","diag_max","uniform",f"{i}x{i}_0.1.dat")+" "+str(i-1))

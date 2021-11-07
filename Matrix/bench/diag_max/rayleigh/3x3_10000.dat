@@ -1,0 +1,9 @@
+uzSl uzSl 0.500000
+uzSl lvDP 0.000000
+uzSl tCp9 0.500000
+lvDP uzSl 0.000000
+lvDP lvDP 0.666667
+lvDP tCp9 0.333333
+tCp9 uzSl 0.000000
+tCp9 lvDP 0.000000
+tCp9 tCp9 1.000000
