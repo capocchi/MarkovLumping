@@ -109,6 +109,32 @@ def get_ordered_partitions_from_mftp(S:[str],P:pykov.Chain)->tuple:
         if v[1] < mean:
             yield v[0]
 
+def getMFTPAnalysis(S:[str],P:pykov.Chain)->tuple:
+    Pi = P.steady()
+    count = 0
+    ### result varaible - kl = 1.0 is the max value; we find the min.
+    result = {'kl':1.0,'partition':None, 'Q_mu':None}
+
+    ### loop on partitions to find the best from the mftp analysis
+    for p in get_ordered_partitions_from_mftp(S,P):
+        partition = {''.join(['NS',str(i)]):a for i,a in enumerate(p)}
+
+        ### compute the kl divergence rate
+        Q = Lump(partition, Pi, P)
+        p = [(v, k1) for k1,v1 in partition.items() for v in v1]
+        Q_mu = Lifting(Q, Pi, S, p)
+        kl = KL(S, P, Pi, Q_mu)
+    
+        ### store the best kl and partition
+        if kl < result['kl']:
+            result['kl']=kl
+            result['partition']=p
+            result['Q_mu'] = Q_mu
+    
+        count+=1
+    
+    return (result,count)
+
 if __name__ == '__main__':
 
     # for Windows support of tqdm
@@ -141,28 +167,11 @@ if __name__ == '__main__':
         G = nx.DiGraph(list(P.keys()), directed=True)
         assert nx.is_strongly_connected(G) and nx.is_aperiodic(G), f"Matrix is not ergotic!"
 
-        ###  Mean First Passage Times Analysis ###################################
-        
-        Pi = P.steady()
-        count = 0
-        ### result varaible - kl = 1.0 is the max value; we find the min.
-        result = {'kl':1.0,'partition':None}
-        ### loop on partitions to find the best from the mftp analysis
-        for p in get_ordered_partitions_from_mftp(S,P):
-            partition = {''.join(['NS',str(i)]):a for i,a in enumerate(p)}
-
-            ### compute the kl divergence rate
-            Q = Lump(partition, Pi, P)
-            p = [(v, k1) for k1,v1 in partition.items() for v in v1]
-            Q_mu = Lifting(Q, Pi, S, p)
-            kl = KL(S, P, Pi, Q_mu)
-        
-            ### store the best kl and partition
-            if kl < result['kl']:
-                result['kl']=kl
-                result['partition']=p
-        
-            count+=1
+        ###  Mean First Passage Times Analysis -----------------------------------
+        # if we loop on liffted matrix Q_mu = result['Q_mu] and call getMFTPAnalysis(Q_mu.states(),Q_mu)
+        # we can iterate the process until reach a kind of acceptable limite of information lost... 
+        result,count = getMFTPAnalysis(S,P)
+        ### ----------------------------------------------------------------------
 
         # number of states        
         n = len(P.states())
