@@ -129,7 +129,7 @@ def getMFTPAnalysis(S:[str],P:pykov.Chain)->tuple:
         if kl < result['kl']:
             result['kl']=kl
             result['partition']=p
-            result['Q_mu'] = Q_mu
+            result['Q'] = Q
     
         count+=1
     
@@ -161,20 +161,19 @@ if __name__ == '__main__':
                     P[(s1,s2)]=float(p.strip())
         
 
-        S = tuple(set([a[0] for a in [i.strip('\n').split() for i in open(fn)]]))
-
+        #S = tuple(set([a[0] for a in [i.strip('\n').split() for i in open(fn)]]))
+        S = tuple(P.states())
+        
         ### P must be ergotic i.e. the transition matrix must be irreducible and acyclic.            
         G = nx.DiGraph(list(P.keys()), directed=True)
         assert nx.is_strongly_connected(G) and nx.is_aperiodic(G), f"Matrix is not ergotic!"
 
-        ###  Mean First Passage Times Analysis -----------------------------------
-        # if we loop on liffted matrix Q_mu = result['Q_mu] and call getMFTPAnalysis(Q_mu.states(),Q_mu)
-        # we can iterate the process until reach a kind of acceptable limite of information lost... 
+        ###  Mean First Passage Times Analysis ----------------------------------
         result,count = getMFTPAnalysis(S,P)
         ### ----------------------------------------------------------------------
-
+        
         # number of states        
-        n = len(P.states())
+        n = len(S)
 
         with mp.Pool(mp.cpu_count()) as pool:
             r = pool.starmap(calculSbyGordon, [(n,k) for k in range(n)])
@@ -183,12 +182,12 @@ if __name__ == '__main__':
         print(f"Nb of partition for k=n-1: {calculSbyGordon(n,n-1)}")
         print(f"Labeled Best partition: {result['partition']}")
         print(f"Best KL: {result['kl']}")
-        print(f"Optimal Partition Max Lenght: {count}") 
-
+        print(f"Optimal Partition Max Lenght: {count}")
+            
         # end time
         end = time.time()
 
         # total time taken
         print(f"\nRuntime of the program is {end - start}s")
         print(f"Reduction Rate compared to k=n-1: {(1-count/calculSbyGordon(n,n-1))*100}%")
-        print(f"Reduction Rate compared to all partitions: {(1-count/sum(r))*100}%")
+        print(f"Reduction Rate compared to all partitions: {(1-count/sum(r))*100}%")     
