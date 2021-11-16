@@ -171,7 +171,6 @@ if __name__ == '__main__':
         result,count = getMFTPAnalysis(S,P)
         ### ----------------------------------------------------------------------
        
-        
         # number of states        
         n = len(S)
 
