@@ -80,7 +80,7 @@ def _get_best_partition(k,partitionObject,S,P,Pi,coordinate_choice):
 
 if __name__ == '__main__':
     """
-        >>> python main_parallel_3.py 4x4.dat 2 1212
+        >>> python main_parallel.py 4x4.dat 2 1212
         Processing for k=2, kl=0.4429, par=1212: : 1part [00:00, 705.99part/s]                                               | 0/1 [00:00<?, ?it/s]
         Optimal partitioning process: 100%|██████████████████████████████████████████████████████████████████████████| 1/1 [00:01<00:00,  1.13s/it]
         Processing for k=2, kl=0.4429, par=1212: : 0part [00:00, ?part/s]

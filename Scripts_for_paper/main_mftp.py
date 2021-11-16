@@ -113,7 +113,7 @@ def getMFTPAnalysis(S:[str],P:pykov.Chain)->tuple:
     Pi = P.steady()
     count = 0
     ### result varaible - kl = 1.0 is the max value; we find the min.
-    result = {'kl':1.0,'partition':None, 'Q_mu':None}
+    result = {'kl':1.0,'partition':None}
 
     ### loop on partitions to find the best from the mftp analysis
     for p in get_ordered_partitions_from_mftp(S,P):
@@ -129,7 +129,6 @@ def getMFTPAnalysis(S:[str],P:pykov.Chain)->tuple:
         if kl < result['kl']:
             result['kl']=kl
             result['partition']=p
-            result['Q'] = Q
     
         count+=1
     
@@ -171,6 +170,7 @@ if __name__ == '__main__':
         ###  Mean First Passage Times Analysis ----------------------------------
         result,count = getMFTPAnalysis(S,P)
         ### ----------------------------------------------------------------------
+       
         
         # number of states        
         n = len(S)
@@ -178,9 +178,18 @@ if __name__ == '__main__':
         with mp.Pool(mp.cpu_count()) as pool:
             r = pool.starmap(calculSbyGordon, [(n,k) for k in range(n)])
 
+        ### transform states in order to avoid losing the fusion of states
+        p = result['partition']
+        lst = list(map(lambda a: a[-1],p))
+        new_state_for_aggregation = max(lst,key=lst.count)
+        d = dict(p)
+        state_to_aggregate = [k for k,v in d.items() if v == new_state_for_aggregation]
+        
+        print(f"Aggregate states: {'/'.join(state_to_aggregate)}")
         print(f"Nb of partition: {sum(r)}")
         print(f"Nb of partition for k=n-1: {calculSbyGordon(n,n-1)}")
         print(f"Labeled Best partition: {result['partition']}")
+        print(f"Aggregate states: {'+'.join(state_to_aggregate)} ({new_state_for_aggregation})")
         print(f"Best KL: {result['kl']}")
         print(f"Optimal Partition Max Lenght: {count}")
             
