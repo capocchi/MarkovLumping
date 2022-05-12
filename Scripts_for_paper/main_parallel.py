@@ -35,7 +35,7 @@ __authors__ = 'Laurent Capocchi'
 
 __many_thanks_to__ = 'Jean-François Santucci'
 
-import sys, time, random
+import sys, time
 import pykov
 import networkx as nx
 import numpy as np
@@ -129,7 +129,7 @@ if __name__ == '__main__':
 
                 assert(Pi.sum()!=0)
 
-                ### list of labeled states (dont use S = list(P.states() due to the unordered resulting list)
+                ### list of labeled states (dont use S = list(P.states()) due to the unordered resulting list)
                 S = []
                 for a in [i.strip('\n').split() for i in open(fn)]:
                     if a[0] not in S:
@@ -143,9 +143,13 @@ if __name__ == '__main__':
                 n = len(S)
                     
                 if z is not None:
-                    zz = list(map(int, str(z)))
+                    if ',' not in z:
+                        zz = list(map(int, str(z)))
+                    else:
+                        zz = list(map(int, str(z).split(',')))
+                        
                     assert len(zz)==n, f'The number of coordinates len({z})={len(zz)} must be equal to n ({n})'
-
+                    
                 ### parallel processing
                 K = range(k,k+1) if k else range(1,n)
 

@@ -67,7 +67,7 @@ class Partition():
             ### d = {'A':'NS0', 'B':'NS1';...}
             d = dict(p)
             ### NS
-            new_state = ''.join([n for n in list(d.values())[1] if not n.isdigit()])
+            new_state = ''.join([n for n in list(ordered(d.values()))[1] if not n.isdigit()])
             return ''.join([d[s][len(new_state):] for s in self.GetStateLabels()])
         
     def GetLabeled(self,k:int, new_state:str=None, coordinate_choice:int=None)->list:
@@ -77,22 +77,23 @@ class Partition():
             coordinate_choice: specify a coordinate choice for the class k (for example if n=4, k=2, coordinate_choice can be 1212)
         """
 
+        
         ### AddStateLabels must be called first
         if self._state_to_label:  
             if coordinate_choice:
                 
                 if new_state:
-                    iterator = iter(coordinate_choice)
+                    iterator = iter(coordinate_choice) if ',' not in coordinate_choice else iter(coordinate_choice.split(','))
                     r = [(*tuple([a]), new_state+str(next(iterator))) for a in self.GetStateLabels()]
                 else:
                     r = [None]*k
-                    l = list(map(int,coordinate_choice))
+                    l = list(map(int,coordinate_choice)) if ',' not in coordinate_choice else list(map(int,coordinate_choice.split(',')))
                     for i in range(k):
                         r[i] = tuple(self.GetStateLabel(j) for j in list(locate(l, lambda a: a == i+1)))
                 yield r
             else:
                 partitions = self.Get(k)
-
+                
                 for partition in partitions:
                     r = []
                     for i,c in enumerate(partition):
@@ -100,6 +101,7 @@ class Partition():
                             r.extend([(*tuple([self.GetStateLabel(a)]), ''.join([new_state,str(i)])) for a in c])
                         else:
                             r.append(tuple(self.GetStateLabel(a) for a in c))
+                    
                     yield r
         
     def Get(self,k:int):
