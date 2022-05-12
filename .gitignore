@@ -33,4 +33,4 @@ Scripts_for_paper/script_for_optimalPartitionsList.py
 Scripts_for_paper/OptimalPartitionsList.py
 
 matrix_gen.py
-main_loop.py
+#main_loop.py
