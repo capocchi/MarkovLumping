@@ -8,12 +8,14 @@
 # Make commit...
 
 ~$Experiments.xlsx
+~$Experiments2.xlsx
 __pycache__/
 __init__.py
 
 /cmty.py
 /Dessin1.vsdx
 /Experiments.xlsx
+/Experiments2.xlsx
 /Lifting.c
 /Lifting.cp37-win_amd64.pyd
 /main_parallel.py
@@ -28,6 +30,8 @@ __init__.py
 /test.py 
 
 fig/
+png/
+fsm/
 
 Scripts_for_paper/script_for_optimalPartitionsList.py
 Scripts_for_paper/OptimalPartitionsList.py

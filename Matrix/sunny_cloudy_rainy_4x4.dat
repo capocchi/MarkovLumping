@@ -1,0 +1,16 @@
+Sunny_with_wind Sunny_with_wind 0.0
+Sunny_with_wind Sunny_without_wind 0.5
+Sunny_with_wind Rainy 0.05
+Sunny_with_wind Cloudy 0.45
+Sunny_without_wind Sunny_with_wind 0.5
+Sunny_without_wind Sunny_without_wind 0.0
+Sunny_without_wind Rainy 0.05
+Sunny_without_wind Cloudy 0.45
+Rainy Sunny_with_wind 0.25
+Rainy Sunny_without_wind 0.25
+Rainy Rainy 0.1
+Rainy Cloudy 0.4
+Cloudy Sunny_with_wind 0.25
+Cloudy Sunny_without_wind 0.25
+Cloudy Rainy 0.4
+Cloudy Cloudy 0.1

@@ -1,0 +1,89 @@
+Sunny_with_wind Sunny_with_wind 0.0
+Sunny_with_wind Sunny_without_wind 0.25
+Sunny_with_wind Sunny_with_heat_wave 0.0
+Sunny_with_wind Rainy_with_hail 0.05
+Sunny_with_wind Rainy_with_thunder 0.0
+Sunny_with_wind Rainy_with_wind 0.0
+Sunny_with_wind Cloudy_altostratus 0.7
+Sunny_with_wind Cloudy_stratus 0.0
+Sunny_with_wind Cloudy_cumulus 0.0
+
+Sunny_without_wind Sunny_with_wind 0.25
+Sunny_without_wind Sunny_without_wind 0.25
+Sunny_without_wind Sunny_with_heat_wave 0.5
+Sunny_without_wind Rainy_with_hail 0.0
+Sunny_without_wind Rainy_with_thunder 0.0
+Sunny_without_wind Rainy_with_wind 0.0
+Sunny_without_wind Cloudy_altostratus 0.0
+Sunny_without_wind Cloudy_stratus 0.0
+Sunny_without_wind Cloudy_cumulus 0.0
+
+Rainy_with_hail Sunny_with_wind 0.3
+Rainy_with_hail Sunny_without_wind 0.0
+Rainy_with_hail Sunny_with_heat_wave 0.0
+Rainy_with_hail Rainy_with_hail 0.1
+Rainy_with_hail Rainy_with_thunder 0.4
+Rainy_with_hail Rainy_with_wind 0.0
+Rainy_with_hail Cloudy_altostratus 0.2
+Rainy_with_hail Cloudy_stratus 0.0
+Rainy_with_hail Cloudy_cumulus 0.0
+
+Rainy_with_thunder Sunny_with_wind 0.0
+Rainy_with_thunder Sunny_without_wind 0.0
+Rainy_with_thunder Sunny_with_heat_wave 0.0
+Rainy_with_thunder Rainy_with_hail 0.4
+Rainy_with_thunder Rainy_with_thunder 0.1
+Rainy_with_thunder Rainy_with_wind 0.5
+Rainy_with_thunder Cloudy_altostratus 0.0
+Rainy_with_thunder Cloudy_stratus 0.0
+Rainy_with_thunder Cloudy_cumulus 0.0
+
+Cloudy_altostratus Sunny_with_wind 0.5
+Cloudy_altostratus Sunny_without_wind 0.0
+Cloudy_altostratus Sunny_with_heat_wave 0.0
+Cloudy_altostratus Rainy_with_hail 0.2
+Cloudy_altostratus Rainy_with_thunder 0.0
+Cloudy_altostratus Rainy_with_wind 0.0
+Cloudy_altostratus Cloudy_altostratus 0.1
+Cloudy_altostratus Cloudy_stratus 0.2
+Cloudy_altostratus Cloudy_cumulus 0.0
+
+Cloudy_stratus Sunny_with_wind 0.0
+Cloudy_stratus Sunny_without_wind 0.0
+Cloudy_stratus Sunny_with_heat_wave 0.0
+Cloudy_stratus Rainy_with_hail 0.0
+Cloudy_stratus Rainy_with_thunder 0.0
+Cloudy_stratus Rainy_with_wind 0.0
+Cloudy_stratus Cloudy_altostratus 0.2
+Cloudy_stratus Cloudy_stratus 0.1
+Cloudy_stratus Cloudy_cumulus 0.7
+
+Cloudy_cumulus Sunny_with_wind 0.0
+Cloudy_cumulus Sunny_without_wind 0.0
+Cloudy_cumulus Sunny_with_heat_wave 0.0
+Cloudy_cumulus Rainy_with_hail 0.0
+Cloudy_cumulus Rainy_with_thunder 0.0
+Cloudy_cumulus Rainy_with_wind 0.0
+Cloudy_cumulus Cloudy_altostratus 0.0
+Cloudy_cumulus Cloudy_stratus 0.7
+Cloudy_cumulus Cloudy_cumulus 0.3
+
+Sunny_with_heat_wave Sunny_with_wind 0.0
+Sunny_with_heat_wave Sunny_without_wind 0.5
+Sunny_with_heat_wave Sunny_with_heat_wave 0.5
+Sunny_with_heat_wave Rainy_with_hail 0.0
+Sunny_with_heat_wave Rainy_with_thunder 0.0
+Sunny_with_heat_wave Rainy_with_wind 0.0
+Sunny_with_heat_wave Cloudy_altostratus 0.0
+Sunny_with_heat_wave Cloudy_stratus 0.0
+Sunny_with_heat_wave Cloudy_cumulus 0.0
+
+Rainy_with_wind Sunny_with_wind 0.0
+Rainy_with_wind Sunny_without_wind 0.0
+Rainy_with_wind Sunny_with_heat_wave 0.0
+Rainy_with_wind Rainy_with_hail 0.0
+Rainy_with_wind Rainy_with_thunder 0.5
+Rainy_with_wind Rainy_with_wind 0.5
+Rainy_with_wind Cloudy_altostratus 0.0
+Rainy_with_wind Cloudy_stratus 0.0
+Rainy_with_wind Cloudy_cumulus 0.0

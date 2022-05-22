@@ -24,6 +24,8 @@ import os,sys
 import pykov
 import itertools
 
+np.seterr('raise')
+
 def Lifting(Q, Pi, S, partition):
     d = dict(partition)
     return {(i,j): Pi[j]*Q[d[i], d[j]]/np.sum([Pi[c[0]] for c in partition if d[j] in c]) for i in S for j in S}

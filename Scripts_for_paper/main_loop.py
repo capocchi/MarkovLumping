@@ -41,14 +41,15 @@ import multiprocessing as mp
 
 from Partition import Partition
 from Lifting import Lump, KL, Lifting
-from nbPartitions import calculSbyGordon
+#from nbPartitions import calculSbyGordon
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
+import numpy as np 
 
-PLOT = False
-WRITE_FILE = True
+PLOT = True
+WRITE_FILE = False
 
 def get_edges_with_weights(P:pykov.Chain)->tuple:
     """
@@ -60,7 +61,6 @@ def get_edges_with_weights(P:pykov.Chain)->tuple:
 __getMFTP_cache = {}
 def getMFTP(P:pykov.Chain,s):
     if s not in __getMFTP_cache:
-        #print(P.steady(),s)
         __getMFTP_cache[s] = P.mfpt_to(s).items()
     return __getMFTP_cache[s]
 
@@ -113,7 +113,6 @@ def get_ordered_partitions_from_mftp(S:[str],P:pykov.Chain)->tuple:
         for i in locate(listOfLengths, lambda a: a == 2):
             p = c[i]
             mfpt = getMFTPs(P,p)
-            #print(mfpt)
             if p in dd:
                if mfpt < dd[d][-1]:
                    dd[p]=(c,mfpt)
@@ -123,10 +122,8 @@ def get_ordered_partitions_from_mftp(S:[str],P:pykov.Chain)->tuple:
     ### heristic is based on the mean of mftp values
     mean = statistics.fmean([v[1] for v in dd.values()])
 
-    #print(sorted([format(v[1], '.15f') for v in dd.values()]))
-    #sys.exit()
     for k,v in dd.items():
-        if v[1] < mean:
+        if v[1] <= mean:
             yield v[0]
 
 def getMFTPAnalysis(S:[str],P:pykov.Chain)->tuple:
@@ -154,7 +151,13 @@ def getMFTPAnalysis(S:[str],P:pykov.Chain)->tuple:
     return result
 
 def getMFTPAnalysis2(S:[str],P:pykov.Chain)->tuple:
+    
     Pi = P.steady()
+    
+    #Pi = pykov.Vector()
+    #for a,b in P.steady().items():
+    #    Pi[a] = round(b,11)
+    
     ### result varaible - kl = 1.0 is the max value; we find the min.
     result = []
 
@@ -226,9 +229,11 @@ if __name__ == '__main__':
         P = pykov.Chain()
         with open(fn,'r') as f:
             for s in f.readlines():
-                s1,s2,p = s.split(' ')
-                P[(s1,s2)]=float(p.strip())
-            
+                try:
+                    s1,s2,p = s.split(' ')
+                    P[(s1,s2)]=float(p.strip())
+                except Exception as e:
+                    pass
         ### extract the matrix dim from the filename passed as input of the script
         #n = int(fn.split('x')[-1].split('_')[0].split('.dat')[0])
         
@@ -248,7 +253,7 @@ if __name__ == '__main__':
         
         d_old=10000000
         
-        while (n>2) :
+        while (n>=2) :
             
             ### P must be ergotic i.e. the transition matrix must be irreducible and acyclic.            
             G = nx.DiGraph(list(P.keys()), directed=True)
@@ -273,28 +278,7 @@ if __name__ == '__main__':
             
             print(f"Aggregate states: {'/'.join(state_to_aggregate)}")
             
-            #Pi = PP.steady()
-            
-            #Q_mu = Lifting(result['Q'], Pi, SS, result['partition'])
-            #print(KL(SS, PP, Pi, Q_mu))
-            
-            #if kl>0.01:
-            #    kl,p,Q = next(a)
-            #else:
-            #    
-            #    P = pykov.Chain()
-            #    for k,v in Q.items():
-            #        P[(d[k[0]],d[k[1]])] = v
-            #
-            #    S = tuple(P.states())
-            #    
-            #    a = getMFTPAnalysis2(S,P)     
-            #    kl,p,Q = next(a)
-            #    
-            #    # Number of states
-            #    n = len(S)
-            
-            if n>3:
+            if n>=3:
                 P = pykov.Chain()
                 for k,v in Q.items():
                     P[(d[k[0]],d[k[1]])] = v
@@ -305,24 +289,22 @@ if __name__ == '__main__':
                 new_kl,p,Q = next(a)
                 
                 d = abs(new_kl-kl)
-                if d > 10*d_old:
+                #if d > 10*d_old:
                     ### exit !
-                    n = 2
-                else:
+                #    n = 2
+                #else:
                     # Number of states
-                    n = len(S)
-                    kl = new_kl
-                    d_old = d
+                n = len(S)
+                kl = new_kl
+                d_old = d
             else:
                 ### exit !
-                n=2
-            
-        #P = pykov.Chain(result['Q'])
+                n=1
             
             if PLOT:
                 X.append(n)
                 Y.append(kl)
-                displayGraph(dict(P))
+            #   displayGraph(dict(P))
                 
             if WRITE_FILE:
                 fn = os.path.join(os.pardir,'Matrix',f"{n}x{n}.dat")
@@ -343,8 +325,8 @@ if __name__ == '__main__':
             plt.plot(X, Y)
 
             # show a legend on the plot
-            plt.legend()
-
+            #plt.legend()
+            plt.axis([max(X),min(X),max(Y),min(Y)])
             plt.grid()
             
             plt.ylabel("KL")
@@ -352,6 +334,13 @@ if __name__ == '__main__':
 
             # function to show the plot
             plt.show()
-
-        
             
+            #import statistics
+            #st_dev = statistics.stdev(Y)
+            #var  = statistics.variance(Y)
+            #mean_h = statistic.median_high(Y)
+            #print("Standard deviation of the KL: " + str(st_dev))
+            #print("Variance of the KL: " + str(var))
+            import pandas as pd
+            s = pd.Series(Y)
+            print(s.describe())
