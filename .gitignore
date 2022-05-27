@@ -32,9 +32,11 @@ __init__.py
 fig/
 png/
 fsm/
+resutls/
 
 Scripts_for_paper/script_for_optimalPartitionsList.py
 Scripts_for_paper/OptimalPartitionsList.py
 
+100x100.txt
 matrix_gen.py
 #main_loop.py

@@ -48,8 +48,9 @@ import matplotlib.pyplot as plt
 
 import numpy as np 
 
-PLOT = True
+PLOT = False
 WRITE_FILE = False
+STAT = True
 
 def get_edges_with_weights(P:pykov.Chain)->tuple:
     """
@@ -237,7 +238,7 @@ if __name__ == '__main__':
         ### extract the matrix dim from the filename passed as input of the script
         #n = int(fn.split('x')[-1].split('_')[0].split('.dat')[0])
         
-        S = tuple(sorted(P.states()))
+        S = tuple(sorted(list(P.states())))
         
         #SS = S
         #PP = P
@@ -246,7 +247,21 @@ if __name__ == '__main__':
         
         if PLOT:
             X = []
-            Y = []
+            K_L = []
+        
+        if STAT:    
+            STEADY = {n:P.steady()}
+            #print(STEADY)
+            if not PLOT:
+                K_L=[]
+        
+        
+        #e2p, p2e = P._el2pos_()
+        #p = np.arange(len(e2p)*len(p2e),dtype=float).reshape(len(e2p),len(p2e))
+        
+        #for k,v in P._dok_(e2p).items():
+        #    p[k[0],k[1]]=v
+        #    print(k,v)
         
         a = getMFTPAnalysis2(S,P)
         kl,p,Q = next(a)
@@ -257,6 +272,7 @@ if __name__ == '__main__':
             
             ### P must be ergotic i.e. the transition matrix must be irreducible and acyclic.            
             G = nx.DiGraph(list(P.keys()), directed=True)
+            nx.strongly_connected_components(G)
             assert nx.is_strongly_connected(G) and nx.is_aperiodic(G), f"Matrix is not ergotic!"
             
             ### Mean First Passage Times Analysis -----------------------------------
@@ -303,8 +319,12 @@ if __name__ == '__main__':
             
             if PLOT:
                 X.append(n)
-                Y.append(kl)
-            #   displayGraph(dict(P))
+                K_L.append(kl)
+                #   displayGraph(dict(P))
+            if STAT:
+                STEADY[n]=P.steady()
+                if not PLOT:
+                    K_L.append(kl)
                 
             if WRITE_FILE:
                 fn = os.path.join(os.pardir,'Matrix',f"{n}x{n}.dat")
@@ -322,11 +342,11 @@ if __name__ == '__main__':
         print(f"\nRuntime of the program is {end - start}s")
      
         if PLOT:
-            plt.plot(X, Y)
+            plt.plot(X, K_L)
 
             # show a legend on the plot
             #plt.legend()
-            plt.axis([max(X),min(X),max(Y),min(Y)])
+            plt.axis([max(X),min(X),min(K_L),max(K_L)])
             plt.grid()
             
             plt.ylabel("KL")
@@ -341,6 +361,10 @@ if __name__ == '__main__':
             #mean_h = statistic.median_high(Y)
             #print("Standard deviation of the KL: " + str(st_dev))
             #print("Variance of the KL: " + str(var))
+        
+        if STAT:    
             import pandas as pd
-            s = pd.Series(Y)
+            import pprint
+            s = pd.Series(K_L)
             print(s.describe())
+            pprint.pprint(STEADY)

@@ -530,8 +530,9 @@ class Matrix(OrderedDict):
     def _dok_(self, el2pos, method=''):
         """
         """
+        
         m = len(el2pos)
-        S = ss.dok_matrix((m, m))
+        S = ss.dok_matrix((m, m),dtype=numpy.float64)
         if method == '':
             for k, v in six.iteritems(self):
                 i = el2pos[k[0]]
@@ -542,6 +543,7 @@ class Matrix(OrderedDict):
                 i = el2pos[k[0]]
                 j = el2pos[k[1]]
                 S[j, i] = float(v)
+                
         return S
 
     def _from_dok_(self, mat, pos2el):
@@ -583,7 +585,8 @@ class Matrix(OrderedDict):
         """
         el2pos = {}
         pos2el = {}
-        for pos, element in enumerate(list(self.states())):
+        
+        for pos, element in enumerate(sorted(list(self.states()))):
             el2pos[element] = pos
             pos2el[pos] = element
         return el2pos, pos2el
@@ -914,8 +917,10 @@ class Chain(Matrix):
             return self._steady
         except AttributeError:
             e2p, p2e = self._el2pos_()
+            #print(e2p,p2e)
             m = len(e2p)
             P = self._dok_(e2p).tocsr()
+            
             Q = ss.eye(m, format='csr') - P
             e = numpy.zeros(m)
             e[-1] = 1.
