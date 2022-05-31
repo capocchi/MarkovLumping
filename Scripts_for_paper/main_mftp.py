@@ -36,11 +36,24 @@ from more_itertools import locate
 from sys import platform
 from multiprocessing import freeze_support
 import multiprocessing as mp
+from functools import wraps
 
 from Partition import Partition
 from Lifting import Lump, KL, Lifting
 from nbPartitions import calculSbyGordon
 
+def timeit(func):
+    @wraps(func)
+    def timeit_wrapper(*args, **kwargs):
+        start_time = time.perf_counter()
+        result = func(*args, **kwargs)
+        end_time = time.perf_counter()
+        total_time = end_time - start_time
+        #print(f'Function {func.__name__}{args} {kwargs} Took {total_time:.4f} seconds')
+        print(f'Function {func.__name__} Took {total_time} seconds')
+        return result
+    return timeit_wrapper
+    
 def get_edges_with_weights(P:pykov.Chain)->tuple:
     """
     """  
@@ -78,7 +91,7 @@ def getMFTPs2(P:pykov.Chain,p)->float:
                     b = None
     return min
 
-    
+@timeit
 def get_ordered_partitions_from_mftp(S:[str],P:pykov.Chain)->tuple:
     """ Get orderded list of partitions.
     """ 
@@ -109,6 +122,7 @@ def get_ordered_partitions_from_mftp(S:[str],P:pykov.Chain)->tuple:
         if v[1] < mean:
             yield v[0]
 
+@timeit
 def getMFTPAnalysis(S:[str],P:pykov.Chain)->tuple:
     Pi = P.steady()
     count = 0

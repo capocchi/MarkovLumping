@@ -37,16 +37,11 @@ import statistics
 from more_itertools import locate
 from sys import platform
 from multiprocessing import freeze_support
-import multiprocessing as mp
+from numpy import sqrt
+import matplotlib.pyplot as plt
 
 from Partition import Partition
 from Lifting import Lump, KL, Lifting
-#from nbPartitions import calculSbyGordon
-
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-
-import numpy as np 
 
 PLOT = False
 WRITE_FILE = False
@@ -154,11 +149,7 @@ def getMFTPAnalysis(S:[str],P:pykov.Chain)->tuple:
 def getMFTPAnalysis2(S:[str],P:pykov.Chain)->tuple:
     
     Pi = P.steady()
-    
-    #Pi = pykov.Vector()
-    #for a,b in P.steady().items():
-    #    Pi[a] = round(b,11)
-    
+
     ### result varaible - kl = 1.0 is the max value; we find the min.
     result = []
 
@@ -180,19 +171,26 @@ def getMFTPAnalysis2(S:[str],P:pykov.Chain)->tuple:
         yield n
         
 def displayGraph(P):
+    """Display the state graph of P
+        https://networkx.org/documentation/stable/auto_examples/drawing/plot_weighted_graph.html
+
+    Args:
+        P (_type_): Matrix
+    """
+
     G = nx.Graph()
-   
+    
     for k,v in P.items():
-        G.add_edge(k[0], k[1], weight=float(v))
+        G.add_edge(k[0].replace('/',' \n '), k[1].replace('/',' \n '), weight=float(v))
         
     elarge = [(u, v) for (u, v, d) in G.edges(data=True) if d["weight"] > 0.5]
     esmall = [(u, v) for (u, v, d) in G.edges(data=True) if d["weight"] <= 0.5]
 
     pos = nx.spring_layout(G, seed=7)  # positions for all nodes - seed for reproducibility
-
+    
     # nodes
-    nx.draw_networkx_nodes(G, pos, node_size=700)
-
+    nx.draw_networkx_nodes(G, pos, node_size=700,  node_color='#DCDCDC')
+    
     # edges
     nx.draw_networkx_edges(G, pos, edgelist=elarge, width=3)
     nx.draw_networkx_edges(
@@ -200,13 +198,41 @@ def displayGraph(P):
     )
 
     # labels
-    nx.draw_networkx_labels(G, pos, font_size=14, font_family="sans-serif")
+    nx.draw_networkx_labels(G, pos, font_size=10, font_family="sans-serif")
+    #edge_labels = nx.get_edge_attributes(G, "weight")
+    #nx.draw_networkx_edge_labels(G, pos, edge_labels)
 
     ax = plt.gca()
     ax.margins(0.08)
     plt.axis("off")
     plt.tight_layout()
     plt.show()
+
+    #if WRITE_FILE:
+    #nx.write_graphml_lxml(G, f"{len(P)}.graphml")
+        
+def trace(n:int, kl:float, p:Partition)->None:
+    """Print results
+
+    Args:
+        n (int): size of the aggregated current Markov chain
+        kl (float): KL
+        p (Partition): best partition
+    """
+    
+    print(f"----------------------------------------------------------{n}x{n}")
+    print(f"Best KL:{kl}")
+    
+    ### transform states in order to avoid losing the fusion of states
+    lst = list(map(lambda a: a[-1],p))
+    new_state_for_aggregation = max(lst,key=lst.count)
+    d = dict(p)
+    state_to_aggregate = [k for k,v in d.items() if v == new_state_for_aggregation]
+    d = {value: key for key, value in d.items()}
+    d[new_state_for_aggregation]= "/".join(state_to_aggregate)
+    print(f"Aggregate states: {'/'.join(state_to_aggregate)}")
+    
+    return d
 
 if __name__ == '__main__':
 
@@ -239,10 +265,7 @@ if __name__ == '__main__':
         #n = int(fn.split('x')[-1].split('_')[0].split('.dat')[0])
         
         S = tuple(sorted(list(P.states())))
-        
-        #SS = S
-        #PP = P
-         
+        kl,p,Q = next(getMFTPAnalysis2(S,P))
         n = len(S)
         
         if PLOT:
@@ -251,76 +274,44 @@ if __name__ == '__main__':
         
         if STAT:    
             STEADY = {n:P.steady()}
-            #print(STEADY)
             if not PLOT:
-                K_L=[]
+                K_L = []
+                
+        if PLOT:
+            X.append(n)
+            K_L.append(kl)
         
-        
-        #e2p, p2e = P._el2pos_()
-        #p = np.arange(len(e2p)*len(p2e),dtype=float).reshape(len(e2p),len(p2e))
-        
-        #for k,v in P._dok_(e2p).items():
-        #    p[k[0],k[1]]=v
-        #    print(k,v)
-        
-        a = getMFTPAnalysis2(S,P)
-        kl,p,Q = next(a)
-        
-        d_old=10000000
-        
-        while (n>=2) :
+        ### stopping condition
+        while (n>2) :
             
             ### P must be ergotic i.e. the transition matrix must be irreducible and acyclic.            
             G = nx.DiGraph(list(P.keys()), directed=True)
             nx.strongly_connected_components(G)
             assert nx.is_strongly_connected(G) and nx.is_aperiodic(G), f"Matrix is not ergotic!"
             
-            ### Mean First Passage Times Analysis -----------------------------------
-            #result = getMFTPAnalysis(S,P)    
-            ### ----------------------------------------------------------------------
+            ### just for stdout
+            d = trace(n,kl,p)
             
-            print(f"----------------------------------------------------------{n}x{n}")
-            print(f"Best KL:{kl}")
+            ### P transition matrix of the Markoc chain to lump
+            P = pykov.Chain()
+            for k,v in Q.items():
+                P[(d[k[0]],d[k[1]])] = v
             
-            ### transform states in order to avoid losing the fusion of states
-            #p = result['partition']
-            lst = list(map(lambda a: a[-1],p))
-            new_state_for_aggregation = max(lst,key=lst.count)
-            d = dict(p)
-            state_to_aggregate = [k for k,v in d.items() if v == new_state_for_aggregation]
-            d = {value: key for key, value in d.items()}
-            d[new_state_for_aggregation]= "/".join(state_to_aggregate)
+            ### set of states
+            S = tuple(sorted(P.states()))
             
+            ### mfpt analisys (REDUCED function that call FOP)
+            new_kl,p,Q = next(getMFTPAnalysis2(S,P))
             
-            print(f"Aggregate states: {'/'.join(state_to_aggregate)}")
-            
-            if n>=3:
-                P = pykov.Chain()
-                for k,v in Q.items():
-                    P[(d[k[0]],d[k[1]])] = v
-                
-                S = tuple(sorted(P.states()))
-                    
-                a = getMFTPAnalysis2(S,P)     
-                new_kl,p,Q = next(a)
-                
-                d = abs(new_kl-kl)
-                #if d > 10*d_old:
-                    ### exit !
-                #    n = 2
-                #else:
-                    # Number of states
-                n = len(S)
-                kl = new_kl
-                d_old = d
-            else:
-                ### exit !
-                n=1
+            ### update variables
+            n = len(S)
+            kl = new_kl
             
             if PLOT:
                 X.append(n)
                 K_L.append(kl)
-                #   displayGraph(dict(P))
+                displayGraph(dict(P))
+            
             if STAT:
                 STEADY[n]=P.steady()
                 if not PLOT:
@@ -335,36 +326,37 @@ if __name__ == '__main__':
                     f.write(f"{k[0]} {k[1]} {v} \n")
                 f.close()
          
+        ### just for stdout
+        trace(n,kl,p)
+            
         # end time
         end = time.time()
 
         # total time taken
         print(f"\nRuntime of the program is {end - start}s")
      
-        if PLOT:
-            plt.plot(X, K_L)
-
-            # show a legend on the plot
-            #plt.legend()
-            plt.axis([max(X),min(X),min(K_L),max(K_L)])
-            plt.grid()
-            
-            plt.ylabel("KL")
-            plt.xlabel("dim")
-
-            # function to show the plot
-            plt.show()
-            
-            #import statistics
-            #st_dev = statistics.stdev(Y)
-            #var  = statistics.variance(Y)
-            #mean_h = statistic.median_high(Y)
-            #print("Standard deviation of the KL: " + str(st_dev))
-            #print("Variance of the KL: " + str(var))
-        
         if STAT:    
             import pandas as pd
             import pprint
             s = pd.Series(K_L)
             print(s.describe())
             pprint.pprint(STEADY)
+            
+        if PLOT:
+            X = list(map(lambda a : f"{a} x {a}", map(str,X)))
+            plt.plot(X, K_L, label="KL",marker="o")
+
+            if STAT:
+                plt.plot(X,[s.describe()['std']]*len(X), label='std', linestyle="-")
+                
+            # show a legend on the plot
+            #plt.legend()
+            plt.axis([max(X),min(X),min(K_L),max(K_L)])
+            plt.grid()
+            
+            plt.ylabel("KL")
+            
+            # function to show the plot
+            plt.show()
+                    
+       
