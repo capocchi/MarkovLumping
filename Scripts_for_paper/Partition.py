@@ -67,7 +67,7 @@ class Partition():
             ### d = {'A':'NS0', 'B':'NS1';...}
             d = dict(p)
             ### NS
-            new_state = ''.join([n for n in list(ordered(d.values()))[1] if not n.isdigit()])
+            new_state = ''.join([n for n in list(sorted(d.values()))[1] if not n.isdigit()])
             return ''.join([d[s][len(new_state):] for s in self.GetStateLabels()])
         
     def GetLabeled(self,k:int, new_state:str=None, coordinate_choice:int=None)->list:

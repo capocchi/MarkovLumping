@@ -45,7 +45,7 @@ from Lifting import Lump, KL, Lifting
 
 PLOT = False
 WRITE_FILE = False
-STAT = True
+STAT = False
 
 def get_edges_with_weights(P:pykov.Chain)->tuple:
     """
@@ -222,7 +222,7 @@ def trace(n:int, kl:float, p:Partition)->None:
     
     print(f"----------------------------------------------------------{n}x{n}")
     print(f"Best KL:{kl}")
-    
+
     ### transform states in order to avoid losing the fusion of states
     lst = list(map(lambda a: a[-1],p))
     new_state_for_aggregation = max(lst,key=lst.count)
