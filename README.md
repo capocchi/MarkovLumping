@@ -86,7 +86,7 @@ $$
 then,
  
 $$
-\sum_{i,j=1}^{n} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)}  + log\left(\frac{P_{n+1,n+1}}{\widehat{Q}_{n+1,n+1}}\right)
+\sum_{i,j=1}^{n} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)} + log\left(\frac{P_{n+1,n+1}}{\widehat{Q}_{n+1,n+1}}\right)
 \geq \sum_{i,j=1}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}'}\right)}. 
 $$
 
@@ -96,7 +96,9 @@ We have to considerate two cases depending on the nature of $C'_m$
 which is a singleton containing the state 
 $P_{n+1,n+1}$.
 
-In the first case it is impossible to have the inequality since the proposition P(n) is true (so if $(N,P,\pi)$ be a given stationary n-ordered Markov chain, there is a partition function $\phi: N \rightarrow M$ where M is $n-1$ ordered such as for each other partition m-ordered with $m \textless n-1$, 
+In the first case it is impossible to have the inequality since the proposition P(n) is true (so if $(N,P,\pi)$ 
+be a given stationary n-ordered Markov chain, there is a partition function $\phi: N \rightarrow M$ 
+where M is $n-1$ ordered such as for each other partition m-ordered with $m \textless n-1$, 
 $\phi'$, 
 $R^{(\phi)}(P || \widehat{Q}) < R^{(\phi')}(P || \widehat{Q})$) and since
 
