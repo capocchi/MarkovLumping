@@ -57,7 +57,8 @@ where $M$
 is $n-1$ 
 ordered such as for each other partition m-ordered with $m \textless n-1$, 
 $\phi'$,
-$\Re^{\phi}$
+$\Re$
+$^{\phi}$
 $(P||\widehat{Q})$
 <
 $\Re^{\phi'}$
