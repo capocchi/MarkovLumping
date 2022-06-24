@@ -100,7 +100,7 @@ In the first case it is impossible to have the inequality since the proposition 
 be a given stationary n-ordered Markov chain, there is a partition function $\phi: N \rightarrow M$ 
 where M is $n-1$ ordered such as for each other partition m-ordered with $m \textless n-1$, 
 $\phi'$, 
-$R^{(\phi)}(P || \widehat{Q}) \geq R^{(\phi')}(P || \widehat{Q})$ and since
+$R^{(\phi)}(P || \widehat{Q}) < R^{(\phi')}(P || \widehat{Q})$ and since
 
 $$
 \sum_{i,j=1}^{n} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)} + log\left(\frac{P_{n+1,n+1}}{\widehat{Q}_{n+1,n+1}}\right)
@@ -113,8 +113,10 @@ $$
 R^{(\phi2')}(P || \widehat{Q}) = \sum_{i,j=1}^{n} {\pi_{i}P_{i,j}log(\frac{P_{i,j}}{\widehat{Q}_{i,j}'})}  + log(\frac{P_{n+1,n+1}}{\widehat{Q}_{n+1,n+1}'}).
 $$
 
-In the second case, $C'_m$ is not a singleton so it contains n+1-m states (at least $m=n-2$). So the partition have $m$ sets ($C'_1, C'_2, \ldots, C'_m$) and the inequality $R^{\left(\phi2\right)}\left(P || \widehat{Q}\right) \geq R^{\left(\phi2'\right)}\left(P || \widehat{Q}\right)$ 
-where $\phi2$ is a n-partition having the following sets $C_1, C_2, \ldots, C_n$ and $\phi2'$ is a partition having m sets $\left(m<n\right)$ $C_1, C_2, \ldots, C_m$.
+In the second case, $C'_m$ is not a singleton so it contains n+1-m states (at least $m=n-2$). 
+So the partition have $m$ sets ($C'_1, C'_2, \ldots, C'_m$) and the inequality $R^{\left(\phi2\right)}\left(P || \widehat{Q}\right) \geq R^{\left(\phi2'\right)}\left(P || \widehat{Q}\right)$ 
+where $\phi2$ 
+is a n-partition having the following sets $C_1, C_2, \ldots, C_n$ and $\phi2'$ is a partition having m sets $(m \textless n)$ $C_1, C_2, \ldots, C_m$.
 
 So we can write:
 
