@@ -54,7 +54,7 @@ Inductive step: we assume that P(k) is true and prove that, as a consequence of 
 
 We have to demonstrate that if $\left(N,P,\pi\right)$ is a given stationary Markov chain n-ordered, there is a partition function $\phi: N \rightarrow M$ where $M$ is $n-1$ ordered such as for each other partition m-ordered with $m<n-1$ $\phi'$, $\Re^{\left(\phi\right)}\left(P || \widehat{Q}\right) < \Re^{\left(\phi'\right)}\left(P || \widehat{Q}\right)$ .
 
-We have to demonstrate that if $\left(N,P,\pi\right)$ is a given stationary Markov chain n+1-ordered, there is a partition function $\phi2: N \rightarrow M$ where $M$ is $n$ ordered such as for each other partition m-ordered with $m<n$, $\phi2'$, $\Re^{\left(\phi2\right)}\left(P || \widehat{Q}\right) < \Re^{\left(\phi2'\right)}\left(P || \widehat{Q}\right)$ .
+We have to demonstrate that if $(N,P,\pi)$ is a given stationary Markov chain n+1-ordered, there is a partition function $\phi2: N \rightarrow M$ where $M$ is $n$ ordered such as for each other partition m-ordered with $m<n$, $\phi2'$, $\Re^{\left(\phi2\right)}\left(P || \widehat{Q}\right) < \Re^{\left(\phi2'\right)}\left(P || \widehat{Q}\right)$ .
 
 Let us suppose that it is not true.
 So we have $\left(N,P,\pi\right)$ being a given stationary n+1-ordered Markov chain  and for each $n$ ordered partition ($\phi2: N \rightarrow M$ where $M$ is n ordered), there is a m-ordered partition with $m<n$ $\phi2'$ such as $\Re^{\left(\phi2\right)}\left(P || \widehat{Q}\right) \geq \Re^{\left(\phi2'\right)}\left(P || \widehat{Q} \right)$ 
@@ -132,7 +132,6 @@ $$
 \Re^{\left(\phi2'\right)}\left(P || \widehat{Q}\right) = \sum_{i,j=1}^{m} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q'}_{i,j}}\right)}+\\
 \sum_{k=1}^{n} \left(\sum_{i=m+k,j=1}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q'}_{i,j}}\right)} + \sum_{i=1,j=m+k}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q'}_{i,j}}\right)} \right) + \\ 
 {\pi_{n+1}P_{n+1,n+1}log\left(\frac{P_{n+1,n+1}}{\widehat{Q'}_{n+1,n+1}}\right)}.
-
 \end{split} 
 $$
 
