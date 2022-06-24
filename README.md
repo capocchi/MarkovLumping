@@ -125,7 +125,7 @@ $$
 
 We should have: $R^{\left(\phi2\right)}\left(P || \widehat{Q}\right) \geq R^{\left(\phi2'\right)}\left(P || \widehat{Q}\right)$ whatever the partition $\phi2$.
 
-But we have for m, $m <n-1$:
+But we have for m, $m \textless n-1$:
 $$
 \begin{split}
 R^{\left(\phi2'\right)}\left(P || \widehat{Q}\right) = \sum_{i,j=1}^{m} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q`}_{i,j}}\right)}  + \\
