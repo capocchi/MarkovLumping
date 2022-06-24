@@ -57,13 +57,13 @@ where $M$
 is $n-1$ 
 ordered such as for each other partition m-ordered with $m \textless n-1$, 
 $\phi'$, 
-$\Re^{(\phi)} (P || \widehat{Q}) \textless \Re^{(\phi')}(P || \widehat{Q})$.
+$\Re^{(\phi)} (P || \widehat{Q}) < \Re^{(\phi')}(P || \widehat{Q})$.
 
 We have to demonstrate that if (N,P,$\pi$) is a given stationary Markov chain n+1-ordered, there is a partition function $\phi2: N \rightarrow M$
 where $M$ is $n$ 
 ordered such as for each other partition m-ordered with $m \textless n$, 
 $\phi2'$, 
-$\Re^{(\phi2)}(P || \widehat{Q}) \textless \Re^{(\phi2')}(P || \widehat{Q})$.
+$\Re^{(\phi2)}(P || \widehat{Q}) < \Re^{(\phi2')}(P || \widehat{Q})$.
 
 Let us suppose that it is not true.
 So we have $(N,P,\pi)$ 
