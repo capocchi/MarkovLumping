@@ -43,13 +43,143 @@ The best partition for k=n-1 results are obtained by executing the folowing comm
 python table1.py
 ```
 
-When $a \ne 0$, there are two solutions to $(ax^2 + bx + c = 0)$ and they are 
-$$ x = {-b \pm \sqrt{b^2-4ac} \over 2a} $$
-## Validation of deterministic and heuristic improvements (Table 2)
+The goal is to prove that given an initial n-ordered Markov chain, the optimum partition satisfying the equation 5 has $n-1$ elements. This proposition has been called P(n).
+
+The proof proceeds as follows:
+
+Basic step: we first prove that P(n) is true for the first value of $n$, namely, $n=2$.
+The proposition P(2) is obvious.
+
+Inductive step: we assume that P(k) is true and prove that, as a consequence of this, P(k+1) is true.
+
+We have to demonstrate that if $\left(N,P,\pi\right)$ is a given stationary Markov chain n-ordered, there is a partition function $\phi: N \rightarrow M$ where $M$ is $n-1$ ordered such as for each other partition m-ordered with $m<n-1$ $\phi'$, $\Re^{\left(\phi\right)}\left(P || \widehat{Q}\right) < \Re^{\left(\phi'\right)}\left(P || \widehat{Q}\right)$ .
+
+We have to demonstrate that if $\left(N,P,\pi\right)$ is a given stationary Markov chain n+1-ordered, there is a partition function $\phi2: N \rightarrow M$ where $M$ is $n$ ordered such as for each other partition m-ordered with $m<n$, $\phi2'$, $\Re^{\left(\phi2\right)}\left(P || \widehat{Q}\right) < \Re^{\left(\phi2'\right)}\left(P || \widehat{Q}\right)$ .
+
+Let us suppose that it is not true.
+So we have $\left(N,P,\pi\right)$ being a given stationary n+1-ordered Markov chain  and for each $n$ ordered partition ($\phi2: N \rightarrow M$ where $M$ is n ordered), there is a m-ordered partition with $m<n$ $\phi2'$ such as $\Re^{\left(\phi2\right)}\left(P || \widehat{Q}\right) \geq \Re^{\left(\phi2'\right)}\left(P || \widehat{Q} \right)$ 
+
+But in this case it is true when the n-partition $\phi2$ has the following sets $C_1, C_2, \ldots, C_n$ where $C_n$ is a singleton.
+
+Then we have: 
+
+\begin{equation*} 
+\sum_{i,j=1}^{n+1}{\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)} \geq \sum_{i,j=1}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}'}\right)}, 
+\label{eq:R1}
+\end{equation*}
+
+then,
+ 
+\begin{equation*}
+\sum_{i,j=1}^{n} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)}  + log\left(\frac{P_{n+1,n+1}}{\widehat{Q}_{n+1,n+1}}\right)
+\geq \sum_{i,j=1}^{n+1} %{\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}'}\right)}. 
+\label{eq_dem1}
+\end{equation*}
+
+But concerning $\phi2'$ we have $m$ set for the corresponding partition ($C'_1, C'_2, \ldots, C'_m$).
+
+We have to considerate two cases depending on the nature of $C'_m$: (i) $C'_m$ is a singleton containing the state $P_{n+1,n+1}$; (ii) $C'_m$ is not a singleton.
+
+In the first case it is impossible to have the inequality since the proposition P(n) is true (so if $\left(N,P,\pi\right)$ be a given stationary n-ordered Markov chain, there is a partition function $\phi: N \rightarrow M$ where M is $n-1$ ordered such as for each other partition m-ordered with $m<n-1$ $\phi'$, $\Re^{\left(\phi\right)}\left(P || \widehat{Q}\right) < \Re^{\left(\phi'\right)}\left(P || \widehat{Q}\right)$) and since
+
+\begin{equation*}
+\sum_{i,j=1}^{n} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)}  + log\left(\frac{P_{n+1,n+1}}{\widehat{Q}_{n+1,n+1}}\right)
+\geq \sum_{i,j=1}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}'}\right)}, 
+\label{eq_dem2}
+\end{equation*}
+
+we can find a partition that contradicts the inequality of Proposition $P(n)$ since,  
+
+\begin{equation*}
+\Re^{\left(\phi2'\right)}\left(P || \widehat{Q}\right) = \sum_{i,j=1}^{n} %{\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}'}\right)}  + %log\left(\frac{P_{n+1,n+1}}{\widehat{Q}_{n+1,n+1}'}\right).
+\label{eq_dem}
+\end{equation*}
+
+In the second case, $C'_m$ is not a singleton so it contains n+1-m states (at least $m=n-2$). So the partition have $m$ sets ($C'_1, C'_2, \ldots, C'_m$) and the inequality $\Re^{\left(\phi2\right)}\left(P || \widehat{Q}\right) \geq \Re^{\left(\phi2'\right)}\left(P || \widehat{Q}\right)$ 
+where $\phi2$ is a n-partition having the following sets $C_1, C_2, \ldots, C_n$ and $\phi2'$ is a partition having m sets $\left(m<n\right)$ $C_1, C_2, \ldots, C_m$.
+
+So we can write:
+
+\begin{equation*}
+\begin{split}
+\Re^{\left(\phi2\right)}\left(P || \widehat{Q}\right) = \sum_{i,j=1}^{n} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)}  + \\ %\sum_{i=n+1,j=1}^{n} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)} + \\  \sum_{i=1,j=n+1}^{n} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)} + \\ 
+{\pi_{n+1}P_{n+1,n+1}log\left(\frac{P_{n+1,n+1}}{\widehat{Q}_{n+1,n+1}}\right)}.
+\label{eq_dem2}
+\end{split} 
+\end{equation*}
+
+We should have: $\Re^{\left(\phi2\right)}\left(P || \widehat{Q}\right) \geq \Re^{\left(\phi2'\right)}\left(P || \widehat{Q}\right)$ whatever the partition $\phi2$.
+
+But we have for m, $m <n-1$:
+\begin{equation*}
+\begin{split}
+\Re^{\left(\phi2'\right)}\left(P || \widehat{Q}\right) = \sum_{i,j=1}^{m} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q`}_{i,j}}\right)}  + \\
+\sum_{k=1}^{n} \left(\sum_{i=m+k,j=1}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q'}_{i,j}}\right)} +  
+\sum_{i=1,j=m+k}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q'}_{i,j}}\right)} \right) + \\
+{\pi_{n+1}P_{n+1,n+1}log\left(\frac{P_{n+1,n+1}}{\widehat{Q`}_{n+1,n+1}}\right)}.
+\label{eq_dem2}
+\end{split} 
+\end{equation*}
+
+So the inequality $\Re^{\left(\phi2\right)}\left(P || \widehat{Q}\right) \geq \Re^{\left(\phi2'\right)}\left(P || \widehat{Q}\right)$ whatever the partition $\phi2$ can be simplified and becomes:
+
+\begin{equation}
+\begin{split}
+\Re^{\left(\phi2\right)}\left(P || \widehat{Q}\right) = \sum_{i,j=1}^{m} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)}+\\
+\sum_{k=1}^{n} \left(\sum_{i=m+k,j=1}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)} + \sum_{i=1,j=m+k}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)} \right) + \\ 
+{\pi_{n+1}P_{n+1,n+1}log\left(\frac{P_{n+1,n+1}}{\widehat{Q}_{n+1,n+1}}\right)},
+\label{eq:phi2}
+\end{split} 
+\end{equation}
+
+and
+
+\begin{equation}
+\begin{split}
+\Re^{\left(\phi2'\right)}\left(P || \widehat{Q}\right) = \sum_{i,j=1}^{m} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q'}_{i,j}}\right)}+\\
+\sum_{k=1}^{n} \left(\sum_{i=m+k,j=1}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q'}_{i,j}}\right)} + \sum_{i=1,j=m+k}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q'}_{i,j}}\right)} \right) + \\ 
+{\pi_{n+1}P_{n+1,n+1}log\left(\frac{P_{n+1,n+1}}{\widehat{Q'}_{n+1,n+1}}\right)}.
+\label{eq:phi2'}
+\end{split} 
+\end{equation}
+
+So for the partition $\phi2'$ ($C'_1, C'_2, \ldots, C'_m$) corresponding to the classes involved in the partition, we should have
+$\Re^{\left(\phi2\right)}\left(P || \widehat{Q}\right) \geq \Re^{\left(\phi2'\right)}\left(P || \widehat{Q}\right)$ whatever the partition $\phi2$. 
+
+But once again since proposition P(n) is true (for example when $n= m$):
+\begin{equation*}
+\begin{split}
+\sum_{i,j=1}^{m} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)} 
+\leq
+\sum_{i,j=1}^{m} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q'}_{i,j}}\right)}.
+\end{split} 
+\end{equation*}
+
+Furthermore we can notice that:
+\begin{equation*}
+\begin{split}
+{\widehat{Q'}_{i,j}} = \frac{\pi_j}{\sum\limits_{l \in \psi(j)}{\pi_l}}Q_{\phi(i)\phi(j)},
+\end{split} 
+\end{equation*}
+
+when $i$ varies from $m+k$ to $n+1$ and $i$ from 1 to $n+1$ as well as when $i$ varies from 1 to $n+1$ and $j$ to $m+k$ to $n+1$ (with $m<n-1$). 
+ 
+That implies that all the terms of the sum involved in the equation~\ref{eq:phi2'} are inferior to the terms of the sum involved the equation~\ref{eq:phi2}. So there is a counter example for the proposed proposition (for the partition $\phi2'=(C'_1, C'_2, \ldots, C'_m$) corresponding to the classes involved in the $\Re^{\left(\phi2\right)}\left(P || \widehat{Q}\right) \geq \Re^{\left(\phi2'\right)}\left(P || \widehat{Q}\right)$ whatever the partition $\phi2$). The proof of proposition P(n+1) is done.}
+
+## Validation of deterministic and heuristic improvements (Table 1)
 
 ![table2](https://user-images.githubusercontent.com/233341/134331867-90601576-3c01-4a24-9f4b-6f52a1ea4c80.gif)
 
 Table 1 is obtained by executing the folowing command from the Script_for_paper/ directory:
+
+```
+python table1.py
+```
+## Validation of BESTA algorithm (Table 2)
+
+![table2](https://user-images.githubusercontent.com/233341/134331867-90601576-3c01-4a24-9f4b-6f52a1ea4c80.gif)
+
+Table 2 is obtained by executing the folowing command from the Script_for_paper/ directory:
 
 ```
 python table2.py
