@@ -33,16 +33,18 @@ See the header of the main_matrix.py to have more details concerning the options
 
 The Matrix/ directory contains all of the matrix used in the experiments.
 
-## Best partition k=n-1 (Table 1)
+## Best partition k=n-1 
 
 ![table1.py python execution trace](https://user-images.githubusercontent.com/233341/134331100-07f03927-43fc-42cf-b4bf-b6243f96826e.gif)
 
-Table 1 is obtained by executing the folowing command from the Script_for_paper/ directory:
+The best partition for k=n-1 results are obtained by executing the folowing command from the Script_for_paper/ directory:
 
 ```
 python table1.py
 ```
 
+When $a \ne 0$, there are two solutions to $(ax^2 + bx + c = 0)$ and they are 
+$$ x = {-b \pm \sqrt{b^2-4ac} \over 2a} $$
 ## Validation of deterministic and heuristic improvements (Table 2)
 
 ![table2](https://user-images.githubusercontent.com/233341/134331867-90601576-3c01-4a24-9f4b-6f52a1ea4c80.gif)

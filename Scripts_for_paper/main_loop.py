@@ -43,7 +43,7 @@ import matplotlib.pyplot as plt
 from Partition import Partition
 from Lifting import Lump, KL, Lifting
 
-PLOT = False
+PLOT = True
 WRITE_FILE = False
 STAT = False
 
@@ -351,7 +351,8 @@ if __name__ == '__main__':
                 
             # show a legend on the plot
             #plt.legend()
-            plt.axis([max(X),min(X),min(K_L),max(K_L)])
+            #plt.axis([max(X),min(X),min(K_L),max(K_L)])
+            plt.xticks(rotation=45)
             plt.grid()
             
             plt.ylabel("KL")
