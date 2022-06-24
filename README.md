@@ -108,27 +108,27 @@ $$
 we can find a partition that contradicts the inequality of Proposition $P(n)$ since,  
 
 $$
-\Re^{\left(\phi2'\right)}\left(P || \widehat{Q}\right) = \sum_{i,j=1}^{n} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}'}\right)}  + log\left(\frac{P_{n+1,n+1}}{\widehat{Q}_{n+1,n+1}'}\right).
+R^{(\phi2')}(P || \widehat{Q}) = \sum_{i,j=1}^{n} {\pi_{i}P_{i,j}log(\frac{P_{i,j}}{\widehat{Q}_{i,j}'})}  + log(\frac{P_{n+1,n+1}}{\widehat{Q}_{n+1,n+1}'}).
 $$
 
-In the second case, $C'_m$ is not a singleton so it contains n+1-m states (at least $m=n-2$). So the partition have $m$ sets ($C'_1, C'_2, \ldots, C'_m$) and the inequality $\Re^{\left(\phi2\right)}\left(P || \widehat{Q}\right) \geq \Re^{\left(\phi2'\right)}\left(P || \widehat{Q}\right)$ 
+In the second case, $C'_m$ is not a singleton so it contains n+1-m states (at least $m=n-2$). So the partition have $m$ sets ($C'_1, C'_2, \ldots, C'_m$) and the inequality $R^{\left(\phi2\right)}\left(P || \widehat{Q}\right) \geq R^{\left(\phi2'\right)}\left(P || \widehat{Q}\right)$ 
 where $\phi2$ is a n-partition having the following sets $C_1, C_2, \ldots, C_n$ and $\phi2'$ is a partition having m sets $\left(m<n\right)$ $C_1, C_2, \ldots, C_m$.
 
 So we can write:
 
 $$
 \begin{split}
-\Re^{\left(\phi2\right)}\left(P || \widehat{Q}\right) = \sum_{i,j=1}^{n} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)}  + \\ \sum_{i=n+1,j=1}^{n} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)} + \\  \sum_{i=1,j=n+1}^{n} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)} + \\ 
+R^{\left(\phi2\right)}\left(P || \widehat{Q}\right) = \sum_{i,j=1}^{n} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)}  + \\ \sum_{i=n+1,j=1}^{n} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)} + \\  \sum_{i=1,j=n+1}^{n} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)} + \\ 
 {\pi_{n+1}P_{n+1,n+1}log\left(\frac{P_{n+1,n+1}}{\widehat{Q}_{n+1,n+1}}\right)}.
 \end{split} 
 $$
 
-We should have: $\Re^{\left(\phi2\right)}\left(P || \widehat{Q}\right) \geq \Re^{\left(\phi2'\right)}\left(P || \widehat{Q}\right)$ whatever the partition $\phi2$.
+We should have: $R^{\left(\phi2\right)}\left(P || \widehat{Q}\right) \geq R^{\left(\phi2'\right)}\left(P || \widehat{Q}\right)$ whatever the partition $\phi2$.
 
 But we have for m, $m <n-1$:
 $$
 \begin{split}
-\Re^{\left(\phi2'\right)}\left(P || \widehat{Q}\right) = \sum_{i,j=1}^{m} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q`}_{i,j}}\right)}  + \\
+R^{\left(\phi2'\right)}\left(P || \widehat{Q}\right) = \sum_{i,j=1}^{m} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q`}_{i,j}}\right)}  + \\
 \sum_{k=1}^{n} \left(\sum_{i=m+k,j=1}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q'}_{i,j}}\right)} +  
 \sum_{i=1,j=m+k}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q'}_{i,j}}\right)} \right) + \\
 {\pi_{n+1}P_{n+1,n+1}log\left(\frac{P_{n+1,n+1}}{\widehat{Q`}_{n+1,n+1}}\right)}.
@@ -139,7 +139,7 @@ So the inequality $\Re^{\left(\phi2\right)}\left(P || \widehat{Q}\right) \geq \R
 
 $$
 \begin{split}
-\Re^{\left(\phi2\right)}\left(P || \widehat{Q}\right) = \sum_{i,j=1}^{m} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)}+\\
+R^{\left(\phi2\right)}\left(P || \widehat{Q}\right) = \sum_{i,j=1}^{m} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)}+\\
 \sum_{k=1}^{n} \left(\sum_{i=m+k,j=1}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)} + \sum_{i=1,j=m+k}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)} \right) + \\ 
 {\pi_{n+1}P_{n+1,n+1}log\left(\frac{P_{n+1,n+1}}{\widehat{Q}_{n+1,n+1}}\right)},
 \end{split} 
@@ -149,16 +149,16 @@ and
 
 $$
 \begin{split}
-\Re^{\left(\phi2'\right)}\left(P || \widehat{Q}\right) = \sum_{i,j=1}^{m} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q'}_{i,j}}\right)}+\\
+R^{\left(\phi2'\right)}\left(P || \widehat{Q}\right) = \sum_{i,j=1}^{m} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q'}_{i,j}}\right)}+\\
 \sum_{k=1}^{n} \left(\sum_{i=m+k,j=1}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q'}_{i,j}}\right)} + \sum_{i=1,j=m+k}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q'}_{i,j}}\right)} \right) + \\ 
 {\pi_{n+1}P_{n+1,n+1}log\left(\frac{P_{n+1,n+1}}{\widehat{Q'}_{n+1,n+1}}\right)}.
 \end{split} 
 $$
 
 So for the partition $\phi2'$ ($C'_1, C'_2, \ldots, C'_m$) corresponding to the classes involved in the partition, we should have
-$\Re^{\left(\phi2\right)}\left(P || \widehat{Q}\right) \geq \Re^{\left(\phi2'\right)}\left(P || \widehat{Q}\right)$ whatever the partition $\phi2$. 
+$R^{\left(\phi2\right)}\left(P || \widehat{Q}\right) \geq R^{\left(\phi2'\right)}\left(P || \widehat{Q}\right)$ whatever the partition $\phi2$. 
 
-But once again since proposition P(n) is true (for example when $n= m$):
+But once again since proposition P(n) is true (for example when $n=m$):
 
 $$
 \begin{split}
@@ -177,7 +177,7 @@ $$
 
 when $i$ varies from $m+k$ to $n+1$ and $i$ from 1 to $n+1$ as well as when $i$ varies from 1 to $n+1$ and $j$ to $m+k$ to $n+1$ (with $m<n-1$). 
  
-That implies that all the terms of the sum involved in the equation~\ref{eq:phi2'} are inferior to the terms of the sum involved the equation~\ref{eq:phi2}. So there is a counter example for the proposed proposition (for the partition $\phi2'=(C'_1, C'_2, \ldots, C'_m$) corresponding to the classes involved in the $\Re^{\left(\phi2\right)}\left(P || \widehat{Q}\right) \geq \Re^{\left(\phi2'\right)}\left(P || \widehat{Q}\right)$ whatever the partition $\phi2$). The proof of proposition P(n+1) is done.}
+That implies that all the terms of the sum involved in the equation~\ref{eq:phi2'} are inferior to the terms of the sum involved the equation~\ref{eq:phi2}. So there is a counter example for the proposed proposition (for the partition $\phi2'=(C'_1, C'_2, \ldots, C'_m$) corresponding to the classes involved in the $\Re^{\left(\phi2\right)}\left(P || \widehat{Q}\right) \geq R^{\left(\phi2'\right)}\left(P || \widehat{Q}\right)$ whatever the partition $\phi2$). The proof of proposition P(n+1) is done.}
 
 ## Validation of deterministic and heuristic improvements (Table 1)
 
