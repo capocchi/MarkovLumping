@@ -43,6 +43,8 @@ The best partition for k=n-1 results are obtained by executing the folowing comm
 python table1.py
 ```
 
+### Proof by contradiction of proposition P(n)
+
 The goal is to prove that given an initial n-ordered Markov chain, the optimum partition satisfying the equation 5 has $n-1$ elements. This proposition has been called P(n).
 
 The proof proceeds as follows:
