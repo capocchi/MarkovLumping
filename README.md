@@ -79,16 +79,16 @@ where $C_n$ is a singleton.
 
 Then we have: 
 
-$
-\sum_{i,j=1}^{n+1}{\pi_{i}P_{i,j}log(\frac{P_{i,j}}{\widehat{Q}_{i,j}})}\geq\sum_{i,j=1}^{n+1} {\pi_{i}P_{i,j}log(\frac{P_{i,j}}{\widehat{Q}_{i,j}'})}, 
-$
+$$
+\sum_{i,j=1}^{n+1}{\pi_{i}P_{i,j}log(\frac{P_{i,j}}{\widehat{Q}_{i,j}})} \geq \sum_{i,j=1}^{n+1} {\pi_{i}P_{i,j}log(\frac{P_{i,j}}{\widehat{Q}_{i,j}'})} 
+$$,
 
 then,
  
 $$
 \sum_{i,j=1}^{n} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)} + log\left(\frac{P_{n+1,n+1}}{\widehat{Q}_{n+1,n+1}}\right)
-\geq \sum_{i,j=1}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}'}\right)}. 
-$$
+\geq \sum_{i,j=1}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}'}\right)}
+$$.
 
 But concerning $\phi2'$ we have $m$ set for the corresponding partition ($C'_1, C'_2, \ldots, C'_m$).
 
