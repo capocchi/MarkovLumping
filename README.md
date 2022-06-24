@@ -55,9 +55,9 @@ Inductive step: we assume that P(k) is true and prove that, as a consequence of 
 We have to demonstrate that if (N,P,$\pi$\) is a given stationary Markov chain n-ordered, there is a partition function $\phi: N \rightarrow M$ 
 where $M$
 is $n-1$ 
-ordered such as for each other partition m-ordered with $m<n-1$ 
+ordered such as for each other partition m-ordered with $m \textless n-1$ 
 $\phi'$, 
-$\Re^{(\phi)} (P || \widehat{Q}) < \Re^{(\phi')}(P || \widehat{Q}$).
+$\Re^{(\phi)} (P || \widehat{Q}) < \Re^{(\phi')}(P || \widehat{Q})$.
 
 We have to demonstrate that if (N,P,$\pi$) is a given stationary Markov chain n+1-ordered, there is a partition function $\phi2: N \rightarrow M$ where $M$ is $n$ ordered such as for each other partition m-ordered with $m<n$, $\phi2'$, $\Re^{\left(\phi2\right)}\left(P || \widehat{Q}\right) < \Re^{\left(\phi2'\right)}\left(P || \widehat{Q}\right)$ .
 
