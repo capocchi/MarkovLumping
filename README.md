@@ -90,10 +90,7 @@ $$
 
 But concerning $\phi2'$ we have $m$ set for the corresponding partition ($C'_1, C'_2, \ldots, C'_m$).
 
-We have to considerate two cases depending on the nature of $C'_m$: 
-$C'_m$ is a singleton containing the state $P_{n+1,n+1}$ 
-and 
-$C'_m$ is not a singleton.
+We have to considerate two cases depending on the nature of $C'_m$ which is a singleton containing the state $P_{n+1,n+1}$.
 
 In the first case it is impossible to have the inequality since the proposition P(n) is true (so if $(N,P,\pi)$ be a given stationary n-ordered Markov chain, there is a partition function $\phi: N \rightarrow M$ where M is $n-1$ ordered such as for each other partition m-ordered with $m \textless n-1$, 
 $\phi'$, 
