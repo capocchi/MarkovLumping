@@ -116,7 +116,9 @@ $$
 In the second case, $C'_m$ is not a singleton so it contains n+1-m states (at least $m=n-2$). 
 So the partition have $m$ sets ($C'_1, C'_2, \ldots, C'_m$) and the inequality $R^{\left(\phi2\right)}\left(P || \widehat{Q}\right) \geq R^{\left(\phi2'\right)}\left(P || \widehat{Q}\right)$ 
 where $\phi2$ 
-is a n-partition having the following sets $C_1, C_2, \ldots, C_n$ and $\phi2'$ is a partition having m sets $(m \textless n)$ $C_1, C_2, \ldots, C_m$.
+is a n-partition having the following sets $C_1, C_2, \ldots, C_n$ and $\phi2'$
+is a partition having $(m \textless n)$ sets 
+$C_1, C_2, \ldots, C_m$.
 
 So we can write:
 
