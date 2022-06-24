@@ -63,18 +63,16 @@ But in this case it is true when the n-partition $\phi2$ has the following sets 
 
 Then we have: 
 
-\begin{equation*} 
+$$
 \sum_{i,j=1}^{n+1}{\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)} \geq \sum_{i,j=1}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}'}\right)}, 
-\label{eq:R1}
-\end{equation*}
+$$
 
 then,
  
-\begin{equation*}
+$$
 \sum_{i,j=1}^{n} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)}  + log\left(\frac{P_{n+1,n+1}}{\widehat{Q}_{n+1,n+1}}\right)
 \geq \sum_{i,j=1}^{n+1} %{\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}'}\right)}. 
-\label{eq_dem1}
-\end{equation*}
+$$
 
 But concerning $\phi2'$ we have $m$ set for the corresponding partition ($C'_1, C'_2, \ldots, C'_m$).
 
@@ -82,85 +80,81 @@ We have to considerate two cases depending on the nature of $C'_m$: (i) $C'_m$ i
 
 In the first case it is impossible to have the inequality since the proposition P(n) is true (so if $\left(N,P,\pi\right)$ be a given stationary n-ordered Markov chain, there is a partition function $\phi: N \rightarrow M$ where M is $n-1$ ordered such as for each other partition m-ordered with $m<n-1$ $\phi'$, $\Re^{\left(\phi\right)}\left(P || \widehat{Q}\right) < \Re^{\left(\phi'\right)}\left(P || \widehat{Q}\right)$) and since
 
-\begin{equation*}
+$$
 \sum_{i,j=1}^{n} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)}  + log\left(\frac{P_{n+1,n+1}}{\widehat{Q}_{n+1,n+1}}\right)
 \geq \sum_{i,j=1}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}'}\right)}, 
-\label{eq_dem2}
-\end{equation*}
+$$
 
 we can find a partition that contradicts the inequality of Proposition $P(n)$ since,  
 
-\begin{equation*}
-\Re^{\left(\phi2'\right)}\left(P || \widehat{Q}\right) = \sum_{i,j=1}^{n} %{\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}'}\right)}  + %log\left(\frac{P_{n+1,n+1}}{\widehat{Q}_{n+1,n+1}'}\right).
-\label{eq_dem}
-\end{equation*}
+$$
+\Re^{\left(\phi2'\right)}\left(P || \widehat{Q}\right) = \sum_{i,j=1}^{n} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}'}\right)}  + log\left(\frac{P_{n+1,n+1}}{\widehat{Q}_{n+1,n+1}'}\right).
+$$
 
 In the second case, $C'_m$ is not a singleton so it contains n+1-m states (at least $m=n-2$). So the partition have $m$ sets ($C'_1, C'_2, \ldots, C'_m$) and the inequality $\Re^{\left(\phi2\right)}\left(P || \widehat{Q}\right) \geq \Re^{\left(\phi2'\right)}\left(P || \widehat{Q}\right)$ 
 where $\phi2$ is a n-partition having the following sets $C_1, C_2, \ldots, C_n$ and $\phi2'$ is a partition having m sets $\left(m<n\right)$ $C_1, C_2, \ldots, C_m$.
 
 So we can write:
 
-\begin{equation*}
+$$
 \begin{split}
-\Re^{\left(\phi2\right)}\left(P || \widehat{Q}\right) = \sum_{i,j=1}^{n} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)}  + \\ %\sum_{i=n+1,j=1}^{n} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)} + \\  \sum_{i=1,j=n+1}^{n} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)} + \\ 
+\Re^{\left(\phi2\right)}\left(P || \widehat{Q}\right) = \sum_{i,j=1}^{n} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)}  + \\ \sum_{i=n+1,j=1}^{n} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)} + \\  \sum_{i=1,j=n+1}^{n} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)} + \\ 
 {\pi_{n+1}P_{n+1,n+1}log\left(\frac{P_{n+1,n+1}}{\widehat{Q}_{n+1,n+1}}\right)}.
-\label{eq_dem2}
 \end{split} 
-\end{equation*}
+$$
 
 We should have: $\Re^{\left(\phi2\right)}\left(P || \widehat{Q}\right) \geq \Re^{\left(\phi2'\right)}\left(P || \widehat{Q}\right)$ whatever the partition $\phi2$.
 
 But we have for m, $m <n-1$:
-\begin{equation*}
+$$
 \begin{split}
 \Re^{\left(\phi2'\right)}\left(P || \widehat{Q}\right) = \sum_{i,j=1}^{m} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q`}_{i,j}}\right)}  + \\
 \sum_{k=1}^{n} \left(\sum_{i=m+k,j=1}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q'}_{i,j}}\right)} +  
 \sum_{i=1,j=m+k}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q'}_{i,j}}\right)} \right) + \\
 {\pi_{n+1}P_{n+1,n+1}log\left(\frac{P_{n+1,n+1}}{\widehat{Q`}_{n+1,n+1}}\right)}.
-\label{eq_dem2}
 \end{split} 
-\end{equation*}
+$$
 
 So the inequality $\Re^{\left(\phi2\right)}\left(P || \widehat{Q}\right) \geq \Re^{\left(\phi2'\right)}\left(P || \widehat{Q}\right)$ whatever the partition $\phi2$ can be simplified and becomes:
 
-\begin{equation}
+$$
 \begin{split}
 \Re^{\left(\phi2\right)}\left(P || \widehat{Q}\right) = \sum_{i,j=1}^{m} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)}+\\
 \sum_{k=1}^{n} \left(\sum_{i=m+k,j=1}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)} + \sum_{i=1,j=m+k}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)} \right) + \\ 
 {\pi_{n+1}P_{n+1,n+1}log\left(\frac{P_{n+1,n+1}}{\widehat{Q}_{n+1,n+1}}\right)},
-\label{eq:phi2}
 \end{split} 
-\end{equation}
+$$
 
 and
 
-\begin{equation}
+$$
 \begin{split}
 \Re^{\left(\phi2'\right)}\left(P || \widehat{Q}\right) = \sum_{i,j=1}^{m} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q'}_{i,j}}\right)}+\\
 \sum_{k=1}^{n} \left(\sum_{i=m+k,j=1}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q'}_{i,j}}\right)} + \sum_{i=1,j=m+k}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q'}_{i,j}}\right)} \right) + \\ 
 {\pi_{n+1}P_{n+1,n+1}log\left(\frac{P_{n+1,n+1}}{\widehat{Q'}_{n+1,n+1}}\right)}.
-\label{eq:phi2'}
+
 \end{split} 
-\end{equation}
+$$
 
 So for the partition $\phi2'$ ($C'_1, C'_2, \ldots, C'_m$) corresponding to the classes involved in the partition, we should have
 $\Re^{\left(\phi2\right)}\left(P || \widehat{Q}\right) \geq \Re^{\left(\phi2'\right)}\left(P || \widehat{Q}\right)$ whatever the partition $\phi2$. 
 
 But once again since proposition P(n) is true (for example when $n= m$):
-\begin{equation*}
+
+$$
 \begin{split}
 \sum_{i,j=1}^{m} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)} 
 \leq
 \sum_{i,j=1}^{m} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q'}_{i,j}}\right)}.
 \end{split} 
-\end{equation*}
+$$
 
 Furthermore we can notice that:
-\begin{equation*}
+$$
 \begin{split}
 {\widehat{Q'}_{i,j}} = \frac{\pi_j}{\sum\limits_{l \in \psi(j)}{\pi_l}}Q_{\phi(i)\phi(j)},
 \end{split} 
-\end{equation*}
+$$
 
 when $i$ varies from $m+k$ to $n+1$ and $i$ from 1 to $n+1$ as well as when $i$ varies from 1 to $n+1$ and $j$ to $m+k$ to $n+1$ (with $m<n-1$). 
  
