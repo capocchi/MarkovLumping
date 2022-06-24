@@ -80,7 +80,8 @@ where $C_n$ is a singleton.
 Then we have: 
 
 $$
-\sum_{i,j=1}^{n+1}{\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)} \geq \sum_{i,j=1}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}'}\right)}, 
+\sum_{i,j=1}^{n+1}{\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)} \geq 
+\sum_{i,j=1}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}'}\right)}, 
 $$
 
 then,
@@ -132,7 +133,8 @@ R^{\left(\phi2\right)}\left(P || \widehat{Q}\right) = \sum_{i,j=1}^{n} {\pi_{i}P
 \end{split} 
 $$
 
-We should have: $R^{\left(\phi2\right)}\left(P || \widehat{Q}\right) \geq R^{\left(\phi2'\right)}\left(P || \widehat{Q}\right)$ whatever the partition $\phi2$.
+We should have: $R^{\left(\phi2\right)}\left(P || \widehat{Q}\right) \geq R^{\left(\phi2'\right)}\left(P || \widehat{Q}\right)$ 
+whatever the partition $\phi2$.
 
 But we have for m, $m \textless n-1$:
 $$
