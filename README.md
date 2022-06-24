@@ -68,7 +68,7 @@ $R^{(\phi2)}(P || \widehat{Q}) < R^{(\phi2')}(P || \widehat{Q})$.
 Let us suppose that it is not true.
 So we have $(N,P,\pi)$ 
 being a given stationary n+1-ordered Markov chain and for each $n$ ordered partition ($\phi2: N \rightarrow M$
-where $M$ is n ordered), there is a m-ordered partition with $m<n$, 
+where $M$ is n ordered), there is a m-ordered partition with $m \textless n$, 
 $\phi2'$ such as 
 $R^{(\phi2)}(P || \widehat{Q}) \geq R^{(\phi2')}(P || \widehat{Q})$ 
 
