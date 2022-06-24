@@ -52,19 +52,28 @@ The proposition P(2) is obvious.
 
 Inductive step: we assume that P(k) is true and prove that, as a consequence of this, P(k+1) is true.
 
-We have to demonstrate that if (N,P,$\pi$\) is a given stationary Markov chain n-ordered, there is a partition function $\phi: N \rightarrow M$ 
+We have to demonstrate that if (N,P,$\pi$) is a given stationary Markov chain n-ordered, there is a partition function $\phi: N \rightarrow M$ 
 where $M$
 is $n-1$ 
-ordered such as for each other partition m-ordered with $m \textless n-1$ 
+ordered such as for each other partition m-ordered with $m \textless n-1$, 
 $\phi'$, 
-$\Re^{(\phi)} (P || \widehat{Q}) < \Re^{(\phi')}(P || \widehat{Q})$.
+$\Re^{(\phi)} (P || \widehat{Q}) \textless \Re^{(\phi')}(P || \widehat{Q})$.
 
-We have to demonstrate that if (N,P,$\pi$) is a given stationary Markov chain n+1-ordered, there is a partition function $\phi2: N \rightarrow M$ where $M$ is $n$ ordered such as for each other partition m-ordered with $m<n$, $\phi2'$, $\Re^{\left(\phi2\right)}\left(P || \widehat{Q}\right) < \Re^{\left(\phi2'\right)}\left(P || \widehat{Q}\right)$ .
+We have to demonstrate that if (N,P,$\pi$) is a given stationary Markov chain n+1-ordered, there is a partition function $\phi2: N \rightarrow M$
+where $M$ is $n$ 
+ordered such as for each other partition m-ordered with $m \textless n$, 
+$\phi2'$, 
+$\Re^{(\phi2)}(P || \widehat{Q}) \textless \Re^{(\phi2')}(P || \widehat{Q})$.
 
 Let us suppose that it is not true.
-So we have $\left(N,P,\pi\right)$ being a given stationary n+1-ordered Markov chain and for each $n$ ordered partition ($\phi2: N \rightarrow M$ where $M$ is n ordered), there is a m-ordered partition with $m<n$ $\phi2'$ such as $\Re^{\left(\phi2\right)}\left(P || \widehat{Q}\right) \geq \Re^{\left(\phi2'\right)}\left(P || \widehat{Q} \right)$ 
+So we have $(N,P,\pi)$ 
+being a given stationary n+1-ordered Markov chain and for each $n$ ordered partition ($\phi2: N \rightarrow M$
+where $M$ is n ordered), there is a m-ordered partition with $m<n$, 
+$\phi2'$ such as 
+$\Re^{(\phi2)}(P || \widehat{Q}) \geq \Re^{(\phi2')}(P || \widehat{Q})$ 
 
-But in this case it is true when the n-partition $\phi2$ has the following sets $C_1, C_2, \ldots, C_n$ where $C_n$ is a singleton.
+But in this case it is true when the n-partition $\phi2$ has the following sets $C_1, C_2, \ldots, C_n$ 
+where $C_n$ is a singleton.
 
 Then we have: 
 
