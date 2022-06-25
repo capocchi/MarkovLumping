@@ -41,7 +41,7 @@ The best partition for k=n-1 results presented in the **FOP(LP)** column of the 
 ```
 python best_partition.py
 ```
-
+md"""
 \begin{table*}
  \caption{Confirmation that the deterministic improvement is efficient by pointing out that the optimum solutions (best KL in bold) are belonging to partitions having $k=n-1$ elements if the initial Markov chain was n-order using a eleven benchmark n-ordered Markov chains uniformly distributed with 0.1 as high parameter.}
 \label{whyK-1}
@@ -70,6 +70,7 @@ k/n & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14\\
 \bottomrule
 \end{tabularx}
 \end{table*}
+"""
 
 ### Proof by contradiction of proposition P(n)
 
