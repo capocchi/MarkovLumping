@@ -61,11 +61,11 @@ ordered such as for each other partition m-ordered with $m \textless n-1$,
 $\phi'$,
 $R^{(\phi)}(P || \widehat{Q}) < R^{(\phi')}(P || \widehat{Q})$.
 
-We have to demonstrate that if (N,P,$\pi$) is a given stationary Markov chain n+1-ordered, there is a partition function $\phi2: N \rightarrow M$
+We have to demonstrate that if (N,P,$\pi$) is a given stationary Markov chain n+1-ordered, there is a partition function $\phi_2: N \rightarrow M$
 where $M$ is $n$ 
 ordered such as for each other partition m-ordered with $m \textless n$, 
-$\phi2'$, 
-$R^{(\phi2)}(P || \widehat{Q}) < R^{(\phi2')}(P || \widehat{Q})$.
+$\phi_2'$, 
+$R^{(\phi_2)}(P || \widehat{Q}) < R^{(\phi_2')}(P || \widehat{Q})$.
 
 Let us suppose that it is not true.
 So we have $(N,P,\pi)$ 
