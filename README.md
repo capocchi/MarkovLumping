@@ -33,14 +33,14 @@ See the header of the main_matrix.py to have more details concerning the options
 
 The Matrix/ directory contains all of the matrix used in the experiments.
 
-## Best partition k=n-1 
+## Best partition for k=n-1 
 
-![table1.py python execution trace](https://user-images.githubusercontent.com/233341/134331100-07f03927-43fc-42cf-b4bf-b6243f96826e.gif)
+![best_partition.py python execution trace](https://user-images.githubusercontent.com/233341/134331100-07f03927-43fc-42cf-b4bf-b6243f96826e.gif)
 
-The best partition for k=n-1 results are obtained by executing the folowing command from the Script_for_paper/ directory:
+The best partition for k=n-1 results presented in the FOP(LP) column of the table 1 are obtained by executing the folowing command from the Script_for_paper/ directory:
 
 ```
-python table1.py
+python best_partition.py
 ```
 
 ### Proof by contradiction of proposition P(n)
@@ -82,7 +82,7 @@ where $C_n$ is a singleton.
 Then we have: 
 
 $$\sum_{i,j=1}^{n+1}{\pi_{i}P_{i,j} log (\frac{P_{i,j}}{\widehat{Q}_{i,j}})} 
-\geq \\
+\geq
 \sum_{i,j=1}^{n+1} {\pi_{i}P_{i,j} log (\frac{P_{i,j}}{\widehat{Q}_{i,j}'})},
 $$
 
@@ -209,7 +209,7 @@ The proof of proposition $P(n+1)$ is done.
 
 ## Validation of deterministic and heuristic improvements (Table 1)
 
-![table2](https://user-images.githubusercontent.com/233341/134331867-90601576-3c01-4a24-9f4b-6f52a1ea4c80.gif)
+![table2 python execution trace](https://user-images.githubusercontent.com/233341/134331867-90601576-3c01-4a24-9f4b-6f52a1ea4c80.gif)
 
 Table 1 is obtained by executing the folowing command from the Script_for_paper/ directory:
 
@@ -218,7 +218,7 @@ python table1.py
 ```
 ## Validation of BESTA algorithm (Table 2)
 
-![table2](https://user-images.githubusercontent.com/233341/134331867-90601576-3c01-4a24-9f4b-6f52a1ea4c80.gif)
+![table3 python execution trace](https://user-images.githubusercontent.com/233341/134331867-90601576-3c01-4a24-9f4b-6f52a1ea4c80.gif)
 
 Table 2 is obtained by executing the folowing command from the Script_for_paper/ directory:
 

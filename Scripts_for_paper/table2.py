@@ -11,13 +11,17 @@ def run_command(cmd):
         print(line)
 
 if __name__ == "__main__":
-    for i in (3,4,5,6,7,8,9,10,15,20,30,40,50,60,70,80,90,100):
-        print(f"\n---------------------------- Matrix {i}x{i}_0.1")
-        pool = "python main_mftp.py "+os.path.join("..","Matrix","bench","diag_max","uniform",f"{i}x{i}_0.1.dat")
+    
+    print("Column 2 'Best KL'\n")
+    pool = "python main_loop.py "+os.path.join("..","Matrix","16x16.dat ")
+    run_command(pool)
+    
+    print("Last Column 'KL Difference against 16x16 initial matrix'\n")
+    
+    for k,p in zip((3,4,5,6,7,8,9,10,11,12,13,14,15),("1,1,1,2,2,2,2,2,3,3,3,3,3,3,3,3","1,1,1,2,2,2,2,2,3,3,4,4,4,4,4,4","1,1,1,2,2,2,2,3,4,4,4,4,4,5,5,5","1,1,1,2,2,2,2,3,4,4,5,5,5,6,6,6","1,1,1,2,2,3,3,4,5,5,6,6,6,7,7,7",
+                                                     "1,1,1,2,2,3,3,4,5,5,6,6,7,8,8,8", "1,1,1,2,2,3,3,4,5,5,6,6,7,8,9,9","1,1,1,2,2,3,3,4,5,5,6,6,7,8,9,10",
+                                                     "1,1,1,2,2,3,3,4,5,6,7,7,8,9,10,11","1,1,1,2,2,3,3,4,5,6,7,8,9,10,11,12", "1,1,1,2,2,3,4,5,6,7,8,9,10,11,12,13",
+                                                      "1,1,1,2,3,4,5,6,7,8,9,10,11,12,13,14","1,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15")):
+        print(f"\n---------------------------- Matrix 16x16 for k={k}")
+        pool = "python main_parallel.py "+os.path.join("..","Matrix","16x16.dat ")+ f"{k} "+f"{p}"
         run_command(pool)
-
-        # print(f"\nTIME FOR ALL K")
-        # os.system("python main_parallel.py "+os.path.join("..","Matrix","bench","diag_max","uniform",f"{i}x{i}_0.1.dat"))
-
-        # print(f"\nTIME FOR ALL K=N-1")
-        # os.system("python main_parallel.py "+os.path.join("..","Matrix","bench","diag_max","uniform",f"{i}x{i}_0.1.dat")+" "+str(i-1))
