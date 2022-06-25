@@ -196,8 +196,10 @@ $$
 
 when $i$ varies from $m+k$ to $n+1$ and $i$ from 1 to $n+1$ as well as when $i$ varies from 1 to $n+1$ and $j$ to $m+k$ to $n+1$ (with $m \textless n-1$). 
  
-That implies that all the terms of the sum involved in the equation~\ref{eq:phi2'} are inferior to the terms of the sum involved the equation~\ref{eq:phi2}. So there is a counter example for the proposed proposition (for the partition $\phi_2'=(C'_1, C'_2, \ldots, C'_m$) 
-corresponding to the classes involved in the $R^{\left(\phi_2\right)}\left(P || \widehat{Q}\right) \geq R^{\left(\phi_2'\right)}\left(P || \widehat{Q}\right)$ whatever the partition $\phi_2$). 
+That implies that all the terms of the sum involved in the equation~\ref{eq:phi2'} are inferior to the terms of the sum involved the equation~\ref{eq:phi2}. So there is a counter example for the proposed proposition (for the partition $\phi_2'=(C'_1, C'_2, \ldots, C'_m)$ 
+corresponding to the classes involved in the 
+$R^{\left(\phi_2\right)}\left(P || \widehat{Q}\right) \geq R^{\left(\phi_2'\right)}\left(P || \widehat{Q}\right)$ 
+whatever the partition $\phi_2$). 
 The proof of proposition $P(n+1)$ is done.
 
 ## Validation of deterministic and heuristic improvements (Table 1)
