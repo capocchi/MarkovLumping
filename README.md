@@ -226,6 +226,6 @@ Table 2 is obtained by executing the folowing command from the Script_for_paper/
 python table2.py
 ```
 table2.py scipt depends on the main_loop.py script that present in the header some boolean constants as:
-    * PLOT for plotting reduced graph at each step and the trace of the KL value
-    * WRITE_FILE for write reduced matrices in files
-    * STAT for displaying some state (using pandas)
+    - PLOT for plotting reduced graph at each step and the trace of the KL value
+    - WRITE_FILE for write reduced matrices in files
+    - STAT for displaying some state (using pandas)
