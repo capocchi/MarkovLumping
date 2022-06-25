@@ -20,8 +20,8 @@ the results. The tables 1 and 2 are based on the matrix stored in Matrix\bench\d
 ## Matrix Generation
 The main_matrix.py Python script can be used to randomly generate into a file a normalized ergotic Markov chain with a size n (number of states) and an distribution drift term (uniform, rayleigh, binomial, weibfull and beta). It generate a stochastic matrix filled with random numbers, given some conditions:
 
-    * The rows have to sum up to 1.
-    * The values on the diagonal should be significantly higher than the other values.
+* The rows have to sum up to 1.
+* The values on the diagonal should be significantly higher than the other values.
 
 For example, if you want to generate uniform matrix with n=4 and high=0.1:
 
@@ -37,7 +37,7 @@ The Matrix/ directory contains all of the matrix used in the experiments.
 
 ![best_partition.py python execution trace](https://user-images.githubusercontent.com/233341/175769664-dd6dfdf3-b56b-4bd8-ab78-f884e65b10ba.gif)
 
-The best partition for k=n-1 results presented in the FOP(LP) column of the table 1 are obtained by executing the folowing command from the Script_for_paper/ directory:
+The best partition for k=n-1 results presented in the **FOP(LP)** column of the table 1 are obtained by executing the folowing command from the Script_for_paper/ directory:
 
 ```
 python best_partition.py
@@ -211,7 +211,7 @@ The proof of proposition $P(n+1)$ is done.
 
 ![table1 python execution trace](https://user-images.githubusercontent.com/233341/175769986-60410c41-e392-4be0-8b61-c8dccfb3b77e.gif)
 
-Table 1 is obtained by executing the folowing command from the Script_for_paper/ directory:
+**Table 1** is obtained by executing the folowing command from the Script_for_paper/ directory:
 
 ```
 python table1.py
@@ -220,12 +220,12 @@ python table1.py
 
 ![table2 python execution trace](https://user-images.githubusercontent.com/233341/175770132-636fdfdc-33eb-47c9-8b64-cd1b9502e4f7.gif)
 
-Table 2 is obtained by executing the folowing command from the Script_for_paper/ directory:
+**Table 2** is obtained by executing the folowing command from the Script_for_paper/ directory:
 
 ```
 python table2.py
 ```
 table2.py scipt depends on the main_loop.py script that present in the header some boolean constants as:
-    - PLOT for plotting reduced graph at each step and the trace of the KL value
-    - WRITE_FILE for write reduced matrices in files
-    - STAT for displaying some state (using pandas)
+* PLOT for plotting reduced graph at each step and the trace of the KL value
+* WRITE_FILE for write reduced matrices in files
+* STAT for displaying some state (using pandas)
