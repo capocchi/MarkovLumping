@@ -7,8 +7,6 @@
 
 # Make commit...
 
-~$Experiments.xlsx
-~$Experiments2.xlsx
 __pycache__/
 __init__.py
 
