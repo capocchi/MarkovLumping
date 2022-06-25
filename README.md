@@ -92,10 +92,10 @@ $$
 \geq \sum_{i,j=1}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}'}\right)}. 
 $$
 
-But concerning $\phi_2'$ we have $m$ set for the corresponding partition ($C'_1, C'_2, \ldots, C'_m$).
+But concerning $\phi_2'$ we have $m$ set for the corresponding partition $(C'_1, C'_2, \ldots, C'_m)$.
 
-We have to considerate two cases depending on the nature of $C'_m$ 
-which is a singleton containing the state 
+We have to considerate two cases depending on the nature of $C'_m$
+which is a singleton containing the state
 $P_{n+1,n+1}$.
 
 In the first case it is impossible to have the inequality since the proposition $P(n)$ is true so if $(N,P,\pi)$ 
@@ -106,7 +106,8 @@ $R^{(\phi)}(P || \widehat{Q}) < R^{(\phi')}(P || \widehat{Q})$ and since
 
 $$
 \sum_{i,j=1}^{n} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)} + log\left(\frac{P_{n+1,n+1}}{\widehat{Q}_{n+1,n+1}}\right)
-\geq \sum_{i,j=1}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}'}\right)}, 
+\geq 
+\sum_{i,j=1}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}'}\right)}, 
 $$
 
 we can find a partition that contradicts the inequality of Proposition $P(n)$ since,  
