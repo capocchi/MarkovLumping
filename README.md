@@ -81,11 +81,9 @@ where $C_n$ is a singleton.
 
 Then we have: 
 
-$$
-\sum_{i,j=1}^{n+1}{\pi_{i}P_{i,j} log (\frac{P_{i,j}}{\widehat{Q}_{i,j}})} 
-\geq 
-\sum_{i,j=1}^{n+1} {\pi_{i}P_{i,j} log (\frac{P_{i,j}}{\widehat{Q}_{i,j}'})},
-$$
+$$ \sum_{i,j=1}^{n+1}{\pi_{i}P_{i,j} log (\frac{P_{i,j}}{\widehat{Q}_{i,j}})} $$
+$$\geq$$ 
+$$\sum_{i,j=1}^{n+1} {\pi_{i}P_{i,j} log (\frac{P_{i,j}}{\widehat{Q}_{i,j}'})},$$
 
 then,
  
