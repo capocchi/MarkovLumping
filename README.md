@@ -139,6 +139,7 @@ whatever the partition $\phi_2$.
 
 But we have for m, 
 $m \textless n-1$:
+
 $$
 \begin{split}
 R^{\left(\phi_2'\right)}\left(P || \widehat{Q}\right) = \sum_{i,j=1}^{m} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q`}_{i,j}}\right)}  + \\
@@ -186,6 +187,7 @@ $$
 $$
 
 Furthermore we can notice that:
+
 $$
 \begin{split}
 {\widehat{Q'}_{i,j}} = \frac{\pi_j}{\sum\limits_{l \in \psi(j)}{\pi_l}}Q_{\phi(i)\phi(j)},
