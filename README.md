@@ -35,7 +35,7 @@ The Matrix/ directory contains all of the matrix used in the experiments.
 
 ## Best partition for k=n-1 
 
-![best_partition.py python execution trace](https://user-images.githubusercontent.com/233341/134331100-07f03927-43fc-42cf-b4bf-b6243f96826e.gif)
+![best_partition.py python execution trace](https://user-images.githubusercontent.com/233341/175769664-dd6dfdf3-b56b-4bd8-ab78-f884e65b10ba.gif)
 
 The best partition for k=n-1 results presented in the FOP(LP) column of the table 1 are obtained by executing the folowing command from the Script_for_paper/ directory:
 
