@@ -137,11 +137,12 @@ $$
 We should have: $R^{\left(\phi_2\right)}\left(P || \widehat{Q}\right) \geq R^{\left(\phi_2'\right)}\left(P || \widehat{Q}\right)$ 
 whatever the partition $\phi_2$.
 
-But we have for m, $m \textless n-1$:
+But we have for m, 
+$m \textless n-1$:
 $$
 \begin{split}
 R^{\left(\phi_2'\right)}\left(P || \widehat{Q}\right) = \sum_{i,j=1}^{m} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q`}_{i,j}}\right)}  + \\
-\sum_{k=1}^{n} \left(\sum_{i=m+k,j=1}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q'}_{i,j}}\right)} +  
+\sum_{k=1}^{n} \left(\sum_{i=m+k,j=1}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q'}_{i,j}}\right)} +  \\
 \sum_{i=1,j=m+k}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q'}_{i,j}}\right)} \right) + \\
 {\pi_{n+1}P_{n+1,n+1}log\left(\frac{P_{n+1,n+1}}{\widehat{Q`}_{n+1,n+1}}\right)}.
 \end{split} 
