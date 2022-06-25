@@ -54,14 +54,16 @@ The proposition $P(2)$ is obvious.
 
 Inductive step: we assume that $P(k)$ is true and prove that, as a consequence of this, $P(k+1)$ is true.
 
-We have to demonstrate that if $(N,P,\pi)$ is a given stationary Markov chain n-ordered, there is a partition function $\phi: N \rightarrow M$ 
+We have to demonstrate that if $(N,P,\pi)$ 
+is a given stationary Markov chain n-ordered, there is a partition function $\phi: N \rightarrow M$ 
 where $M$
 is $n-1$ 
 ordered such as for each other partition m-ordered with $m \textless n-1$, 
 $\phi'$,
 $R^{(\phi)}(P || \widehat{Q}) < R^{(\phi')}(P || \widehat{Q})$.
 
-We have to demonstrate that if $(N,P,\pi)$ is a given stationary Markov chain n+1-ordered, there is a partition function $\phi_2: N \rightarrow M$
+We have to demonstrate that if $(N,P,\pi)$ 
+is a given stationary Markov chain n+1-ordered, there is a partition function $\phi_2: N \rightarrow M$
 where $M$ is $n$ 
 ordered such as for each other partition m-ordered with $m \textless n$, 
 $\phi_2'$, 
