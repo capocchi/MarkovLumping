@@ -45,14 +45,14 @@ python table1.py
 
 ### Proof by contradiction of proposition P(n)
 
-The goal is to prove that given an initial n-ordered Markov chain, the optimum partition satisfying the equation 5 has $n-1$ elements. This proposition has been called P(n).
+The goal is to prove that given an initial n-ordered Markov chain, the optimum partition satisfying the equation 5 has $n-1$ elements. This proposition has been called $P(n)$.
 
 The proof proceeds as follows:
 
-Basic step: we first prove that P(n) is true for the first value of $n$, namely, $n=2$.
-The proposition P(2) is obvious.
+Basic step: we first prove that $P(n)$ is true for the first value of $n$, namely, $n=2$.
+The proposition $P(2)$ is obvious.
 
-Inductive step: we assume that P(k) is true and prove that, as a consequence of this, P(k+1) is true.
+Inductive step: we assume that $P(k)$ is true and prove that, as a consequence of this, $P(k+1)$ is true.
 
 We have to demonstrate that if (N,P,$\pi$) is a given stationary Markov chain n-ordered, there is a partition function $\phi: N \rightarrow M$ 
 where $M$
