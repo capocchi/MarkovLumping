@@ -82,17 +82,17 @@ where $C_n$ is a singleton.
 Then we have: 
 
 $$
-\sum_{i,j=1}^{n+1}{\pi_{i}P_{i,j} log \left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)} 
+\sum_{i,j=1}^{n+1}{\pi_{i}P_{i,j} log (\frac{P_{i,j}}{\widehat{Q}_{i,j}})} 
 \geq 
-\sum_{i,j=1}^{n+1} {\pi_{i}P_{i,j} log \left(\frac{P_{i,j}}{\widehat{Q}_{i,j}'}\right)},
+\sum_{i,j=1}^{n+1} {\pi_{i}P_{i,j} log (\frac{P_{i,j}}{\widehat{Q}_{i,j}'})},
 $$
 
 then,
  
 $$
-\sum_{i,j=1}^{n} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)} + log\left(\frac{P_{n+1,n+1}}{\widehat{Q}_{n+1,n+1}}\right)
+\sum_{i,j=1}^{n} {\pi_{i}P_{i,j} log (\frac{P_{i,j}}{\widehat{Q}_{i,j}})} + log (\frac{P_{n+1,n+1}}{\widehat{Q}_{n+1,n+1}})
 \geq 
-\sum_{i,j=1}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}'}\right)}. 
+\sum_{i,j=1}^{n+1} {\pi_{i}P_{i,j} log (\frac{P_{i,j}}{\widehat{Q}_{i,j}'})}. 
 $$
 
 But concerning $\phi_2'$ 
@@ -100,7 +100,8 @@ we have $m$
 set for the corresponding partition $(C'_1, C'_2, \ldots, C'_m)$.
 
 We have to considerate two cases depending on the nature of $C'_m$
-which is a singleton containing the state $P_{n+1,n+1}$.
+which is a singleton containing the state 
+$P_{n+1,n+1}$.
 
 In the first case it is impossible to have the inequality since the proposition $P(n)$ is true so if $(N,P,\pi)$ 
 be a given stationary n-ordered Markov chain, there is a partition function $\phi: N \rightarrow M$ 
