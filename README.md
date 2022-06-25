@@ -45,7 +45,7 @@ python best_partition.py
 
 ### Proof by contradiction of proposition P(n)
 
-The goal is to prove that given an initial n-ordered Markov chain, the optimum partition satisfying the equation 5 has $n-1$ elements. This proposition has been called $P(n)$.
+The goal is to prove that given an initial n-ordered Markov chain, the optimum partition has $n-1$ elements. This proposition has been called $P(n)$.
 
 The proof proceeds as follows:
 
@@ -155,7 +155,7 @@ R^{\left(\phi_2'\right)}\left(P || \widehat{Q}\right) = \sum_{i,j=1}^{m} {\pi_{i
 $$
 
 So the inequality $R^{\left(\phi_2\right)}\left(P || \widehat{Q}\right) \geq R^{\left(\phi_2'\right)}\left(P || \widehat{Q}\right)$ 
-whatever the partition $\phi_2$ can be simplified and becomes:
+whatever the partition $\phi_2$ can be simplified and becomes Equation 1 :
 
 $$
 \begin{split}
@@ -165,7 +165,7 @@ R^{\left(\phi_2\right)}\left(P || \widehat{Q}\right) = \sum_{i,j=1}^{m} {\pi_{i}
 \end{split} 
 $$
 
-and
+and Equation 2 is 
 
 $$
 \begin{split}
@@ -201,7 +201,7 @@ $$
 
 when $i$ varies from $m+k$ to $n+1$ and $i$ from 1 to $n+1$ as well as when $i$ varies from 1 to $n+1$ and $j$ to $m+k$ to $n+1$ (with $m \textless n-1$). 
  
-That implies that all the terms of the sum involved in the equation~\ref{eq:phi2'} are inferior to the terms of the sum involved the equation~\ref{eq:phi2}. So there is a counter example for the proposed proposition (for the partition $\phi_2'=(C'_1, C'_2, \ldots, C'_m)$ 
+That implies that all the terms of the sum involved in the Equation 2 are inferior to the terms of the sum involved the Equation 1. So there is a counter example for the proposed proposition (for the partition $\phi_2'=(C'_1, C'_2, \ldots, C'_m)$ 
 corresponding to the classes involved in the 
 $R^{\left(\phi_2\right)}\left(P || \widehat{Q}\right) \geq R^{\left(\phi_2'\right)}\left(P || \widehat{Q}\right)$ 
 whatever the partition $\phi_2$). 
@@ -209,7 +209,7 @@ The proof of proposition $P(n+1)$ is done.
 
 ## Validation of deterministic and heuristic improvements (Table 1)
 
-![table2 python execution trace](https://user-images.githubusercontent.com/233341/134331867-90601576-3c01-4a24-9f4b-6f52a1ea4c80.gif)
+![table1 python execution trace](https://user-images.githubusercontent.com/233341/175769986-60410c41-e392-4be0-8b61-c8dccfb3b77e.gif)
 
 Table 1 is obtained by executing the folowing command from the Script_for_paper/ directory:
 
@@ -218,7 +218,7 @@ python table1.py
 ```
 ## Validation of BESTA algorithm (Table 2)
 
-![table3 python execution trace](https://user-images.githubusercontent.com/233341/134331867-90601576-3c01-4a24-9f4b-6f52a1ea4c80.gif)
+![table2 python execution trace](https://user-images.githubusercontent.com/233341/175770132-636fdfdc-33eb-47c9-8b64-cd1b9502e4f7.gif)
 
 Table 2 is obtained by executing the folowing command from the Script_for_paper/ directory:
 

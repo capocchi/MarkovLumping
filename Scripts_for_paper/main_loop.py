@@ -43,7 +43,7 @@ import matplotlib.pyplot as plt
 from Partition import Partition
 from Lifting import Lump, KL, Lifting
 
-PLOT = True
+PLOT = False
 WRITE_FILE = False
 STAT = False
 
