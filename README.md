@@ -74,15 +74,15 @@ So we have $(N,P,\pi)$
 being a given stationary n+1-ordered Markov chain and for each $n$ ordered partition ($\phi2: N \rightarrow M$
 where $M$ is n ordered), there is a m-ordered partition with $m \textless n$, 
 $\phi2'$ such as 
-$R^{(\phi2)}(P || \widehat{Q}) \geq R^{(\phi2')}(P || \widehat{Q})$ 
+$R^{(\phi2)}(P || \widehat{Q}) \geq R^{(\phi2')}(P || \widehat{Q})$.
 
-But in this case it is true when the n-partition $\phi2$ has the following sets $C_1, C_2, \ldots, C_n$ 
+But in this case it is true when the n-partition $\phi_2$ has the following sets $C_1, C_2, \ldots, C_n$ 
 where $C_n$ is a singleton.
 
 Then we have: 
 
 $$
-\sum_{i,j=1}^{n+1}{\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)} \geq \sum_{i,j=1}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}'}\right)}, 
+\sum_{i,j=1}^{n+1}{\pi_{i}P_{i,j} log \left(\frac{P_{i,j}}{\widehat{Q}_{i,j}}\right)} \geq \sum_{i,j=1}^{n+1} {\pi_{i}P_{i,j} log \left(\frac{P_{i,j}}{\widehat{Q}_{i,j}'}\right)},
 $$
 
 then,
