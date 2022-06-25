@@ -8,8 +8,7 @@ All the scripts are compatible with Python in version 3.x.
 Some packages must be installed to execute the scripts. You can use pip in order to install them as follow:
 
 ```
-pip install -U numpy tqdm more_itertools networkx 
-pip install git+git://github.com/riccardoscalco/Pykov@master
+pip install -U numpy tqdm more_itertools networkx pandas matplotlib
 ```
 
 # Scripts
@@ -18,7 +17,7 @@ The Scripts_for_paper/ directory that contains all the scripts nedeed to obtain
 the results. The tables 1 and 2 are based on the matrix stored in Matrix\bench\diag_max\uniform directory. 
 
 ## Matrix Generation
-The main_matrix.py Python script can be used to randomly generate into a file a normalized ergotic Markov chain with a size n (number of states) and an distribution drift term (uniform, rayleigh, binomial, weibfull and beta). It generate a stochastic matrix filled with random numbers, given some conditions:
+The *main_matrix.py* Python script can be used to randomly generate into a file a normalized ergotic Markov chain with a size n (number of states) and an distribution drift term (uniform, rayleigh, binomial, weibfull and beta). It generate a stochastic matrix filled with random numbers, given some conditions:
 
 * The rows have to sum up to 1.
 * The values on the diagonal should be significantly higher than the other values.
@@ -29,7 +28,7 @@ For example, if you want to generate uniform matrix with n=4 and high=0.1:
 python main_matrix.py 4 4x4_0.1.dat uniform 0.1
 ```
 
-See the header of the main_matrix.py to have more details concerning the options. 
+See the header of the *main_matrix.py* to have more details concerning the options. 
 
 The Matrix/ directory contains all of the matrix used in the experiments.
 
@@ -225,7 +224,7 @@ python table1.py
 ```
 python table2.py
 ```
-table2.py scipt depends on the main_loop.py script that present in the header some boolean constants as:
+*table2.py* Python scipt depends on the *main_loop.py* Python script that presents in the header some boolean constants as:
 * PLOT for plotting reduced graph at each step and the trace of the KL value
-* WRITE_FILE for write reduced matrices in files
-* STAT for displaying some state (using pandas)
+* WRITE_FILE for writing reduced matrices in files
+* STAT for displaying some statistics (using pandas)

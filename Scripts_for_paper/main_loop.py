@@ -37,7 +37,6 @@ import statistics
 from more_itertools import locate
 from sys import platform
 from multiprocessing import freeze_support
-from numpy import sqrt
 import matplotlib.pyplot as plt
 
 from Partition import Partition
