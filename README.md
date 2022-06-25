@@ -270,6 +270,27 @@ The execution of the *table1.py* Python script allows to build the following tab
 ```
 python table2.py
 ```
+
+The execution of the *table2.py* Python script allows to build the following table which gives elements to validate the new BESTA algorithm applied on the 16-dimensional Markov chain. The optimal reduced Markov chain is obtained as soon as the *epsilon* value (4th column) is less than the corresponding KL difference.
+
+| **Uniform matrix (n x n)** | **Best KL (e^{-3})** | **KL Difference (e^{-3})** | **epsilon** | **KL Difference against 16x16 initial matrix** |
+|----------------------------|----------------------|----------------------------|-------------|------------------------------------------------|
+| 16x16                      | 1.2451               |                            |             |                                                |
+| 15x15                      | 2.2361               | 0.991                      | 1.867       | 0.0028                                         |
+| 14x14                      | 2.3985               | 0.1623                     | 3.355       | 0.0049                                         |
+| 13x13                      | 2.7820               | 0.3835                     | 3.597       | 0.0071                                         |
+| 12x12                      | 2.0978               | 0.6841                     | 4.173       | 0.0100                                         |
+| 11x11                      | 2.9157               | 0.8178                     | 3.146       | 0.0113                                         |
+| **10x10**                      | **11.5080**              | **8.592**                      | **4.373**       | **0.0137**                                         |
+| 9x9                        | 29.8988              | 18.390                     | 17.262      | 0.0676                                         |
+| 8x8                        | 21.0032              | 8.895                      | 44.848      | 0.0770                                         |
+| 7x7                        | 33.6406              | 12.637                     | 31.504      | 0.7597                                         |
+| 6x6                        | 29.6560              | 3.984                      | 50.46       | 0.7905                                         |
+| 5x5                        | 263.8485             | 234.192                    | 44.483      | 0.9195                                         |
+| 4x4                        | 573.4026             | 309.554                    | 395.772     | 1.2925                                         |
+| 3x3                        | 584.1693             | 1.0766                     | 860.103     | 1.3846                                         |
+
+
 *table2.py* Python scipt depends on the *main_loop.py* Python script that presents in the header some boolean constants as:
 * PLOT for plotting reduced graph at each step and the trace of the KL value
 * WRITE_FILE for writing reduced matrices in files
