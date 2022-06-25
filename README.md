@@ -92,7 +92,8 @@ $$
 \geq \sum_{i,j=1}^{n+1} {\pi_{i}P_{i,j}log\left(\frac{P_{i,j}}{\widehat{Q}_{i,j}'}\right)}. 
 $$
 
-But concerning $\phi_2'$ we have $m$ set for the corresponding partition $(C'_1, C'_2, \ldots, C'_m)$.
+But concerning $\phi_2'$ 
+we have $m$ set for the corresponding partition $(C'_1, C'_2, \ldots, C'_m)$.
 
 We have to considerate two cases depending on the nature of $C'_m$
 which is a singleton containing the state
