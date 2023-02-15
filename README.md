@@ -8,7 +8,7 @@ All the scripts are compatible with Python in version 3.x.
 Some packages must be installed to execute the scripts. You can use pip in order to install them as follow:
 
 ```
-pip install -U numpy tqdm more_itertools networkx pandas matplotlib
+pip install -U numpy tqdm more_itertools networkx pandas matplotlib scipy
 ```
 
 # Scripts
