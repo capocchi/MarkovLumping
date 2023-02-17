@@ -23,7 +23,7 @@
 ### Name: main_loop.py
 ### Author: L. Capocchi
 ### Version: 1.0
-### Description: script to compute the loop lumping from the matric given in argv[1]. See the __main__ for the usage. 
+### Description: script to compute the loop lumping from the matrix given in argv[1]. See the __main__ for the usage. 
 ### Dependencies: pykov, networkx, numpy, matplotlib
 ### Python version: 3.9
 ### Date: 11/13/2021
@@ -246,7 +246,7 @@ if __name__ == '__main__':
         sys.exit()
     else:
         # starting time
-        start = time.time()
+        start1 = time.time()
         
         ### Markov matrix
         #try:
@@ -267,6 +267,12 @@ if __name__ == '__main__':
         kl,p,Q = next(getMFTPAnalysis2(S,P))
         n = len(S)
         
+        # starting time
+        end1 = time.time()
+
+        # total time taken
+        print(f"\nRuntime of the first phase of the algorithm BESTA is {end1 - start1}s")
+
         if PLOT:
             X = []
             K_L = []
@@ -283,6 +289,9 @@ if __name__ == '__main__':
         ### stopping condition
         while (n>2) :
             
+            # starting time
+            start2 = time.time()
+
             ### P must be ergotic i.e. the transition matrix must be irreducible and acyclic.            
             G = nx.DiGraph(list(P.keys()), directed=True)
             nx.strongly_connected_components(G)
@@ -306,6 +315,12 @@ if __name__ == '__main__':
             n = len(S)
             kl = new_kl
             
+            # starting time
+            end2 = time.time()
+
+            # total time taken
+            print(f"\nRuntime of the 'while' phase of the algorithm BESTA for n={n} is {end2 - start2}s")
+
             if PLOT:
                 X.append(n)
                 K_L.append(kl)
@@ -329,10 +344,10 @@ if __name__ == '__main__':
         trace(n,kl,p)
             
         # end time
-        end = time.time()
+        end3 = time.time()
 
         # total time taken
-        print(f"\nRuntime of the program is {end - start}s")
+        print(f"\nRuntime of the program is {end3 - start1}s")
      
         if STAT:    
             import pandas as pd
