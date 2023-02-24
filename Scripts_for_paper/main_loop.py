@@ -285,9 +285,16 @@ if __name__ == '__main__':
         if PLOT:
             X.append(n)
             K_L.append(kl)
-        
+
+        ### condition for table 2
+        #cond = "n>2"
+
+        ### condition for table3
+        kl=new_kl=diff=0.0
+        cond = "diff <= kl*(1+0.5) or kl==0.0"
+
         ### stopping condition
-        while (n>2) :
+        while(eval(cond)):
             
             # starting time
             start2 = time.time()
@@ -307,13 +314,22 @@ if __name__ == '__main__':
             
             ### set of states
             S = tuple(sorted(P.states()))
-            
+
+            if "n>2" not in cond:
+                kl = new_kl
+                
             ### mfpt analisys (REDUCED function that call FOP)
             new_kl,p,Q = next(getMFTPAnalysis2(S,P))
             
             ### update variables
             n = len(S)
-            kl = new_kl
+           
+            if "n>2" in cond:
+                kl = new_kl
+            else:
+                diff = new_kl-kl
+
+            print(diff, kl*(1+0.5))
             
             # starting time
             end2 = time.time()
