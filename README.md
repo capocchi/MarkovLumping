@@ -295,3 +295,17 @@ The execution of the *table2.py* Python script allows to build the following tab
 * PLOT for plotting reduced graph at each step and the trace of the KL value
 * WRITE_FILE for writing reduced matrices in files
 * STAT for displaying some statistics (using pandas)
+
+## Discussion and Comparison (Fig. 10)
+
+Figure 10 gives a comparison of the BESTA algorithm against the three following popular
+Markov chain reduction algorithms: Gerschgorin, Chain Indexing and partial Sum
+algorithms. The curve have been normalized and the Original ones allows to display
+the metrics (Average Waiting Time, Average Service Time, Service Rate and Abandon
+Rate) of the original 20x20 M/M/1 chain (without reduction). 
+
+**Figure 10** is obtained by executing the folowing command from the Script_for_paper/ directory:
+
+```
+python fig10.py 10 40 20
+```
