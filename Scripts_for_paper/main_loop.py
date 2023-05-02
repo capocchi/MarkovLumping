@@ -151,7 +151,6 @@ def getMFTPAnalysis2(S:[str],P:pykov.Chain)->tuple:
 
     ### result varaible - kl = 1.0 is the max value; we find the min.
     result = []
-
    
     ### loop on partitions to find the best from the mftp analysis
     for p in get_ordered_partitions_from_mftp(S,P):
@@ -168,7 +167,31 @@ def getMFTPAnalysis2(S:[str],P:pykov.Chain)->tuple:
     
     for n in sorted(result,key=lambda x: x[0]):
         yield n
-        
+
+def getMFTPAnalysis3(S:[str],P:pykov.Chain)->tuple:
+    
+    Pi = P.steady()
+
+    ### result varaible - kl = 1.0 is the max value; we find the min.
+    result = []
+   
+    ### loop on partitions to find the best from the mftp analysis
+    for p in get_ordered_partitions_from_mftp(S,P):
+        #partition = {"/".join(a):a for a in p}
+        partition = {''.join(['NS',str(i)]):a for i,a in enumerate(p)}
+         
+        ### compute the kl divergence rate
+        Q = Lump(partition, Pi, P)
+        pp = [(v, k1) for k1,v1 in partition.items() for v in v1]
+        # Q_mu = Lifting(Q, Pi, S, pp)
+        # kl = KL(S, P, Pi, Q_mu)
+         
+        # result.append((kl,pp,Q))
+        result.append((pp,Q))
+
+    for n in sorted(result,key=lambda x: x[0]):
+        yield n
+
 def displayGraph(P):
     """Display the state graph of P
         https://networkx.org/documentation/stable/auto_examples/drawing/plot_weighted_graph.html
@@ -291,7 +314,7 @@ if __name__ == '__main__':
 
         ### condition for table3
         kl=new_kl=diff=0.0
-        cond = "diff <= kl*(1+0.5) or kl==0.0"
+        cond = "new_kl <= kl*(1+0.5) or kl==0.0"
 
         ### stopping condition
         while(eval(cond)):
@@ -306,7 +329,14 @@ if __name__ == '__main__':
             
             ### just for stdout
             d = trace(n,kl,p)
-            
+            #ranks_pr = nx.pagerank(G)
+            #print(statistics.mean(ranks_pr.values()))
+
+            #print(f"PageRank : {ranks_pr}")
+            #nx.draw_circular(G, node_size=400, with_labels=True)
+            #plt.show()
+            #exit()
+
             ### P transition matrix of the Markoc chain to lump
             P = pykov.Chain()
             for k,v in Q.items():
@@ -326,10 +356,8 @@ if __name__ == '__main__':
            
             if "n>2" in cond:
                 kl = new_kl
-            else:
-                diff = new_kl-kl
 
-            print(diff, kl*(1+0.5))
+            print(new_kl, kl*(1+0.5))
             
             # starting time
             end2 = time.time()
@@ -358,7 +386,10 @@ if __name__ == '__main__':
          
         ### just for stdout
         trace(n,kl,p)
-            
+        #ranks_pr = nx.pagerank(G)
+        #print(statistics.mean(ranks_pr.values()))
+        #print(f"PageRank : {ranks_pr}")
+          
         # end time
         end3 = time.time()
 
