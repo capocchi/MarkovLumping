@@ -192,6 +192,72 @@ def getMFTPAnalysis3(S:[str],P:pykov.Chain)->tuple:
     for n in sorted(result,key=lambda x: x[0]):
         yield n
 
+def display_tree(P, root):
+  """Displays a tree structure based on the provided transition matrix P and root node.
+
+  Args:
+      P (dict): Transition matrix, where keys are state pairs (source, target) and
+                 values are transition probabilities.
+      root (str): The starting node of the tree.
+  """
+
+  # Create a directed acyclic graph (DAG) to ensure tree structure
+  G = nx.DiGraph()
+
+  # Breadth-First Search (BFS) traversal to efficiently add nodes and edges
+  queue = [root]
+  visited = set()
+
+  current_node = queue.pop(0)
+  if current_node not in visited:
+      visited.add(current_node)
+      G.add_node(current_node)
+
+        # Find outgoing edges (children) from the current node
+      outgoing_edges = [(source_target[1],w) for source_target, w in P.items() if source_target[0] == current_node]
+    #   for source, target in P.items():
+        #   print(source,target, current_node)
+      for child,w in outgoing_edges:
+        G.add_edge(current_node, child, weight=float(w))
+        queue.append(child)
+
+  # Separate edges based on transition probability (optional customization)
+  elarge = [(u, v) for (u, v, d) in G.edges(data=True) if d["weight"] > 0.5]
+  esmall = [(u, v) for (u, v, d) in G.edges(data=True) if d["weight"] <= 0.5]
+
+  # Node positions (consider using a more layout algorithm for complex trees)
+  pos = nx.spring_layout(G, seed=7)
+  
+  # Nodes
+  nx.draw_networkx_nodes(G, pos, node_color='#DCDCDC', node_size=700)
+
+  # Edges
+  nx.draw_networkx_edges(G, pos, edgelist=elarge, width=3, alpha=1.0)
+  nx.draw_networkx_edges(
+      G, pos, edgelist=esmall, width=2, alpha=0.7, edge_color="b", style="dashed"
+  )
+
+  # Labels
+  nx.draw_networkx_labels(G, pos, font_size=10, font_family="sans-serif")
+
+  # edge weight labels
+  edge_labels = nx.get_edge_attributes(G, "weight")
+  
+  for source_target, w in P.items():
+      if source_target in edge_labels.keys():
+        edge_labels[source_target] = f"prob={str(edge_labels[source_target])}"
+
+  nx.draw_networkx_edge_labels(G, pos, edge_labels)
+
+  # Customize plot appearance (optional)
+  ax = plt.gca()
+  ax.margins(0.08)
+  plt.axis("off")
+  plt.tight_layout()
+  plt.title(f"Tree Structure (Root: {root})")  # Add a title with root node
+
+  plt.show()
+
 def displayGraph(P):
     """Display the state graph of P
         https://networkx.org/documentation/stable/auto_examples/drawing/plot_weighted_graph.html
@@ -271,6 +337,12 @@ if __name__ == '__main__':
         # starting time
         start1 = time.time()
         
+        ### nom de fichier
+        filename = os.path.splitext(fn)[0]
+
+        ### Répertoire de base
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+
         ### Markov matrix
         #try:
         #    P = pykov.readmat(fn)
@@ -314,7 +386,8 @@ if __name__ == '__main__':
 
         ### condition for table3
         kl=new_kl=diff=0.0
-        cond = "new_kl <= kl*(1+0.5) or kl==0.0"
+        #cond = "new_kl <= kl*(1+0.5) or kl==0.0"
+        cond = "n!=3"
 
         ### stopping condition
         while(eval(cond)):
@@ -357,7 +430,7 @@ if __name__ == '__main__':
             if "n>2" in cond:
                 kl = new_kl
 
-            print(new_kl, kl*(1+0.5))
+            # print(new_kl, kl*(1+0.5))
             
             # starting time
             end2 = time.time()
@@ -369,6 +442,7 @@ if __name__ == '__main__':
                 X.append(n)
                 K_L.append(kl)
                 displayGraph(dict(P))
+                display_tree(dict(P),"000")
             
             if STAT:
                 STEADY[n]=P.steady()
@@ -376,13 +450,23 @@ if __name__ == '__main__':
                     K_L.append(kl)
                 
             if WRITE_FILE:
-                fn = os.path.join(os.pardir,'Matrix',f"{n}x{n}.dat")
+                
+                # Nom du fichier transformé                
+                new_fn = f"{filename}_{n}x{n}.dat"
+
+                # Répertoire cible
+                target_dir = os.path.join(base_dir, '..', 'Matrix')
+                
+                # Chemin complet du fichier
+                fn = os.path.join(target_dir, new_fn)
+
+                # fn = os.path.join(os.pardir,'Matrix',f"{fn.split('.dat')[0]}_{n}x{n}.dat")
                 if os.path.exists(fn):
                     os.remove(fn)
-                f = open(fn,'w')
-                for k,v in dict(P).items():
-                    f.write(f"{k[0]} {k[1]} {v} \n")
-                f.close()
+
+                with open(fn, 'w') as f:
+                    for k,v in dict(P).items():
+                        f.write(f"{k[0]} {k[1]} {v} \n")
          
         ### just for stdout
         trace(n,kl,p)

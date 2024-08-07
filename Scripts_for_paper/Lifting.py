@@ -27,8 +27,28 @@ import itertools
 np.seterr('raise')
 
 def Lifting(Q, Pi, S, partition):
+    # Convertir la partition en dictionnaire pour des accès rapides
     d = dict(partition)
-    return {(i,j): Pi[j]*Q[d[i], d[j]]/np.sum([Pi[c[0]] for c in partition if d[j] in c]) for i in S for j in S}
+    
+    # Pré-calculer les sommes des Pi pour chaque valeur dans partition
+    sum_Pi = {}
+    for c in partition:
+        sum_Pi[c[1]] = sum_Pi.get(c[1], 0) + Pi[c[0]]
+
+    # Construire le dictionnaire résultant
+    result = {}
+    for i in S:
+        for j in S:
+            if d[i] in sum_Pi and sum_Pi[d[i]] != 0:  # Assurer que la somme n'est pas nulle
+                result[(i, j)] = Pi[j] * Q[d[i], d[j]] / sum_Pi[d[i]]
+            else:
+                result[(i, j)] = 0  # Ou une autre valeur par défaut si nécessaire
+
+    return result
+
+# def Lifting(Q, Pi, S, partition):
+#     d = dict(partition)
+#     return {(i,j): Pi[j]*Q[d[i], d[j]]/np.sum([Pi[c[0]] for c in partition if d[j] in c]) for i in S for j in S}
 
 def Lump2(partition, Pi, P):
     """ exact lumpability
@@ -59,11 +79,46 @@ def Lump2(partition, Pi, P):
     return new_chain
 
 def Lump(partition, Pi, P):
-    """ exact lumpability
-    """
-    ### new pi vector
-    new_pi = {new_state:np.sum([Pi[s] for s in sub_partition]) for new_state, sub_partition in partition.items()}
-    return { pair:np.sum([Pi[state]*np.sum([P[(state,s)] for s in partition[pair[1]]]) for state in partition[pair[0]]])/new_pi[pair[0]] for pair in itertools.product(partition.keys(), repeat=2)}
+    """ Exact lumpability """
+    
+    # Crée un dictionnaire pour stocker les nouvelles valeurs de pi
+    new_pi = {}
+    
+    # Calculer new_pi en utilisant une liste pour stocker les sous-partitions
+    for new_state, sub_partition in partition.items():
+        new_pi[new_state] = np.sum([Pi[s] for s in sub_partition])
+    
+    # Convertir les clés de partition en une liste pour l'itération
+    keys = list(partition.keys())
+    
+    # Créer un dictionnaire pour stocker les résultats
+    results = {}
+    
+    for pair in itertools.product(keys, repeat=2):
+        p1, p2 = pair
+        numerator = 0.0
+        
+        for state in partition[p1]:
+            state_p = Pi[state]
+            for s in partition[p2]:
+                numerator += state_p * P[(state, s)]
+        
+        # Calculer la valeur moyenne
+        if new_pi[p1] != 0:
+            result_value = numerator / new_pi[p1]
+        else:
+            result_value = 0.0
+        
+        results[pair] = result_value
+    
+    return results
+
+# def Lump(partition, Pi, P):
+#     """ exact lumpability
+#     """
+#     ### new pi vector
+#     new_pi = {new_state:np.sum([Pi[s] for s in sub_partition]) for new_state, sub_partition in partition.items()}
+#     return {pair:np.sum([Pi[state]*np.sum([P[(state,s)] for s in partition[pair[1]]]) for state in partition[pair[0]]])/new_pi[pair[0]] for pair in itertools.product(partition.keys(), repeat=2)}
 
 ### neta
 def Neta(partition, tetha, M, new_states, S):
@@ -120,13 +175,34 @@ def Tetha(tetha, init_state, partitions, M, new_states, P, Pi, S, N=500):
     return T
 
 def KL(S, P, Pi, Q_mu):
-    ### To ensure R(P k Q) is finite, we require P to be absolutely
-    ### continuous w.r.t. Q, i.e. Qij = 0 ⇒ Pij = 0.
-    r = 0.0
-    for i in S:
-        r += Pi[i]*np.sum([P[i,j]*np.log(P[i,j]/Q_mu[i,j]) for j in S if Q_mu[i,j] != 0.0 and P[i,j] != 0.0])
     
+    # Initialize the result variable
+    r = 0.0
+
+    # Iterate over the set S
+    for i in S:
+        # Initialize a temporary variable to accumulate the sum for this row
+        row_sum = 0.0
+
+        # Iterate over the columns to compute the sum
+        for j in S:
+            # Check if both P[i,j] and Q_mu[i,j] are non-zero
+            if Q_mu[i, j] != 0.0:# and P[i, j] != 0.0:
+                row_sum += P[i, j] * np.log(P[i, j] / Q_mu[i, j])
+
+        # Add to the result after scaling by Pi[i]
+        r += Pi[i] * row_sum
+
     return r
+
+# def KL(S, P, Pi, Q_mu):
+#     ### To ensure R(P k Q) is finite, we require P to be absolutely
+#     ### continuous w.r.t. Q, i.e. Qij = 0 ⇒ Pij = 0.
+#     r = 0.0
+#     for i in S:
+#         r += Pi[i]*np.sum([P[i,j]*np.log(P[i,j]/Q_mu[i,j]) for j in S if Q_mu[i,j] != 0.0 and P[i,j] != 0.0])
+    
+#     return r
 
 def KL2(i, Q_mu, P, Pi, S):
     ### To ensure R(P k Q) is finite, we require P to be absolutely
