@@ -42,7 +42,7 @@ import matplotlib.pyplot as plt
 from Partition import Partition
 from Lifting import Lump, KL, Lifting
 
-PLOT = False
+PLOT = True
 WRITE_FILE = False
 STAT = False
 
@@ -442,7 +442,8 @@ if __name__ == '__main__':
                 X.append(n)
                 K_L.append(kl)
                 displayGraph(dict(P))
-                display_tree(dict(P),"000")
+                root = next((s for s in S if '000' in s), None)
+                display_tree(dict(P),root)
             
             if STAT:
                 STEADY[n]=P.steady()
@@ -468,6 +469,8 @@ if __name__ == '__main__':
                     for k,v in dict(P).items():
                         f.write(f"{k[0]} {k[1]} {v} \n")
          
+                print(f"Write file in {fn}")
+
         ### just for stdout
         trace(n,kl,p)
         #ranks_pr = nx.pagerank(G)
