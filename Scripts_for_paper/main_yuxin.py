@@ -12,6 +12,14 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import pandas as pd
 import numpy as np
+import time
+
+REDUCE_WITH_KL = True
+YUXIN_PRINT = False
+LAST_DAY = 7
+PLOT = False
+
+end_depth = 2 if REDUCE_WITH_KL else LAST_DAY
 
 def build_tree(data, G, current_node, depth, max_depth, parent_probability=1.0, original_cash = 1000000):
 
@@ -41,7 +49,8 @@ def build_tree(data, G, current_node, depth, max_depth, parent_probability=1.0, 
         new_probability = parent_probability * action_probability
         new_cash = current_node[4] + action_cash
 
-        print(new_node, current_node[4], action_cash, new_cash)
+        if YUXIN_PRINT:
+            print(new_node, current_node[4], action_cash, new_cash)
 
         if new_node not in G.nodes:
             G.add_node(new_node, probability=new_probability)
@@ -51,6 +60,10 @@ def build_tree(data, G, current_node, depth, max_depth, parent_probability=1.0, 
         G.add_edge(current_node, new_node)
         build_tree(data, G, new_node, depth + 1, max_depth, parent_probability=new_probability, original_cash=new_cash)
 
+    return G
+
+#
+start_time = time.time()
 
 data = pd.read_csv('DJIA-NASDAQ.csv').to_numpy()
 stock = pd.read_csv('DJIA-NASDAQ.csv').values
@@ -61,23 +74,22 @@ G = nx.Graph()
 
 root_node = (0, 0, 0, 0, 1000000)
 start_depth = 0
-end_depth = 2
+
 build_tree(data, G, root_node, start_depth, end_depth)
 
 for node in G.nodes():
     if 'probability' not in G.nodes[node]:
         G.nodes[node]['probability'] = 1.0
 
-file_path = f"Scenario1_First_{end_depth}_Days.txt"
+file_path = f"Scenario1_First_{end_depth}_Days.dat"
 
 with open(file_path, 'w') as file:
     for node in G.nodes:
         probability = G.nodes[node].get('probability','N/A')
         file.write(f'{str(node)} {probability}\n')
 
-
 ###############################################
-# Exécuter un autre script Python (script1.py)
+# LUMPING PHASE
 ##############################################
 
 import subprocess
@@ -117,13 +129,25 @@ def update_node_cash_value(G, node, new_value):
     else:
         print("Node doesn't exist")
 
-def execute_lumping(G, end_depth):
-    fn = None
+def get_prob(G, node_str, yuxin_graph_dict):
+    node_to_search = tuple([end_depth]+list(map(int, node_str.strip())))
+    finded_node = find_key(yuxin_graph_dict, node_to_search)
+    return G.nodes[finded_node]['probability'] if finded_node else 0.0
 
+def execute_lumping(G, end_depth):
+    
+    if end_depth < 1:
+        return 
+
+    ### find the name of the graphml file that stored the results of the lumping process
+    fn = None
     while not fn:
         ### execute scripts for lumping process
-        subprocess.run(["python", "extract_matrix.py", "Scenario1_First_2_Days.txt", "1", f"{end_depth}"])
-        result = subprocess.run(["python", "main_loop.py", "..\Matrix\Yuxin\Scenario1_First_2_Days_day1_to_day2.dat"], capture_output=True, text=True)
+        cmd = ["python", "extract_matrix.py", f"Scenario1_First_{end_depth}_Days.dat", f"{end_depth-1}", f"{end_depth}"]
+        subprocess.run(cmd, capture_output=True)
+        cmd = ["python", "main_loop.py", f"..\Matrix\Yuxin\Scenario1_First_{end_depth}_Days_day{end_depth-1}_to_day{end_depth}.dat"]
+        # print(cmd)
+        result = subprocess.run(cmd, capture_output=True, text=True)
 
         ### list of fusionned states
         for l in result.stdout.split('\n'):
@@ -140,31 +164,34 @@ def execute_lumping(G, end_depth):
 
     state_to_delete_list = []
     state_to_change_dict = {}
-    for s,d in nx.to_dict_of_dicts(G_lumped).items():
+    for s in nx.to_dict_of_dicts(G_lumped).keys():
         s_list = s.split('\n')
         ### if s_list contains more one element, we must make a fusion
         if len(s_list) > 1:
-            new_prob = d[s]['weight']
+            # new_prob = d[s]['weight']
+            new_prob = get_prob(G, s_list[0], yuxin_graph_dict)
             new_cash = 0.0
             nb = 1
             ### 1st element is the state to keep, the others are the states to delete
-            for s1 in map(lambda a: a.strip(),s_list[1:]):
+            for s1 in map(lambda a: a.strip(), s_list[1:]):
                 ### key to search in yuxin_graph_dict
-                key_to_search = tuple([2]+list(map(int,s1.strip())))
+                key_to_search = tuple([end_depth]+list(map(int, s1.strip())))
                 finded_key = find_key(yuxin_graph_dict, key_to_search)
                 ### add the finded key to the list of states to delete
                 state_to_delete_list.append(finded_key)
+                ### update prob
+                new_prob += get_prob(G,s1,yuxin_graph_dict)
                 ### update cash
-                new_cash += finded_key[-1]
+                new_cash += finded_key[-1] if finded_key else 0.0
                 nb += 1
             ### 1st element is the state to keep
-            key_to_search = tuple([2]+list(map(int,s_list[0].strip())))
+            key_to_search = tuple([end_depth]+list(map(int, s_list[0].strip())))
             finded_key = find_key(yuxin_graph_dict, key_to_search)
             ### store the state to change with the new values for prob and cash
-            state_to_change_dict[finded_key] = {'new_prob':new_prob, 'new_cash':new_cash/nb}
+            state_to_change_dict[finded_key] = {'new_prob': new_prob, 'new_cash': new_cash/nb}
 
-    print(f"Nodes to delete: {state_to_delete_list}")
-    print(f"Nodes to change: {state_to_change_dict}")
+    # print(f"Nodes to delete: {state_to_delete_list}")
+    # print(f"Nodes to change: {state_to_change_dict}")
 
     ### loop to update G
     for node in G.copy().nodes():
@@ -172,14 +199,50 @@ def execute_lumping(G, end_depth):
             G.remove_node(node)
         elif node in state_to_change_dict.keys():
             G.nodes[node]['probability'] = state_to_change_dict[node]['new_prob']
-            update_node_cash_value(G,node,state_to_change_dict[node]['new_cash'])
+            update_node_cash_value(G, node, state_to_change_dict[node]['new_cash'])
 
-    return G
+if REDUCE_WITH_KL:
+    state_gain = []
 
-execute_lumping(G, end_depth)
+    ### number of final nodes before the lumping process
+    final_nodes_before = [node for node in G.nodes if G.degree(node) == 1]
+
+    execute_lumping(G, end_depth)
+
+    # trace the number of final nodes before and after the lumping
+    final_nodes_after = [node for node in G.nodes if G.degree(node) == 1]
+    state_gain.append(len(final_nodes_before) - len(final_nodes_after))
+
+    print(f"Number of nodes before/after for day {end_depth}: {len(final_nodes_before)}/{len(final_nodes_after)}")
+
+    for i in range(2, LAST_DAY, 1):
+        start_depth = i
+        end_depth = i+1
+        for root_node in final_nodes_after:
+            parent_probability = G.nodes[root_node]["probability"]
+            original_cash = root_node[4]
+            build_tree(data, G, root_node, start_depth, end_depth, parent_probability, original_cash)
+        
+            file_path = f"Scenario1_First_{end_depth}_Days.dat"
+            with open(file_path, 'w') as file:
+                for node in G.nodes:
+                    probability = G.nodes[node].get('probability', 'N/A')
+                    file.write(f'{str(node)} {probability}\n')
+
+        final_nodes_before = [node for node in G.nodes if G.degree(node) == 1]
+        
+        execute_lumping(G, end_depth)
+        
+        final_nodes_after = [node for node in G.nodes if G.degree(node) == 1]
+        
+        print(f"Number of nodes before/after for day {end_depth}: {len(final_nodes_before)}/{len(final_nodes_after)}")
+
+        state_gain.append(len(final_nodes_before) - len(final_nodes_after))
+
+    print("Number of state removed during the process", state_gain)
 
 ############################################
-#
+# TRACE
 ############################################
 
 expected_assets = {}
@@ -212,110 +275,136 @@ for i, node in enumerate(state_node_array):
         expected_investment[day] = expect_invest
         expected_assets[day] = expect_asset
 
-    print(expected_investment)
+    if YUXIN_PRINT:
+        print(expected_investment)
 
-node_colors = [G.nodes[node]['probability'] for node in G.nodes()]
-cmap = matplotlib.colormaps['Oranges']
+#
+end_time = time.time()
 
-def custom_layout(G):
-    pos = {}
-    row_spacing = 20000
-    col_spacing = 2000
-
-    rows = {}
-    for node in G.nodes():
-        if node[0] not in rows:
-            rows[node[0]] = []
-        rows[node[0]].append(node)
-
-
-    for row, nodes in rows.items():
-        y = -row * row_spacing
-        for i, node in enumerate(nodes):
-            x = i * col_spacing
-            pos[node] = (x, y)
-
-    return pos
-
-# pos = custom_layout(G)
-
-pos = nx.spring_layout(G)
-
-fig, ax = plt.subplots(figsize=(35, 10))
-
-nx.draw(G, pos, with_labels=False, node_color=node_colors, cmap=cmap, node_size=4000, font_size=12, font_weight='bold', edge_color='gray', linewidths=1, arrows=False)
-
-node_labels = {}
-for node in G.nodes():
-    state_label = f"({node[1]}, {node[2]}, {node[3]})"  # State label
-    prob_label = f"Prob: {G.nodes[node]['probability']:.2f}"  # Probability label
-    cash_label = f"Cash: {node[4]:.0f}"  # Cash label
-    node_labels[node] = f"{state_label}\n{prob_label}\n{cash_label}"
-
-
-nx.draw_networkx_labels(G, pos, labels=node_labels, font_size=10, font_color='black', verticalalignment='center', ax=ax)
-
-sm = plt.cm.ScalarMappable(cmap=cmap)
-sm.set_array(node_colors)
-cbar = plt.colorbar(sm, ax=ax)
-cbar.set_label('Probability', rotation=270, labelpad=20,fontsize=15)
-cbar.ax.tick_params(labelsize=15)
+#
+execution_time = end_time - start_time
+print(f"Execution time : {execution_time} secondes")
 
 text = "Expected Investment Value\n"
 for day, exp_assets in expected_investment.items():
     if day != 0:
         text += f"Day {day}: {exp_assets:.2f}\n"
-
-fig.text(0.6, 0.7, text, ha='center', va='center', fontsize=10, family='monospace')
-
-fig.text(0.22, 0.82, 'Root Node', ha='center', va='center', fontsize=10, family='monospace')
-#fig.text(0.30, 0.62, 'Day 1', ha='center', va='center', fontsize=20, family='monospace')
-#fig.text(0.47, 0.4, 'Day 2', ha='center', va='center', fontsize=20, family='monospace')
-#fig.text(0.73, 0.18, 'Day 3', ha='center', va='center', fontsize=20, family='monospace')
-
-
-plt.title("Stock Trading Tree", fontsize=20)
-plt.axis('off')
-plt.show()
-
-node_colors = [G.nodes[node]['probability'] for node in G.nodes()]
-cmap = matplotlib.colormaps['Oranges']
-
-# pos = custom_layout(G)
-
-fig, ax = plt.subplots(figsize=(35, 10))
-
-nx.draw(G, pos, with_labels=False, node_color=node_colors, cmap=cmap, node_size=4000, font_size=12, font_weight='bold', edge_color='gray', linewidths=1, arrows=False, ax=ax)
-
-node_labels = {}
-for node in G.nodes():
-    state_label = f"({node[1]}, {node[2]}, {node[3]})"  # State label
-    prob_label = f"Prob: {G.nodes[node]['probability']:.2f}"  # Probability label
-    cash_label = f"Cash: {node[4]:.0f}"  # Cash label
-    node_labels[node] = f"{state_label}\n{prob_label}\n{cash_label}"
-
-
-nx.draw_networkx_labels(G, pos, labels=node_labels, font_size=10, font_color='black', verticalalignment='center')
-
-sm = plt.cm.ScalarMappable(cmap=cmap)
-sm.set_array(node_colors)
-cbar = plt.colorbar(sm, ax=ax)
-cbar.set_label('Probability', rotation=270, labelpad=20,fontsize=15)
-cbar.ax.tick_params(labelsize=15)
+print(text)
 
 text = "Expected Assets\n"
 for day, exp_assets in expected_assets.items():
     if day != 0:
         text += f"Day {day}: {exp_assets:.2f}\n"
+print(text)
 
-fig.text(0.6, 0.7, text, ha='center', va='center', fontsize=20, family='monospace')
+############################################
+# PLOT
+############################################
 
-fig.text(0.22, 0.82, 'Root Node', ha='center', va='center', fontsize=20, family='monospace')
-#fig.text(0.30, 0.62, 'Day 1', ha='center', va='center', fontsize=20, family='monospace')
-#fig.text(0.47, 0.4, 'Day 2', ha='center', va='center', fontsize=20, family='monospace')
-#fig.text(0.73, 0.18, 'Day 3', ha='center', va='center', fontsize=20, family='monospace')
+if PLOT:
+
+    node_colors = [G.nodes[node]['probability'] for node in G.nodes()]
+    cmap = matplotlib.colormaps['Oranges']
+
+    def custom_layout(G):
+        pos = {}
+        row_spacing = 20000
+        col_spacing = 2000
+
+        rows = {}
+        for node in G.nodes():
+            if node[0] not in rows:
+                rows[node[0]] = []
+            rows[node[0]].append(node)
 
 
-plt.title("Stock Trading Tree", fontsize=20)
-plt.axis('off')
-plt.show()
+        for row, nodes in rows.items():
+            y = -row * row_spacing
+            for i, node in enumerate(nodes):
+                x = i * col_spacing
+                pos[node] = (x, y)
+
+        return pos
+
+    pos = custom_layout(G)
+
+    # pos = nx.spring_layout(G)
+
+    fig, ax = plt.subplots(figsize=(35, 10))
+
+    nx.draw(G, pos, with_labels=False, node_color=node_colors, cmap=cmap, node_size=3000, font_size=10, font_weight='bold', edge_color='gray', linewidths=1, arrows=False)
+
+    node_labels = {}
+    for node in G.nodes():
+        state_label = f"({node[1]}, {node[2]}, {node[3]})"  # State label
+        prob_label = f"{G.nodes[node]['probability']:.2f}"  # Probability label
+        cash_label = f"{node[4]:.0f}"  # Cash label
+        node_labels[node] = f"{state_label}\n{prob_label}\n{cash_label}"
+
+
+    nx.draw_networkx_labels(G, pos, labels=node_labels, font_size=10, font_color='black', verticalalignment='center', ax=ax)
+
+    sm = plt.cm.ScalarMappable(cmap=cmap)
+    sm.set_array(node_colors)
+    cbar = plt.colorbar(sm, ax=ax)
+    cbar.set_label('Probability', rotation=270, labelpad=20,fontsize=15)
+    cbar.ax.tick_params(labelsize=15)
+
+    text = "Expected Investment Value\n"
+    for day, exp_assets in expected_investment.items():
+        if day != 0:
+            text += f"Day {day}: {exp_assets:.2f}\n"
+
+    fig.text(0.6, 0.7, text, ha='center', va='center', fontsize=10, family='monospace')
+
+    fig.text(0.22, 0.82, 'Root Node', ha='center', va='center', fontsize=10, family='monospace')
+    #fig.text(0.30, 0.62, 'Day 1', ha='center', va='center', fontsize=20, family='monospace')
+    #fig.text(0.47, 0.4, 'Day 2', ha='center', va='center', fontsize=20, family='monospace')
+    #fig.text(0.73, 0.18, 'Day 3', ha='center', va='center', fontsize=20, family='monospace')
+
+
+    plt.title("Stock Trading Tree", fontsize=20)
+    plt.axis('off')
+    plt.show()
+
+    node_colors = [G.nodes[node]['probability'] for node in G.nodes()]
+    cmap = matplotlib.colormaps['Oranges']
+
+    # pos = custom_layout(G)
+
+    fig, ax = plt.subplots(figsize=(35, 10))
+
+    nx.draw(G, pos, with_labels=False, node_color=node_colors, cmap=cmap, node_size=3000, font_size=10, font_weight='bold', edge_color='gray', linewidths=1, arrows=False, ax=ax)
+
+    node_labels = {}
+    for node in G.nodes():
+        state_label = f"({node[1]}, {node[2]}, {node[3]})"  # State label
+        prob_label = f"{G.nodes[node]['probability']:.2f}"  # Probability label
+        cash_label = f"{node[4]:.0f}"  # Cash label
+        node_labels[node] = f"{state_label}\n{prob_label}\n{cash_label}"
+
+
+    nx.draw_networkx_labels(G, pos, labels=node_labels, font_size=10, font_color='black', verticalalignment='center')
+
+    sm = plt.cm.ScalarMappable(cmap=cmap)
+    sm.set_array(node_colors)
+    cbar = plt.colorbar(sm, ax=ax)
+    cbar.set_label('Probability', rotation=270, labelpad=20, fontsize=15)
+    cbar.ax.tick_params(labelsize=15)
+
+    text = "Expected Assets\n"
+    for day, exp_assets in expected_assets.items():
+        if day != 0:
+            text += f"Day {day}: {exp_assets:.2f}\n"
+
+    fig.text(0.6, 0.7, text, ha='center', va='center', fontsize=20, family='monospace')
+
+    fig.text(0.22, 0.82, 'Root Node', ha='center', va='center', fontsize=10, family='monospace')
+    #fig.text(0.30, 0.62, 'Day 1', ha='center', va='center', fontsize=20, family='monospace')
+    #fig.text(0.47, 0.4, 'Day 2', ha='center', va='center', fontsize=20, family='monospace')
+    #fig.text(0.73, 0.18, 'Day 3', ha='center', va='center', fontsize=20, family='monospace')
+
+
+    plt.title("Stock Trading Tree", fontsize=20)
+    plt.axis('off')
+    plt.show()

@@ -25,8 +25,8 @@
 ### Version: 1.0
 ### Description: script to compute the loop lumping from the matrix given in argv[1]. See the __main__ for the usage. 
 ### Dependencies: pykov, networkx, numpy, matplotlib
-### Python version: 3.9
-### Date: 11/13/2021
+### Python version: 3.9.17
+### Date: 18/11/2023
 #######################################################################
 
 import os
@@ -43,7 +43,7 @@ from Partition import Partition
 from Lifting import Lump, KL, Lifting
 
 PLOT = False
-WRITE_FILE = True
+WRITE_FILE = False
 STAT = False
 EXPORT_GRAPH = True
 
@@ -400,7 +400,10 @@ if __name__ == '__main__':
 
         ### condition for table3
         kl=new_kl=diff=0.0
-        cond = "new_kl <= kl*(1+0.5) or kl==0.0"
+        # cond = "new_kl <= kl*(1+0.5) or kl==0.0"
+    
+        N=len(S)/2
+        cond = 'n>2'
         # cond = "n!=3"
 
         ### stopping condition
@@ -540,5 +543,3 @@ if __name__ == '__main__':
             # Vous pouvez maintenant utiliser G comme un objet Graph networkx
             # print(G.nodes())  # Affiche les nœuds du graphe
             # print(G.edges())  # Affiche les arêtes du graphe
-                    
-       
