@@ -42,9 +42,19 @@ import matplotlib.pyplot as plt
 from Partition import Partition
 from Lifting import Lump, KL, Lifting
 
-PLOT = True
-WRITE_FILE = False
+PLOT = False
+WRITE_FILE = True
 STAT = False
+EXPORT_GRAPH = True
+
+def export_graph_to_graphml(P, filename):
+
+    G = nx.Graph()
+    
+    for k,v in P.items():
+        G.add_edge(k[0].replace('/',' \n '), k[1].replace('/',' \n '), weight=float(v))
+
+    nx.write_graphml(G, filename)
 
 def get_edges_with_weights(P:pykov.Chain)->tuple:
     """
@@ -317,10 +327,11 @@ def trace(n:int, kl:float, p:Partition)->None:
     d = dict(p)
     state_to_aggregate = [k for k,v in d.items() if v == new_state_for_aggregation]
     d = {value: key for key, value in d.items()}
-    d[new_state_for_aggregation]= "/".join(state_to_aggregate)
-    print(f"Aggregate states: {'/'.join(state_to_aggregate)}")
+    d[new_state_for_aggregation] = "/".join(state_to_aggregate)
+
+    print(f"Aggregate states: {d[new_state_for_aggregation]}")
     
-    return d
+    return d, d[new_state_for_aggregation]
 
 if __name__ == '__main__':
 
@@ -342,6 +353,9 @@ if __name__ == '__main__':
 
         ### Répertoire de base
         base_dir = os.path.dirname(os.path.abspath(__file__))
+
+        ### list of aggregate states during the process
+        AS = []
 
         ### Markov matrix
         #try:
@@ -386,8 +400,8 @@ if __name__ == '__main__':
 
         ### condition for table3
         kl=new_kl=diff=0.0
-        #cond = "new_kl <= kl*(1+0.5) or kl==0.0"
-        cond = "n!=3"
+        cond = "new_kl <= kl*(1+0.5) or kl==0.0"
+        # cond = "n!=3"
 
         ### stopping condition
         while(eval(cond)):
@@ -398,10 +412,11 @@ if __name__ == '__main__':
             ### P must be ergotic i.e. the transition matrix must be irreducible and acyclic.            
             G = nx.DiGraph(list(P.keys()), directed=True)
             nx.strongly_connected_components(G)
-            assert nx.is_strongly_connected(G) and nx.is_aperiodic(G), f"Matrix is not ergotic!"
+            assert nx.is_strongly_connected(G) and nx.is_aperiodic(G), f"Matrix is not ergodic!"
             
             ### just for stdout
-            d = trace(n,kl,p)
+            d,aggregate_state = trace(n,kl,p)
+            AS.append(aggregate_state)
             #ranks_pr = nx.pagerank(G)
             #print(statistics.mean(ranks_pr.values()))
 
@@ -472,11 +487,13 @@ if __name__ == '__main__':
                 print(f"Write file in {fn}")
 
         ### just for stdout
-        trace(n,kl,p)
+        _, aggregate_state = trace(n,kl,p)
         #ranks_pr = nx.pagerank(G)
         #print(statistics.mean(ranks_pr.values()))
         #print(f"PageRank : {ranks_pr}")
           
+        AS.append(aggregate_state)
+
         # end time
         end3 = time.time()
 
@@ -494,6 +511,10 @@ if __name__ == '__main__':
             X = list(map(lambda a : f"{a} x {a}", map(str,X)))
             plt.plot(X, K_L, label="KL",marker="o")
 
+            # Ajouter les valeurs à la verticale au-dessus de chaque point
+            for i, (x, y) in enumerate(zip(X, K_L)):
+                plt.text(i, y+0.001, f"{AS[i]}", ha='center', va='bottom', rotation=90, fontsize=8)
+
             if STAT:
                 plt.plot(X,[s.describe()['std']]*len(X), label='std', linestyle="-")
                 
@@ -507,5 +528,17 @@ if __name__ == '__main__':
             
             # function to show the plot
             plt.show()
+        
+        if EXPORT_GRAPH:
+            filename = "graph"
+            export_graph_to_graphml(dict(P),f"{filename}_{n}x{n}.graphml")
+            print(f"{filename}_{n}x{n}.graphml exported!")
+
+            ### test
+            # G = import_graph_from_graphml(f"{filename}_{n}x{n}.graphml")
+
+            # Vous pouvez maintenant utiliser G comme un objet Graph networkx
+            # print(G.nodes())  # Affiche les nœuds du graphe
+            # print(G.edges())  # Affiche les arêtes du graphe
                     
        

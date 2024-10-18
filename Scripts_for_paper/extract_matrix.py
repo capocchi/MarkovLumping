@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from pprint import pprint
 from itertools import product
 from sinkhorn_knopp import sinkhorn_knopp as skp
+import networkx as nx
 
 def generate_combinations(n, m):
     """Génère toutes les combinaisons possibles de n éléments prenant des valeurs de 0 à m."""
@@ -96,6 +97,7 @@ def write_matrix_to_file(matrix, combinations, filename):
                 line = f"{''.join(map(str, s1))} {''.join(map(str, s2))} {value:.10f}\n"
                 f.write(line)
 
+### Plot funtions
 def afficher_carte_de_chaleur(matrice, row_labels, col_labels):
     plt.figure(figsize=(10, 8))
     ax = sns.heatmap(matrice, annot=False, fmt=".2e", cmap='viridis', xticklabels = row_labels, yticklabels= col_labels)
@@ -103,6 +105,29 @@ def afficher_carte_de_chaleur(matrice, row_labels, col_labels):
     # plt.title("Ergotic Matrix")
     plt.xlabel("State")
     plt.ylabel("State")
+    plt.show()
+
+def plot_graph(data):
+    # Créer un graphe
+    G = nx.Graph()  # Utilisez nx.DiGraph() pour un graphe orienté
+
+    # Ajouter des arêtes avec des poids
+    for edge, weight in data:
+        G.add_edge(edge[0], edge[1], weight=weight)
+
+    # Options de mise en page du graphe
+    pos = nx.spring_layout(G)  # Vous pouvez essayer d'autres dispositions, comme 'circular_layout' ou 'kamada_kawai_layout'
+
+    # Dessiner le graphe
+    plt.figure(figsize=(10, 8))
+    nx.draw_networkx(G, pos, with_labels=True, node_color='lightblue', edge_color='gray', node_size=500, font_size=10)
+
+    # Dessiner les poids sur les arêtes
+    labels = nx.get_edge_attributes(G, 'weight')
+    nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
+
+    # Afficher le graphe
+    plt.title("Visualisation du Graphe avec NetworkX")
     plt.show()
 
 def print_help():
@@ -202,6 +227,7 @@ def main():
     D = read_yuxin_file(source_filename, day1, day2)
     pprint(sorted(D.items(), key=lambda item:item[1], reverse=True))
 
+
     print("Done!")
 
     ### update the matrix from D
@@ -225,8 +251,8 @@ def main():
     assert check_column_sums(P_ds)
     
     ### print map of matrix
-    labels = ["".join(map(str,a)) for a in combinations]
-    afficher_carte_de_chaleur(P_ds, labels, labels)
+    # labels = ["".join(map(str,a)) for a in combinations]
+    # afficher_carte_de_chaleur(P_ds, labels, labels)
 
     ### write output file
     write_matrix_to_file(P_ds, combinations, output_fn)
