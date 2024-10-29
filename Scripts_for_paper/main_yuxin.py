@@ -16,8 +16,8 @@ import time
 
 REDUCE_WITH_KL = True
 YUXIN_PRINT = False
-LAST_DAY = 7
-PLOT = False
+LAST_DAY = 3
+PLOT = True
 
 end_depth = 2 if REDUCE_WITH_KL else LAST_DAY
 
@@ -129,6 +129,47 @@ def update_node_cash_value(G, node, new_value):
     else:
         print("Node doesn't exist")
 
+def have_same_parent(G, node1, node2):
+    """Check if two nodes have the same parent (common neighbor) in the undirected graph."""
+    # Get neighbors of each node
+    neighbors_node1 = set(G.neighbors(node1))
+    neighbors_node2 = set(G.neighbors(node2))
+    
+    # Check for common neighbors
+    common_neighbors = neighbors_node1.intersection(neighbors_node2)
+    return len(common_neighbors) > 0
+
+def check_nodes_parents(G, node_set):
+    """Return a dictionary where keys are parents and values are lists of nodes that have the same parent."""
+    parent_map = {}  # Dictionary to hold parents and corresponding nodes
+
+    # Convert the set to a list to iterate through pairs
+    node_list = list(node_set)
+
+    # Iterate through all pairs of nodes in the node list
+    for i in range(len(node_list)):
+        for j in range(i + 1, len(node_list)):
+            node1 = node_list[i]
+            node2 = node_list[j]
+            # Check if they have the same parent
+            if have_same_parent(G, node1, node2):
+                # Get common parents (neighbors)
+                parents_node1 = set(G.neighbors(node1))
+                parents_node2 = set(G.neighbors(node2))
+                common_parents = parents_node1.intersection(parents_node2)
+
+                for parent in common_parents:
+                    if parent not in parent_map:
+                        parent_map[parent] = []
+                    parent_map[parent].append(node1)
+                    parent_map[parent].append(node2)
+
+    # Ensure each node only appears once per parent
+    for parent in parent_map:
+        parent_map[parent] = list(set(parent_map[parent]))  # Remove duplicates
+    
+    return parent_map  # Return the dictionary
+
 def get_prob(G, node_str, yuxin_graph_dict):
     node_to_search = tuple([end_depth]+list(map(int, node_str.strip())))
     finded_node = find_key(yuxin_graph_dict, node_to_search)
@@ -136,7 +177,10 @@ def get_prob(G, node_str, yuxin_graph_dict):
 
 def execute_lumping(G, end_depth):
     
+    print(f"execute lumping for day {end_depth}...")
+
     if end_depth < 1:
+        print("Done!")
         return 
 
     ### find the name of the graphml file that stored the results of the lumping process
@@ -148,11 +192,11 @@ def execute_lumping(G, end_depth):
         cmd = ["python", "main_loop.py", f"..\Matrix\Yuxin\Scenario1_First_{end_depth}_Days_day{end_depth-1}_to_day{end_depth}.dat"]
         # print(cmd)
         result = subprocess.run(cmd, capture_output=True, text=True)
+        
+        # print(result.stdout)
 
         ### list of fusionned states
-        for l in result.stdout.split('\n'):
-            if 'exported' in l:
-                fn = l.split(' ')[0]
+        fn = next((line.split(' ')[0] for line in result.stdout.splitlines() if 'exported' in line), None)
 
     G_lumped = import_graph_from_graphml(fn)
 
@@ -162,44 +206,74 @@ def execute_lumping(G, end_depth):
     yuxin_graph_dict = nx.to_dict_of_dicts(G)
     # print(yuxin_graph_dict)
 
-    state_to_delete_list = []
-    state_to_change_dict = {}
     for s in nx.to_dict_of_dicts(G_lumped).keys():
         s_list = s.split('\n')
         ### if s_list contains more one element, we must make a fusion
         if len(s_list) > 1:
-            # new_prob = d[s]['weight']
-            new_prob = get_prob(G, s_list[0], yuxin_graph_dict)
-            new_cash = 0.0
-            nb = 1
-            ### 1st element is the state to keep, the others are the states to delete
-            for s1 in map(lambda a: a.strip(), s_list[1:]):
+            L = set()
+            for s1 in map(str.strip, s_list):
                 ### key to search in yuxin_graph_dict
                 key_to_search = tuple([end_depth]+list(map(int, s1.strip())))
                 finded_key = find_key(yuxin_graph_dict, key_to_search)
-                ### add the finded key to the list of states to delete
-                state_to_delete_list.append(finded_key)
-                ### update prob
-                new_prob += get_prob(G,s1,yuxin_graph_dict)
-                ### update cash
-                new_cash += finded_key[-1] if finded_key else 0.0
-                nb += 1
-            ### 1st element is the state to keep
-            key_to_search = tuple([end_depth]+list(map(int, s_list[0].strip())))
-            finded_key = find_key(yuxin_graph_dict, key_to_search)
-            ### store the state to change with the new values for prob and cash
-            state_to_change_dict[finded_key] = {'new_prob': new_prob, 'new_cash': new_cash/nb}
+                L.add(finded_key)
 
-    # print(f"Nodes to delete: {state_to_delete_list}")
-    # print(f"Nodes to change: {state_to_change_dict}")
+            res = check_nodes_parents(G,L)
+            
+            for parent,nodes in res.items():
+                ### TODO : node to conserve could be the min of volatility
+                node_to_conserve = nodes[0]
+                G.nodes[node_to_conserve]['probability'] += np.sum([G.nodes[n]['probability'] for n in nodes if n != node_to_conserve])
+                update_node_cash_value(G, node_to_conserve, np.mean([n[-1] for n in nodes]))
 
-    ### loop to update G
-    for node in G.copy().nodes():
-        if node in state_to_delete_list:
-            G.remove_node(node)
-        elif node in state_to_change_dict.keys():
-            G.nodes[node]['probability'] = state_to_change_dict[node]['new_prob']
-            update_node_cash_value(G, node, state_to_change_dict[node]['new_cash'])
+                for n in nodes:
+                    if n != node_to_conserve:
+                        print(f"Delete {n} node as child of {parent}")
+                        G.remove_node(n)
+
+    print("Done!")
+
+    # exit()
+
+    # state_to_delete_set = set()
+    # state_to_change_dict = {}
+
+    # for s in nx.to_dict_of_dicts(G_lumped).keys():
+    #     s_list = s.split('\n')
+    #     ### if s_list contains more one element, we must make a fusion
+    #     if len(s_list) > 1:
+
+    #         # new_prob = d[s]['weight']
+    #         new_prob = get_prob(G, s_list[0], yuxin_graph_dict)
+    #         new_cash, nb = 0.0, 1
+            
+    #         ### 1st element is the state to keep, the others are the states to delete
+    #         for s1 in map(str.strip, s_list[1:]):
+    #             ### key to search in yuxin_graph_dict
+    #             key_to_search = tuple([end_depth]+list(map(int, s1.strip())))
+    #             finded_key = find_key(yuxin_graph_dict, key_to_search)
+    #             ### add the finded key to the list of states to delete
+    #             state_to_delete_set.add(key_to_search)
+    #             ### update prob
+    #             new_prob += get_prob(G,s1,yuxin_graph_dict)
+    #             ### update cash
+    #             new_cash += finded_key[-1] if finded_key else 0.0
+    #             nb += 1
+    #         ### 1st element is the state to keep
+    #         key_to_search = tuple([end_depth]+list(map(int, s_list[0].strip())))
+    #         finded_key = find_key(yuxin_graph_dict, key_to_search)
+    #         ### store the state to change with the new values for prob and cash
+    #         state_to_change_dict[finded_key] = {'new_prob': new_prob, 'new_cash': new_cash/nb}
+
+    # # print(f"Nodes to delete: {state_to_delete_list}")
+    # # print(f"Nodes to change: {state_to_change_dict}")
+
+    # ### loop to update G
+    # for node in G.copy().nodes():
+    #     if node[:-1] in state_to_delete_set:
+    #         G.remove_node(node)
+    #     elif node in state_to_change_dict.keys():
+    #         G.nodes[node]['probability'] = state_to_change_dict[node]['new_prob']
+    #         update_node_cash_value(G, node, state_to_change_dict[node]['new_cash'])
 
 if REDUCE_WITH_KL:
     state_gain = []
@@ -212,9 +286,9 @@ if REDUCE_WITH_KL:
     # trace the number of final nodes before and after the lumping
     final_nodes_after = [node for node in G.nodes if G.degree(node) == 1]
     state_gain.append(len(final_nodes_before) - len(final_nodes_after))
-
     print(f"Number of nodes before/after for day {end_depth}: {len(final_nodes_before)}/{len(final_nodes_after)}")
-
+    print("Number of state removed during the process", state_gain)
+    
     for i in range(2, LAST_DAY, 1):
         start_depth = i
         end_depth = i+1
@@ -223,23 +297,20 @@ if REDUCE_WITH_KL:
             original_cash = root_node[4]
             build_tree(data, G, root_node, start_depth, end_depth, parent_probability, original_cash)
         
-            file_path = f"Scenario1_First_{end_depth}_Days.dat"
-            with open(file_path, 'w') as file:
-                for node in G.nodes:
-                    probability = G.nodes[node].get('probability', 'N/A')
-                    file.write(f'{str(node)} {probability}\n')
+        file_path = f"Scenario1_First_{end_depth}_Days.dat"
+        with open(file_path, 'w') as file:
+            for node in G.nodes:
+                probability = G.nodes[node].get('probability', 'N/A')
+                file.write(f'{str(node)} {probability}\n')
 
         final_nodes_before = [node for node in G.nodes if G.degree(node) == 1]
         
         execute_lumping(G, end_depth)
         
         final_nodes_after = [node for node in G.nodes if G.degree(node) == 1]
-        
-        print(f"Number of nodes before/after for day {end_depth}: {len(final_nodes_before)}/{len(final_nodes_after)}")
-
         state_gain.append(len(final_nodes_before) - len(final_nodes_after))
-
-    print("Number of state removed during the process", state_gain)
+        print(f"Number of nodes before/after for day {end_depth}: {len(final_nodes_before)}/{len(final_nodes_after)}")
+        print("Number of state removed during the process", state_gain)
 
 ############################################
 # TRACE
@@ -283,7 +354,7 @@ end_time = time.time()
 
 #
 execution_time = end_time - start_time
-print(f"Execution time : {execution_time} secondes")
+print(f"\nExecution time : {execution_time} secondes")
 
 text = "Expected Investment Value\n"
 for day, exp_assets in expected_investment.items():
@@ -308,7 +379,7 @@ if PLOT:
 
     def custom_layout(G):
         pos = {}
-        row_spacing = 20000
+        row_spacing = 2000
         col_spacing = 2000
 
         rows = {}
@@ -326,9 +397,9 @@ if PLOT:
 
         return pos
 
-    pos = custom_layout(G)
+    # pos = custom_layout(G)
 
-    # pos = nx.spring_layout(G)
+    pos = nx.spring_layout(G)
 
     fig, ax = plt.subplots(figsize=(35, 10))
 

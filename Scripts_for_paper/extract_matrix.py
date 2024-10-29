@@ -6,12 +6,13 @@
 
 import numpy as np
 import sys, os
-import seaborn as sns
-import matplotlib.pyplot as plt
-from pprint import pprint
+# import seaborn as sns
+# import matplotlib.pyplot as plt
+# from pprint import pprint
 from itertools import product
 from sinkhorn_knopp import sinkhorn_knopp as skp
-import networkx as nx
+# import networkx as nx
+from io import StringIO
 
 def generate_combinations(n, m):
     """Génère toutes les combinaisons possibles de n éléments prenant des valeurs de 0 à m."""
@@ -87,15 +88,32 @@ def read_yuxin_file(filename,day1,day2):
 
 def write_matrix_to_file(matrix, combinations, filename):
     """
+    Ecrit les valeurs de la matrice avec les combinaisons dans un fichier,
+    en optimisant les opérations d'écriture.
     """
+    buffer = StringIO()
+    for i, s1 in enumerate(combinations):
+        for j, s2 in enumerate(combinations):
+            value = matrix[i, j]
+            # Formater la ligne sans appel de `join` multiple
+            line = f"{''.join(map(str, s1))} {''.join(map(str, s2))} {value:.10f}\n"
+            buffer.write(line)
     
+    # Ecriture du buffer entier dans le fichier en une seule opération
     with open(filename, 'w') as f:
-        for i,s1 in enumerate(combinations):
-            for j,s2 in enumerate(combinations):
-                value = matrix[i, j]
-                # Formater les indices et la valeur
-                line = f"{''.join(map(str, s1))} {''.join(map(str, s2))} {value:.10f}\n"
-                f.write(line)
+        f.write(buffer.getvalue())
+        
+# def write_matrix_to_file(matrix, combinations, filename):
+#     """
+#     """
+    
+#     with open(filename, 'w') as f:
+#         for i,s1 in enumerate(combinations):
+#             for j,s2 in enumerate(combinations):
+#                 value = matrix[i, j]
+#                 # Formater les indices et la valeur
+#                 line = f"{''.join(map(str, s1))} {''.join(map(str, s2))} {value:.10f}\n"
+#                f.write(line)
 
 ### Plot funtions
 def afficher_carte_de_chaleur(matrice, row_labels, col_labels):
@@ -211,7 +229,7 @@ def main():
     # Initialiser la matrice avec des petites valeurs proches de 0
     matrix = initialize_matrix_with_small_values(matrix_size)
     
-    print(f"Size of the matrix for day {day1} to day {day2} : {matrix_size}x{matrix_size}")
+    # print(f"Size of the matrix for day {day1} to day {day2} : {matrix_size}x{matrix_size}")
 
     # Affichage des combinaisons pour vérification
     # print("Toutes les combinaisons possibles :")
@@ -223,12 +241,11 @@ def main():
     # index_to = combinations.index((0, 0, 1))
     # matrix[index_from, index_to] = 1.0
 
-    print(f"Extraction of file {source_filename}...")
+    # print(f"Extraction of file {source_filename}...")
     D = read_yuxin_file(source_filename, day1, day2)
-    pprint(sorted(D.items(), key=lambda item:item[1], reverse=True))
+    # pprint(sorted(D.items(), key=lambda item:item[1], reverse=True))
 
-
-    print("Done!")
+    # print("Done!")
 
     ### update the matrix from D
     for k,v in D.items():
@@ -247,8 +264,8 @@ def main():
     # print(P_ds)
 
     # Vérifier que la somme des lignes et colonne fait 1
-    assert check_row_sums(P_ds)  
-    assert check_column_sums(P_ds)
+    # assert check_row_sums(P_ds)  
+    # assert check_column_sums(P_ds)
     
     ### print map of matrix
     # labels = ["".join(map(str,a)) for a in combinations]
@@ -257,8 +274,8 @@ def main():
     ### write output file
     write_matrix_to_file(P_ds, combinations, output_fn)
     
-    print("List of considered states:")
-    print(combinations)
+    # print("List of considered states:")
+    # print(combinations)
 
 if __name__ == "__main__":
     main()

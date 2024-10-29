@@ -29,15 +29,14 @@
 ### Date: 18/11/2023
 #######################################################################
 
-import os
-import pykov, sys, time
+import os, sys, time
+import pykov
 import networkx as nx
 import statistics
 
 from more_itertools import locate
 from sys import platform
 from multiprocessing import freeze_support
-import matplotlib.pyplot as plt
 
 from Partition import Partition
 from Lifting import Lump, KL, Lifting
@@ -46,6 +45,9 @@ PLOT = False
 WRITE_FILE = False
 STAT = False
 EXPORT_GRAPH = True
+
+if PLOT:
+    import matplotlib.pyplot as plt
 
 def export_graph_to_graphml(P, filename):
 
@@ -127,7 +129,7 @@ def get_ordered_partitions_from_mftp(S:[str],P:pykov.Chain)->tuple:
     ### heristic is based on the mean of mftp values
     mean = statistics.fmean([v[1] for v in dd.values()])
 
-    for k,v in dd.items():
+    for _,v in dd.items():
         if v[1] <= mean:
             yield v[0]
 
@@ -402,10 +404,11 @@ if __name__ == '__main__':
         kl=new_kl=diff=0.0
         # cond = "new_kl <= kl*(1+0.5) or kl==0.0"
     
-        N=len(S)/2
-        cond = 'n>2'
-        # cond = "n!=3"
+        cond = "kl==0.0"
 
+        # N=len(S)/2
+        # cond = 'n>N'
+        
         ### stopping condition
         while(eval(cond)):
             
