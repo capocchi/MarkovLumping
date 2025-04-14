@@ -7,6 +7,7 @@ import pykov, sys, time
 import numpy as np
 import networkx as nx
 from scipy.linalg import block_diag
+import matplotlib.pyplot as plt
 
 from main_loop import *
 from queuing import *
@@ -74,7 +75,8 @@ def gth_reduction(P, tol=1e-10):
     v /= v.sum()
     while True:
         v_new = M @ v
-        v_new /= v_new.sum()
+        if v_new.sum() != 0:
+            v_new /= v_new.sum()
         if np.max(np.abs(v_new - v)) < tol:
             break
         v = v_new
@@ -88,7 +90,7 @@ def gth_reduction(P, tol=1e-10):
         for j, t in enumerate(states):
             P_reduced[i, j] = P[s, t] / v[t]
     
-    return P_reduced, states.tolist()
+    return P_reduced#, states.tolist()
 
 @calculate_time
 def reduce_graph(P, threshold=1e-5):
@@ -504,7 +506,7 @@ def plot2(X,Y=[]):
     return transition_matrix
 
 if __name__ == '__main__':
-    """ to use : python fig10.py 19 40 20
+    """ to use: python fig10.py 19 40 20
     """
     from Queue import Queue
 
@@ -537,12 +539,12 @@ if __name__ == '__main__':
 
         # queue_transition_matrix=  generate_transition_matrix2(arrival_rate,service_rate,num_servers)
 
-        methods = { #'perron_frobenius':perron_frobenius_reduction2, 
+        methods = { 'perron_frobenius':perron_frobenius_reduction2, 
                     'gerschgorin':gerschgorin_reduction, 
-                    #'GTH':gth_reduction,
+                    # 'GTH':gth_reduction,
                     'partial_sum':partial_sum_reduction,
-                    'chain_indexing':markov_chain_indexing_method}
-                    # 'page_rank':pagerank_reduction}
+                    'chain_indexing':markov_chain_indexing_method,
+                    'page_rank':pagerank_reduction}
 
         ### get queue stat
         print("---------------------- original constants")
@@ -593,7 +595,12 @@ if __name__ == '__main__':
             if sr < 0: sr = 0
             if ar < 0 : ar = 0
             
-            if k == "perron_frobenius":
+            if k == "GTH":
+                QUEUE_WAITING_TIME_M0 = [awt]
+                QUEUE_SERVICE_TIME_M0 = [ast]
+                QUEUE_SERVICE_RATE_M0 = [sr]
+                QUEUE_ABANDON_RATE_M0 = [ar]
+            elif k == "perron_frobenius":
                 QUEUE_WAITING_TIME_M1 = [awt]
                 QUEUE_SERVICE_TIME_M1 = [ast]
                 QUEUE_SERVICE_RATE_M1 = [sr]
@@ -654,7 +661,9 @@ if __name__ == '__main__':
             ### P transition matrix of the Markoc chain to lump
             P = pykov.Chain()
             for k,v in Q.items():
-                P[(d[k[0]],d[k[1]])] = v
+                # print(f"{d} {k[0]} {k[1]} {v} \n")
+                # print(f"{d[str(k[0])]} {d[str(k[1])]} {v} \n")
+                P[(d[0][str(k[0])],d[0][str(k[1])])] = v
 
             A = chainToNPArray(P)
             ### get queue stat
@@ -677,7 +686,12 @@ if __name__ == '__main__':
                 if sr < 0: sr = 0
                 if ar < 0 : ar = 0
 
-                if k == "perron_frobenius":
+                if k == "GTH":
+                    QUEUE_WAITING_TIME_M0.append(awt)
+                    QUEUE_SERVICE_TIME_M0.append(ast)
+                    QUEUE_SERVICE_RATE_M0.append(sr)
+                    QUEUE_ABANDON_RATE_M0.append(ar)
+                elif k == "perron_frobenius":
                     QUEUE_WAITING_TIME_M1.append(awt)
                     QUEUE_SERVICE_TIME_M1.append(ast)
                     QUEUE_SERVICE_RATE_M1.append(sr)
@@ -749,6 +763,7 @@ if __name__ == '__main__':
             normalized_QUEUE_ABANDON_RATE_BESTA = list(map(lambda a: a/max(QUEUE_ABANDON_RATE_BESTA), QUEUE_ABANDON_RATE_BESTA)) #preprocessing.normalize([QUEUE_ABANDON_RATE_BESTA])
 
             for k in methods:
+                
                 if k == "perron_frobenius":
                     normalized_QUEUE_WAITING_TIME_M1 = list(map(lambda a: a/max(QUEUE_WAITING_TIME_M1), QUEUE_WAITING_TIME_M1)) #preprocessing.normalize([QUEUE_WAITING_TIME_M1])
                     normalized_QUEUE_SERVICE_TIME_M1 = list(map(lambda a: a/max(QUEUE_SERVICE_TIME_M1), QUEUE_SERVICE_TIME_M1)) #preprocessing.normalize([QUEUE_SERVICE_TIME_M1])
@@ -777,13 +792,15 @@ if __name__ == '__main__':
                 else:
                     pass
 
-            fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(10, 10))
+            fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(12, 8))
 
             # Plot the data on each subplot
             axes[0, 0].plot(X, normalized_QUEUE_ABANDON_RATE_ORIGINAL, label="Original")
             axes[0, 0].scatter(X, normalized_QUEUE_ABANDON_RATE_BESTA, marker="*", label = "BESTA")
+            axes[0, 0].scatter(X, normalized_QUEUE_ABANDON_RATE_M1, marker="o", label = "Perron Frobenius")
             axes[0, 0].scatter(X, normalized_QUEUE_ABANDON_RATE_M2, marker="h", label = "Gerschgorin")
             axes[0, 0].scatter(X, normalized_QUEUE_ABANDON_RATE_M3, marker="D", label = "Partial Sum")
+            axes[0, 0].scatter(X, normalized_QUEUE_ABANDON_RATE_M4, marker="d", label = "Page Rank")
             axes[0, 0].scatter(X, normalized_QUEUE_ABANDON_RATE_M5, marker="p", label = "Chain Indexing")
             axes[0, 0].set_title("Abandon Rate")
             axes[0, 0].tick_params(rotation=45)
@@ -793,8 +810,10 @@ if __name__ == '__main__':
 
             axes[0, 1].plot(X, normalized_QUEUE_SERVICE_RATE_ORIGINAL, label="Original")
             axes[0, 1].scatter(X, normalized_QUEUE_SERVICE_RATE_BESTA, marker="*", label = "BESTA")
+            axes[0, 1].scatter(X, normalized_QUEUE_SERVICE_RATE_M1, marker="o", label = "Perron Frobenius")
             axes[0, 1].scatter(X, normalized_QUEUE_SERVICE_RATE_M2, marker="h", label = "Gerschgorin")
             axes[0, 1].scatter(X, normalized_QUEUE_SERVICE_RATE_M3, marker="D", label = "Partial Sum")
+            axes[0, 1].scatter(X, normalized_QUEUE_SERVICE_RATE_M4, marker="d", label = "Page Rank")
             axes[0, 1].scatter(X, normalized_QUEUE_SERVICE_RATE_M5, marker="p", label = "Chain Indexing")
             axes[0, 1].set_title("Service Rate")
             axes[0, 1].tick_params(rotation=45)
@@ -803,8 +822,10 @@ if __name__ == '__main__':
 
             axes[1, 0].plot(X, normalized_QUEUE_SERVICE_TIME_ORIGINAL, label="Original")
             axes[1, 0].scatter(X, normalized_QUEUE_SERVICE_TIME_BESTA, marker="*", label = "BESTA")
+            axes[1, 0].scatter(X, normalized_QUEUE_SERVICE_TIME_M1, marker="o", label = "Perron Frobenius")
             axes[1, 0].scatter(X, normalized_QUEUE_SERVICE_TIME_M2, marker="h", label = "Gerschgorin")
             axes[1, 0].scatter(X, normalized_QUEUE_SERVICE_TIME_M3, marker="D", label = "Partial Sum")
+            axes[1, 0].scatter(X, normalized_QUEUE_SERVICE_TIME_M4, marker="d", label = "Page Rank")
             axes[1, 0].scatter(X, normalized_QUEUE_SERVICE_TIME_M5, marker="p", label = "Chain Indexing")
             axes[1, 0].set_title("Average Service Time")
             axes[1, 0].tick_params(rotation=45)
@@ -813,8 +834,10 @@ if __name__ == '__main__':
 
             axes[1, 1].plot(X, normalized_QUEUE_WAITING_TIME_ORIGINAL, label="Original")
             axes[1, 1].scatter(X, normalized_QUEUE_WAITING_TIME_BESTA, marker="*", label = "BESTA")
+            axes[1, 1].scatter(X, normalized_QUEUE_WAITING_TIME_M1, marker="o", label = "Perron Frobenius")
             axes[1, 1].scatter(X, normalized_QUEUE_WAITING_TIME_M2, marker="h", label = "Gerschgorin")
             axes[1, 1].scatter(X, normalized_QUEUE_WAITING_TIME_M3, marker="D", label = "Partial Sum")
+            axes[1, 1].scatter(X, normalized_QUEUE_WAITING_TIME_M4, marker="d", label = "Page Rank")
             axes[1, 1].scatter(X, normalized_QUEUE_WAITING_TIME_M5, marker="p", label ="Chain Indexing")
             axes[1, 1].set_title("Average Waiting Time")
             axes[1, 1].tick_params(rotation=45)
@@ -824,14 +847,27 @@ if __name__ == '__main__':
             plt.ylabel("Normalized Amplitude")
             #plt.vlines(range(0,10), ymin=-1, ymax=1, colors='gray', linestyles='dashed')
 
-            # Adjust the spacing between subplots
-            fig.subplots_adjust(hspace=0.3, wspace=0.3)
+            # # Adjust the spacing between subplots
+            # fig.subplots_adjust(hspace=0.3, wspace=0.3)
 
-            plt.savefig("compa.png", dpi=600)
+            # plt.savefig("compa.png", dpi=600)
 
-            # function to show the plot
+            # # function to show the plot
+            # plt.show()
+            # Add legend outside the plot for each subplot
+            # axes[0, 0].legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+            axes[0, 1].legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+            # axes[1, 0].legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+            # axes[1, 1].legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+
+            # Adjust the layout to prevent legend overlap
+            plt.tight_layout()
+            # Add space for the legend
+            plt.subplots_adjust(right=0.85)
+
+            plt.savefig("compa.png", dpi=600, bbox_inches='tight')
             plt.show()
-        
+
           
         from sklearn.metrics import mean_squared_error
         from math import sqrt
@@ -847,7 +883,11 @@ if __name__ == '__main__':
         rmse = {"BESTA":sqrt(mean_squared_error(QUEUE_ABANDON_RATE_BESTA,QUEUE_ABANDON_RATE_ORIGINAL*len(QUEUE_ABANDON_RATE_BESTA)))}
 
         for k in methods:
-            if k == "perron_frobenius":
+            if k == "GTH":
+                algo["GTH"]=abs(QUEUE_ABANDON_RATE_M0[-1]-original_abandon)
+                mse["GTH"]= mean_squared_error(QUEUE_ABANDON_RATE_M0,QUEUE_ABANDON_RATE_ORIGINAL*len(QUEUE_ABANDON_RATE_M0))
+                rmse["GTH"]= sqrt(mean_squared_error(QUEUE_ABANDON_RATE_M0,QUEUE_ABANDON_RATE_ORIGINAL*len(QUEUE_ABANDON_RATE_M0)))
+            elif k == "perron_frobenius":
                 algo["Perron Frobenius"]=abs(QUEUE_ABANDON_RATE_M1[-1]-original_abandon)
                 mse["Perron Frobenius"]= mean_squared_error(QUEUE_ABANDON_RATE_M1,QUEUE_ABANDON_RATE_ORIGINAL*len(QUEUE_ABANDON_RATE_M1))
                 rmse["Perron Frobenius"]= sqrt(mean_squared_error(QUEUE_ABANDON_RATE_M1,QUEUE_ABANDON_RATE_ORIGINAL*len(QUEUE_ABANDON_RATE_M1)))
@@ -881,7 +921,11 @@ if __name__ == '__main__':
         mse = {"BESTA":mean_squared_error(QUEUE_SERVICE_RATE_BESTA,QUEUE_SERVICE_RATE_ORIGINAL*len(QUEUE_SERVICE_RATE_BESTA))}
         rmse = {"BESTA":sqrt(mean_squared_error(QUEUE_SERVICE_RATE_BESTA,QUEUE_ABANDON_RATE_ORIGINAL*len(QUEUE_SERVICE_RATE_BESTA)))}
         for k in methods:
-            if k == "perron_frobenius":
+            if k== "GTH":
+                algo["Perron Frobenius"]=abs(QUEUE_SERVICE_RATE_M0[-1]-original_sr)
+                mse["Perron Frobenius"]= mean_squared_error(QUEUE_SERVICE_RATE_M1,QUEUE_SERVICE_RATE_ORIGINAL*len(QUEUE_SERVICE_RATE_M0))
+                rmse["Perron Frobenius"]= sqrt(mean_squared_error(QUEUE_SERVICE_RATE_M0,QUEUE_SERVICE_RATE_ORIGINAL*len(QUEUE_SERVICE_RATE_M0)))
+            elif k == "perron_frobenius":
                 algo["Perron Frobenius"]=abs(QUEUE_SERVICE_RATE_M1[-1]-original_sr)
                 mse["Perron Frobenius"]= mean_squared_error(QUEUE_SERVICE_RATE_M1,QUEUE_SERVICE_RATE_ORIGINAL*len(QUEUE_SERVICE_RATE_M1))
                 rmse["Perron Frobenius"]= sqrt(mean_squared_error(QUEUE_SERVICE_RATE_M1,QUEUE_SERVICE_RATE_ORIGINAL*len(QUEUE_SERVICE_RATE_M1)))

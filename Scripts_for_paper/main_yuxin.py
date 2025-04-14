@@ -193,7 +193,7 @@ def execute_lumping(G, end_depth):
         # print(cmd)
         result = subprocess.run(cmd, capture_output=True, text=True)
         
-        # print(result.stdout)
+        print(result.stdout)
 
         ### list of fusionned states
         fn = next((line.split(' ')[0] for line in result.stdout.splitlines() if 'exported' in line), None)

@@ -404,10 +404,10 @@ if __name__ == '__main__':
         kl=new_kl=diff=0.0
         # cond = "new_kl <= kl*(1+0.5) or kl==0.0"
     
-        cond = "kl==0.0"
+        # cond = "kl==0.0"
 
-        # N=len(S)/2
-        # cond = 'n>N'
+        N=len(S)/2
+        cond = 'n>N'
         
         ### stopping condition
         while(eval(cond)):
